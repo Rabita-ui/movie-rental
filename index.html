@@ -1,0 +1,2060 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>✨ Voice FX Studio · Perfect Voice</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet" />
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      background: linear-gradient(145deg, #f5f7fe 0%, #e9edf9 100%);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Inter', system-ui, -apple-system, sans-serif;
+      padding: 1.5rem;
+    }
+
+    .card {
+      max-width: 1000px;
+      width: 100%;
+      background: rgba(255, 255, 255, 0.75);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border-radius: 3rem;
+      padding: 2.5rem 2.8rem 3rem;
+      box-shadow: 0 20px 50px rgba(0, 10, 30, 0.12), 0 8px 24px rgba(0, 20, 40, 0.06), inset 0 1px 2px rgba(255, 255, 255, 0.7);
+      border: 1px solid rgba(255, 255, 255, 0.5);
+      transition: all 0.2s ease;
+    }
+
+    .card:hover {
+      box-shadow: 0 30px 60px rgba(18, 30, 60, 0.15);
+    }
+
+    h1 {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-weight: 600;
+      font-size: 1.9rem;
+      letter-spacing: -0.02em;
+      color: #0b1a33;
+      margin-bottom: 0.4rem;
+    }
+
+    h1 span {
+      background: linear-gradient(135deg, #1a3a6b, #2b5ba0);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .subhead {
+      font-size: 1rem;
+      color: #445e82;
+      margin-bottom: 2rem;
+      font-weight: 400;
+      border-left: 4px solid #3b7bc9;
+      padding-left: 1rem;
+      background: rgba(59, 123, 201, 0.04);
+      border-radius: 0 12px 12px 0;
+      line-height: 1.5;
+    }
+
+    .input-section {
+      margin-bottom: 2rem;
+    }
+
+    .input-label {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-weight: 500;
+      font-size: 0.95rem;
+      color: #1f3a5f;
+      margin-bottom: 0.6rem;
+      flex-wrap: wrap;
+      gap: 0.3rem 0.8rem;
+    }
+
+    .char-counter {
+      background: #dae3f2;
+      padding: 0.25rem 0.9rem;
+      border-radius: 40px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: #1f3a5f;
+      letter-spacing: 0.3px;
+      white-space: nowrap;
+    }
+
+    .char-counter.warning {
+      background: #f9e0b0;
+      color: #7a5d1a;
+    }
+
+    .char-counter.danger {
+      background: #f8d0d0;
+      color: #a12b2b;
+    }
+
+    textarea {
+      width: 100%;
+      border: none;
+      background: white;
+      border-radius: 28px;
+      padding: 1.3rem 1.6rem;
+      font-size: 1rem;
+      line-height: 1.6;
+      font-family: 'Inter', sans-serif;
+      resize: vertical;
+      min-height: 120px;
+      color: #0c1d38;
+      box-shadow: inset 0 6px 12px rgba(0, 10, 30, 0.04), 0 2px 6px rgba(0, 0, 0, 0.02);
+      border: 1px solid rgba(255, 255, 255, 0.8);
+      transition: box-shadow 0.2s, border 0.2s;
+    }
+
+    textarea:focus {
+      outline: none;
+      border-color: #6f9edb;
+      box-shadow: 0 0 0 4px rgba(59, 123, 201, 0.2), inset 0 4px 10px rgba(0, 0, 0, 0.02);
+    }
+
+    textarea::placeholder {
+      color: #94acc9;
+      font-weight: 400;
+    }
+
+    .controls {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 1rem 1.5rem;
+      margin: 1.8rem 0 1.5rem;
+      background: rgba(255, 255, 255, 0.4);
+      padding: 0.9rem 1.5rem;
+      border-radius: 48px;
+      backdrop-filter: blur(4px);
+      border: 1px solid rgba(255, 255, 255, 0.6);
+    }
+
+    .voice-selector {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+    }
+
+    .voice-selector label {
+      font-weight: 500;
+      color: #1f3a5f;
+      font-size: 0.9rem;
+    }
+
+    select {
+      background: white;
+      border: none;
+      padding: 0.5rem 1.2rem 0.5rem 1rem;
+      border-radius: 40px;
+      font-family: 'Inter', sans-serif;
+      font-weight: 500;
+      color: #0b1a33;
+      font-size: 0.9rem;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.03);
+      border: 1px solid rgba(255, 255, 255, 0.6);
+      cursor: pointer;
+      transition: 0.15s;
+      appearance: none;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%232b5ba0' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 1rem center;
+      padding-right: 2.5rem;
+      min-width: 200px;
+    }
+
+    select:hover {
+      background-color: #f3f7ff;
+      border-color: #6f9edb;
+    }
+
+    select:focus {
+      outline: none;
+      box-shadow: 0 0 0 3px rgba(59, 123, 201, 0.25);
+    }
+
+    .equalizer {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 0.6rem 1.2rem;
+      background: rgba(255, 255, 255, 0.3);
+      padding: 0.6rem 1.2rem;
+      border-radius: 40px;
+      border: 1px solid rgba(255, 255, 255, 0.4);
+      margin-bottom: 0.8rem;
+      width: 100%;
+    }
+
+    .eq-control {
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+
+    .eq-control label {
+      font-size: 0.7rem;
+      font-weight: 600;
+      color: #1f3a5f;
+      min-width: 40px;
+    }
+
+    .eq-control input[type="range"] {
+      width: 70px;
+      height: 4px;
+      -webkit-appearance: none;
+      background: #d0dceb;
+      border-radius: 4px;
+      outline: none;
+      transition: background 0.2s;
+    }
+
+    .eq-control input[type="range"]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      width: 14px;
+      height: 14px;
+      border-radius: 50%;
+      background: #2b5ba0;
+      cursor: pointer;
+      box-shadow: 0 2px 6px rgba(43, 91, 160, 0.3);
+      transition: 0.15s;
+    }
+
+    .eq-control input[type="range"]::-webkit-slider-thumb:hover {
+      transform: scale(1.15);
+    }
+
+    .eq-control input[type="range"]::-moz-range-thumb {
+      width: 14px;
+      height: 14px;
+      border-radius: 50%;
+      border: none;
+      background: #2b5ba0;
+      cursor: pointer;
+    }
+
+    .eq-value {
+      font-size: 0.65rem;
+      font-weight: 600;
+      color: #2b5ba0;
+      min-width: 30px;
+      text-align: center;
+    }
+
+    .action-buttons {
+      display: flex;
+      flex: 1;
+      justify-content: flex-end;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.4rem;
+      background: white;
+      border: none;
+      padding: 0.5rem 1.2rem;
+      border-radius: 60px;
+      font-weight: 600;
+      font-size: 0.85rem;
+      font-family: 'Inter', sans-serif;
+      color: #1f3a5f;
+      box-shadow: 0 4px 8px rgba(0, 10, 30, 0.04);
+      border: 1px solid rgba(255, 255, 255, 0.7);
+      transition: all 0.15s ease;
+      cursor: pointer;
+      background: rgba(255, 255, 255, 0.7);
+      backdrop-filter: blur(2px);
+    }
+
+    .btn-primary {
+      background: #1f3a5f;
+      color: white;
+      border: none;
+      box-shadow: 0 8px 18px rgba(26, 58, 107, 0.25);
+    }
+
+    .btn-primary:hover {
+      background: #2b4d7a;
+      transform: scale(1.02);
+      box-shadow: 0 10px 24px rgba(26, 58, 107, 0.3);
+    }
+
+    .btn-primary:active {
+      transform: scale(0.97);
+    }
+
+    .btn-secondary {
+      background: rgba(255, 255, 255, 0.6);
+      backdrop-filter: blur(4px);
+      border: 1px solid rgba(255, 255, 255, 0.8);
+    }
+
+    .btn-secondary:hover {
+      background: white;
+      border-color: #a0bbdd;
+    }
+
+    .btn-success {
+      background: #1f7a4a;
+      color: white;
+      border: none;
+      box-shadow: 0 8px 18px rgba(31, 122, 74, 0.25);
+    }
+
+    .btn-success:hover {
+      background: #26965a;
+      transform: scale(1.02);
+      box-shadow: 0 10px 24px rgba(31, 122, 74, 0.3);
+    }
+
+    .btn-purple {
+      background: #6c3b8c;
+      color: white;
+      border: none;
+      box-shadow: 0 8px 18px rgba(108, 59, 140, 0.25);
+    }
+
+    .btn-purple:hover {
+      background: #7f4aa3;
+      transform: scale(1.02);
+      box-shadow: 0 10px 24px rgba(108, 59, 140, 0.3);
+    }
+
+    .btn-file {
+      background: #2c5f8a;
+      color: white;
+      border: none;
+      box-shadow: 0 8px 18px rgba(44, 95, 138, 0.25);
+    }
+
+    .btn-file:hover {
+      background: #3a78a8;
+      transform: scale(1.02);
+    }
+
+    .btn:disabled {
+      opacity: 0.5;
+      pointer-events: none;
+      filter: grayscale(0.3);
+    }
+
+    .playback-status {
+      display: flex;
+      align-items: center;
+      gap: 0.9rem;
+      font-size: 0.9rem;
+      color: #1f3a5f;
+      background: rgba(255, 255, 255, 0.3);
+      padding: 0.3rem 0.3rem 0.3rem 1.5rem;
+      border-radius: 60px;
+      backdrop-filter: blur(2px);
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      min-height: 3.2rem;
+      flex-wrap: wrap;
+    }
+
+    .status-indicator {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .pulse-dot {
+      display: inline-block;
+      width: 12px;
+      height: 12px;
+      background: #3b7bc9;
+      border-radius: 20px;
+      transition: 0.2s;
+    }
+
+    .pulse-dot.idle {
+      background: #b2c9e5;
+      opacity: 0.6;
+    }
+
+    .pulse-dot.speaking {
+      background: #1f8b4c;
+      animation: pulse 1s infinite;
+      box-shadow: 0 0 0 2px rgba(31, 139, 76, 0.3);
+    }
+
+    .pulse-dot.recording {
+      background: #c0392b;
+      animation: pulse 0.6s infinite;
+      box-shadow: 0 0 0 2px rgba(192, 57, 43, 0.3);
+    }
+
+    @keyframes pulse {
+      0% {
+        transform: scale(1);
+        opacity: 1;
+      }
+      50% {
+        transform: scale(1.2);
+        opacity: 0.7;
+      }
+      100% {
+        transform: scale(1);
+        opacity: 1;
+      }
+    }
+
+    .progress-bar {
+      flex: 1;
+      min-width: 100px;
+      height: 6px;
+      background: rgba(0, 0, 0, 0.07);
+      border-radius: 20px;
+      overflow: hidden;
+    }
+
+    .progress-fill {
+      height: 100%;
+      width: 0%;
+      background: linear-gradient(90deg, #2b5ba0, #5f92d4);
+      border-radius: 20px;
+      transition: width 0.1s linear;
+    }
+
+    .time-label {
+      font-variant-numeric: tabular-nums;
+      font-weight: 500;
+      color: #1f3a5f;
+      letter-spacing: 0.3px;
+      min-width: 48px;
+    }
+
+    .footer-actions {
+      margin-top: 1.8rem;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.8rem;
+    }
+
+    .clear-btn {
+      background: transparent;
+      border: none;
+      color: #5f7da3;
+      font-weight: 500;
+      font-size: 0.85rem;
+      padding: 0.3rem 0.8rem;
+      border-radius: 30px;
+      cursor: pointer;
+      transition: 0.15s;
+      display: flex;
+      align-items: center;
+      gap: 0.3rem;
+    }
+
+    .clear-btn:hover {
+      background: rgba(0, 0, 0, 0.03);
+      color: #1a2f4b;
+    }
+
+    .message {
+      margin-top: 0.6rem;
+      font-size: 0.9rem;
+      color: #2b5ba0;
+      min-height: 1.6rem;
+      font-weight: 450;
+    }
+
+    .download-progress {
+      margin-top: 0.5rem;
+      height: 4px;
+      width: 100%;
+      background: #e0e7f0;
+      border-radius: 4px;
+      overflow: hidden;
+      display: none;
+    }
+
+    .download-progress.active {
+      display: block;
+    }
+
+    .download-progress-bar {
+      height: 100%;
+      width: 0%;
+      background: linear-gradient(90deg, #27ae60, #2ecc71);
+      border-radius: 4px;
+      transition: width 0.3s ease;
+    }
+
+    .file-input-wrapper {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+    }
+
+    .file-input-wrapper input[type="file"] {
+      display: none;
+    }
+
+    .file-label {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.5rem 1.2rem;
+      border-radius: 60px;
+      font-weight: 600;
+      font-size: 0.85rem;
+      font-family: 'Inter', sans-serif;
+      background: #2c5f8a;
+      color: white;
+      border: none;
+      cursor: pointer;
+      transition: all 0.15s ease;
+      box-shadow: 0 8px 18px rgba(44, 95, 138, 0.25);
+    }
+
+    .file-label:hover {
+      background: #3a78a8;
+      transform: scale(1.02);
+    }
+
+    .file-label:active {
+      transform: scale(0.97);
+    }
+
+    .file-name {
+      font-size: 0.8rem;
+      color: #445e82;
+      max-width: 150px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .preset-buttons {
+      display: flex;
+      gap: 0.4rem;
+      flex-wrap: wrap;
+      margin: 0.3rem 0 0.5rem 0;
+    }
+
+    .preset-btn {
+      padding: 0.25rem 0.7rem;
+      border-radius: 20px;
+      border: none;
+      font-size: 0.7rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.15s ease;
+      font-family: 'Inter', sans-serif;
+    }
+
+    .preset-btn:hover {
+      transform: scale(1.05);
+    }
+
+    .preset-male {
+      background: #4a7db5;
+      color: white;
+    }
+
+    .preset-female {
+      background: #c0397a;
+      color: white;
+    }
+
+    .preset-robot {
+      background: #7a7a7a;
+      color: white;
+    }
+
+    .preset-chipmunk {
+      background: #e6a82b;
+      color: white;
+    }
+
+    .preset-darth {
+      background: #2c2c3a;
+      color: #8a8aff;
+    }
+
+    .voice-info {
+      font-size: 0.7rem;
+      color: #5f7da3;
+      background: rgba(255, 255, 255, 0.4);
+      padding: 0.15rem 0.6rem;
+      border-radius: 12px;
+      display: inline-block;
+      margin-top: 0.2rem;
+    }
+
+    .effect-toggles {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.3rem;
+      margin: 0.3rem 0 0.5rem 0;
+      padding: 0.4rem 0.8rem;
+      background: rgba(255, 255, 255, 0.3);
+      border-radius: 20px;
+      border: 1px solid rgba(255, 255, 255, 0.4);
+      align-items: center;
+    }
+
+    .effect-toggle {
+      display: flex;
+      align-items: center;
+      gap: 0.2rem;
+      font-size: 0.7rem;
+      font-weight: 500;
+      color: #1f3a5f;
+      cursor: pointer;
+      padding: 0.15rem 0.5rem;
+      border-radius: 12px;
+      transition: all 0.15s ease;
+      background: rgba(255, 255, 255, 0.3);
+      border: 1px solid transparent;
+    }
+
+    .effect-toggle:hover {
+      background: rgba(255, 255, 255, 0.6);
+    }
+
+    .effect-toggle.active {
+      background: #2b5ba0;
+      color: white;
+      box-shadow: 0 2px 8px rgba(43, 91, 160, 0.25);
+      border-color: #2b5ba0;
+    }
+
+    .effect-toggle input[type="checkbox"] {
+      display: none;
+    }
+
+    .effect-label {
+      display: flex;
+      align-items: center;
+      gap: 0.2rem;
+    }
+
+    .effect-label .emoji {
+      font-size: 0.9rem;
+    }
+
+    .effect-label .name {
+      font-size: 0.65rem;
+    }
+
+    .effects-sliders {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.4rem 1rem;
+      align-items: center;
+      background: rgba(255, 255, 255, 0.2);
+      padding: 0.3rem 0.8rem;
+      border-radius: 16px;
+      margin-bottom: 0.5rem;
+    }
+
+    .effects-sliders .slider-group {
+      display: flex;
+      align-items: center;
+      gap: 0.3rem;
+    }
+
+    .effects-sliders .slider-group label {
+      font-size: 0.65rem;
+      font-weight: 600;
+      color: #445e82;
+      min-width: 30px;
+    }
+
+    .effects-sliders .slider-group input[type="range"] {
+      width: 50px;
+      height: 3px;
+      -webkit-appearance: none;
+      background: #d0dceb;
+      border-radius: 4px;
+      outline: none;
+    }
+
+    .effects-sliders .slider-group input[type="range"]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      background: #6c3b8c;
+      cursor: pointer;
+      box-shadow: 0 2px 4px rgba(108, 59, 140, 0.3);
+    }
+
+    .effects-sliders .slider-group input[type="range"]::-moz-range-thumb {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      border: none;
+      background: #6c3b8c;
+      cursor: pointer;
+    }
+
+    .effects-sliders .slider-group .val {
+      font-size: 0.6rem;
+      font-weight: 600;
+      color: #6c3b8c;
+      min-width: 24px;
+      text-align: center;
+    }
+
+    @media (max-width: 600px) {
+      .card {
+        padding: 1.8rem 1.2rem 2rem;
+        border-radius: 2rem;
+      }
+      .controls {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 0.8rem;
+        padding: 1.2rem;
+        border-radius: 32px;
+      }
+      .action-buttons {
+        justify-content: stretch;
+      }
+      .btn {
+        flex: 1;
+        justify-content: center;
+        font-size: 0.8rem;
+        padding: 0.4rem 0.8rem;
+      }
+      .playback-status {
+        padding: 0.5rem 0.8rem 0.5rem 1.2rem;
+        gap: 0.5rem;
+      }
+      .voice-selector {
+        flex-wrap: wrap;
+      }
+      .equalizer {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 0.4rem;
+      }
+      .eq-control input[type="range"] {
+        width: 100%;
+        flex: 1;
+      }
+      .eq-control {
+        flex-wrap: wrap;
+      }
+      select {
+        min-width: 100%;
+      }
+      .preset-buttons {
+        justify-content: center;
+      }
+      .effect-toggles {
+        justify-content: center;
+      }
+      .effects-sliders {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 0.3rem;
+      }
+      .effects-sliders .slider-group {
+        justify-content: space-between;
+      }
+      .effects-sliders .slider-group input[type="range"] {
+        flex: 1;
+        width: auto;
+      }
+    }
+
+    @media (max-width: 450px) {
+      h1 {
+        font-size: 1.6rem;
+      }
+      textarea {
+        min-height: 100px;
+        padding: 1rem;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="card">
+    <h1>
+      <span>🎧 Voice FX Studio</span>
+      <span style="font-weight:300; font-size:1.6rem; background: none; -webkit-text-fill-color: #8aa3c7;">·</span>
+      <span style="font-size:1.3rem; background: none; -webkit-text-fill-color: #1f3a5f;">perfect</span>
+    </h1>
+    <div class="subhead">
+      Upload audio or record your voice, then apply voice transformation effects. All effects are adjustable!
+    </div>
+
+    <div class="input-section">
+      <div class="input-label">
+        <label for="textInput">📝 Your text</label>
+        <span class="char-counter" id="charCounter">0 / 5000</span>
+      </div>
+      <textarea id="textInput" placeholder="Write something… or just use this for TTS">Hello! Welcome to the Voice FX Studio. Apply effects to your voice!</textarea>
+    </div>
+
+    <div class="controls">
+      <div class="voice-selector">
+        <label for="voiceSelect">🗣️ Voice</label>
+        <select id="voiceSelect"></select>
+      </div>
+      <div class="action-buttons">
+        <button class="btn btn-primary" id="speakBtn">▶ TTS</button>
+        <button class="btn btn-secondary" id="pauseBtn">⏸</button>
+        <button class="btn btn-secondary" id="stopBtn">⏹</button>
+        <button class="btn btn-purple" id="recordBtn">🎤 Record</button>
+        <button class="btn btn-success" id="downloadBtn">💾 Download</button>
+      </div>
+    </div>
+
+    <!-- Effect Toggles -->
+    <div class="effect-toggles" id="effectToggles">
+      <span style="font-size:0.7rem;font-weight:600;color:#445e82;margin-right:0.2rem;">🎛️ FX:</span>
+      <label class="effect-toggle active" data-effect="formant">
+        <input type="checkbox" checked />
+        <span class="effect-label"><span class="emoji">🎯</span><span class="name">Formant</span></span>
+      </label>
+      <label class="effect-toggle" data-effect="chorus">
+        <input type="checkbox" />
+        <span class="effect-label"><span class="emoji">🌀</span><span class="name">Chorus</span></span>
+      </label>
+      <label class="effect-toggle" data-effect="reverb">
+        <input type="checkbox" />
+        <span class="effect-label"><span class="emoji">🏔️</span><span class="name">Reverb</span></span>
+      </label>
+      <label class="effect-toggle" data-effect="echo">
+        <input type="checkbox" />
+        <span class="effect-label"><span class="emoji">🔊</span><span class="name">Echo</span></span>
+      </label>
+      <label class="effect-toggle" data-effect="distortion">
+        <input type="checkbox" />
+        <span class="effect-label"><span class="emoji">⚡</span><span class="name">Distortion</span></span>
+      </label>
+      <label class="effect-toggle" data-effect="tremolo">
+        <input type="checkbox" />
+        <span class="effect-label"><span class="emoji">🌊</span><span class="name">Tremolo</span></span>
+      </label>
+      <label class="effect-toggle" data-effect="lowpass">
+        <input type="checkbox" />
+        <span class="effect-label"><span class="emoji">📻</span><span class="name">Lowpass</span></span>
+      </label>
+      <label class="effect-toggle" data-effect="highpass">
+        <input type="checkbox" />
+        <span class="effect-label"><span class="emoji">🔊</span><span class="name">Highpass</span></span>
+      </label>
+    </div>
+
+    <!-- Effect Sliders (new adjustable effects) -->
+    <div class="effects-sliders" id="effectsSliders">
+      <span style="font-size:0.7rem;font-weight:600;color:#445e82;">🎚️ Effect Amounts:</span>
+      <div class="slider-group">
+        <label>Chorus</label>
+        <input type="range" id="chorusAmount" min="0" max="1" step="0.05" value="0.5" />
+        <span class="val" id="chorusVal">0.50</span>
+      </div>
+      <div class="slider-group">
+        <label>Reverb</label>
+        <input type="range" id="reverbAmount" min="0" max="1" step="0.05" value="0.5" />
+        <span class="val" id="reverbVal">0.50</span>
+      </div>
+      <div class="slider-group">
+        <label>Echo</label>
+        <input type="range" id="echoAmount" min="0" max="0.8" step="0.05" value="0.3" />
+        <span class="val" id="echoVal">0.30</span>
+      </div>
+      <div class="slider-group">
+        <label>Distort</label>
+        <input type="range" id="distortAmount" min="0" max="1" step="0.05" value="0.3" />
+        <span class="val" id="distortVal">0.30</span>
+      </div>
+      <div class="slider-group">
+        <label>Tremolo</label>
+        <input type="range" id="tremoloAmount" min="0" max="1" step="0.05" value="0.5" />
+        <span class="val" id="tremoloVal">0.50</span>
+      </div>
+    </div>
+
+    <!-- Equalizer Controls -->
+    <div class="equalizer">
+      <div class="eq-control">
+        <label>Rate</label>
+        <input type="range" id="rateControl" min="0.25" max="2.5" step="0.05" value="0.95" />
+        <span class="eq-value" id="rateValue">0.95</span>
+      </div>
+      <div class="eq-control">
+        <label>Pitch</label>
+        <input type="range" id="pitchControl" min="0.25" max="2.0" step="0.05" value="1.0" />
+        <span class="eq-value" id="pitchValue">1.00</span>
+      </div>
+      <div class="eq-control">
+        <label>Volume</label>
+        <input type="range" id="volumeControl" min="0" max="1" step="0.05" value="1.0" />
+        <span class="eq-value" id="volumeValue">1.00</span>
+      </div>
+      <div class="eq-control">
+        <label>Formant</label>
+        <input type="range" id="formantControl" min="0.5" max="2.0" step="0.05" value="1.0" />
+        <span class="eq-value" id="formantValue">1.00</span>
+      </div>
+    </div>
+
+    <!-- Preset Buttons -->
+    <div class="preset-buttons">
+      <button class="preset-btn preset-male" data-rate="0.85" data-pitch="0.85" data-formant="0.80">👨 Male</button>
+      <button class="preset-btn preset-female" data-rate="1.15" data-pitch="1.35" data-formant="1.30">👩 Female</button>
+      <button class="preset-btn preset-robot" data-rate="1.2" data-pitch="0.6" data-formant="0.5">🤖 Robot</button>
+      <button class="preset-btn preset-chipmunk" data-rate="1.8" data-pitch="1.8" data-formant="1.6">🐿️ Chipmunk</button>
+      <button class="preset-btn preset-darth" data-rate="0.7" data-pitch="0.5" data-formant="0.5">⚫ Darth</button>
+      <button class="preset-btn" style="background:#6c3b8c;color:white;" id="resetPresetBtn">↺ Reset</button>
+    </div>
+
+    <div style="display: flex; flex-wrap: wrap; gap: 0.6rem; margin-bottom: 1.2rem; align-items: center;">
+      <div class="file-input-wrapper">
+        <label for="fileInput" class="file-label">📁 Upload Audio</label>
+        <input type="file" id="fileInput" accept="audio/*" />
+        <span class="file-name" id="fileName">No file</span>
+      </div>
+      <button class="btn btn-file" id="convertFileBtn">🔄 Apply Effects</button>
+      <span class="voice-info" id="voiceInfo">Rate 0.95 | Pitch 1.00 | Formant 1.00</span>
+    </div>
+
+    <div class="playback-status">
+      <div class="status-indicator">
+        <span class="pulse-dot idle" id="statusDot"></span>
+        <span id="statusText">Ready</span>
+      </div>
+      <div class="progress-bar" id="progressBar">
+        <div class="progress-fill" id="progressFill"></div>
+      </div>
+      <span class="time-label" id="timeLabel">0:00</span>
+    </div>
+
+    <div class="download-progress" id="downloadProgress">
+      <div class="download-progress-bar" id="downloadProgressBar"></div>
+    </div>
+
+    <div class="footer-actions">
+      <button class="clear-btn" id="clearBtn">✕ Clear</button>
+      <div class="message" id="messageBox">✨ Upload audio or record, then toggle effects!</div>
+    </div>
+  </div>
+
+  <script>
+    (function() {
+      "use strict";
+
+      // DOM refs
+      const textarea = document.getElementById('textInput');
+      const charCounter = document.getElementById('charCounter');
+      const voiceSelect = document.getElementById('voiceSelect');
+      const speakBtn = document.getElementById('speakBtn');
+      const pauseBtn = document.getElementById('pauseBtn');
+      const stopBtn = document.getElementById('stopBtn');
+      const downloadBtn = document.getElementById('downloadBtn');
+      const clearBtn = document.getElementById('clearBtn');
+      const recordBtn = document.getElementById('recordBtn');
+      const convertFileBtn = document.getElementById('convertFileBtn');
+      const fileInput = document.getElementById('fileInput');
+      const fileName = document.getElementById('fileName');
+      const statusDot = document.getElementById('statusDot');
+      const statusText = document.getElementById('statusText');
+      const progressFill = document.getElementById('progressFill');
+      const timeLabel = document.getElementById('timeLabel');
+      const messageBox = document.getElementById('messageBox');
+      const downloadProgress = document.getElementById('downloadProgress');
+      const downloadProgressBar = document.getElementById('downloadProgressBar');
+      const voiceInfo = document.getElementById('voiceInfo');
+      const resetPresetBtn = document.getElementById('resetPresetBtn');
+
+      // Equalizer controls
+      const rateControl = document.getElementById('rateControl');
+      const pitchControl = document.getElementById('pitchControl');
+      const volumeControl = document.getElementById('volumeControl');
+      const formantControl = document.getElementById('formantControl');
+      const rateValue = document.getElementById('rateValue');
+      const pitchValue = document.getElementById('pitchValue');
+      const volumeValue = document.getElementById('volumeValue');
+      const formantValue = document.getElementById('formantValue');
+
+      // Effect amount sliders
+      const chorusAmount = document.getElementById('chorusAmount');
+      const reverbAmount = document.getElementById('reverbAmount');
+      const echoAmount = document.getElementById('echoAmount');
+      const distortAmount = document.getElementById('distortAmount');
+      const tremoloAmount = document.getElementById('tremoloAmount');
+      const chorusVal = document.getElementById('chorusVal');
+      const reverbVal = document.getElementById('reverbVal');
+      const echoVal = document.getElementById('echoVal');
+      const distortVal = document.getElementById('distortVal');
+      const tremoloVal = document.getElementById('tremoloVal');
+
+      const MAX_CHARS = 5000;
+
+      // State
+      let speechSynthesis = window.speechSynthesis;
+      let utterance = null;
+      let isSpeaking = false;
+      let isPaused = false;
+      let currentVoice = null;
+      let progressInterval = null;
+      let currentDuration = 0;
+      let isRecording = false;
+      let audioChunks = [];
+      let mediaRecorder = null;
+      let recordingStream = null;
+      let isChangingVoice = false;
+      let uploadedAudioBuffer = null;
+      let audioContext = null;
+      let currentSource = null;
+      let currentGainNode = null;
+      let currentFilterNodes = [];
+      let currentDelayNode = null;
+      let currentConvolver = null;
+      let currentOscillator = null;
+      let currentChorusOsc = null;
+
+      // Update effect slider displays
+      function updateEffectDisplays() {
+        chorusVal.textContent = parseFloat(chorusAmount.value).toFixed(2);
+        reverbVal.textContent = parseFloat(reverbAmount.value).toFixed(2);
+        echoVal.textContent = parseFloat(echoAmount.value).toFixed(2);
+        distortVal.textContent = parseFloat(distortAmount.value).toFixed(2);
+        tremoloVal.textContent = parseFloat(tremoloAmount.value).toFixed(2);
+      }
+
+      chorusAmount.addEventListener('input', updateEffectDisplays);
+      reverbAmount.addEventListener('input', updateEffectDisplays);
+      echoAmount.addEventListener('input', updateEffectDisplays);
+      distortAmount.addEventListener('input', updateEffectDisplays);
+      tremoloAmount.addEventListener('input', updateEffectDisplays);
+      updateEffectDisplays();
+
+      // ----- Update voice info display -----
+      function updateVoiceInfo() {
+        const rate = parseFloat(rateControl.value);
+        const pitch = parseFloat(pitchControl.value);
+        const formant = parseFloat(formantControl.value);
+        voiceInfo.textContent = `Rate ${rate.toFixed(2)} | Pitch ${pitch.toFixed(2)} | Formant ${formant.toFixed(2)}`;
+      }
+
+      // ----- Effect toggles -----
+      function getActiveEffects() {
+        const toggles = document.querySelectorAll('.effect-toggle');
+        const active = [];
+        toggles.forEach(toggle => {
+          const checkbox = toggle.querySelector('input[type="checkbox"]');
+          if (checkbox && checkbox.checked) {
+            active.push(toggle.dataset.effect);
+          }
+        });
+        return active;
+      }
+
+      document.querySelectorAll('.effect-toggle').forEach(toggle => {
+        toggle.addEventListener('click', function(e) {
+          if (e.target.tagName === 'INPUT') return;
+          const checkbox = this.querySelector('input[type="checkbox"]');
+          if (checkbox) {
+            checkbox.checked = !checkbox.checked;
+            this.classList.toggle('active');
+          }
+        });
+        const checkbox = toggle.querySelector('input[type="checkbox"]');
+        if (checkbox) {
+          checkbox.addEventListener('change', function() {
+            toggle.classList.toggle('active', this.checked);
+          });
+        }
+      });
+
+      // ----- character counter -----
+      function updateCharCount() {
+        const len = textarea.value.length;
+        charCounter.textContent = `${len} / ${MAX_CHARS}`;
+        charCounter.classList.remove('warning', 'danger');
+        if (len > MAX_CHARS) {
+          charCounter.classList.add('danger');
+          textarea.value = textarea.value.substring(0, MAX_CHARS);
+          updateCharCount();
+          messageBox.textContent = `⚠️ Limit is ${MAX_CHARS} characters. Text was trimmed.`;
+          return;
+        } else if (len > MAX_CHARS * 0.85) {
+          charCounter.classList.add('warning');
+        }
+      }
+
+      textarea.addEventListener('input', function(e) {
+        const len = textarea.value.length;
+        if (len > MAX_CHARS) {
+          textarea.value = textarea.value.substring(0, MAX_CHARS);
+          messageBox.textContent = `⚠️ Maximum ${MAX_CHARS} characters allowed. Extra text removed.`;
+        }
+        updateCharCount();
+        if (!isSpeaking && !isPaused) {
+          progressFill.style.width = '0%';
+          timeLabel.textContent = '0:00';
+          clearProgressInterval();
+        }
+      });
+      updateCharCount();
+
+      // ----- Equalizer controls -----
+      function updateRateDisplay() {
+        rateValue.textContent = parseFloat(rateControl.value).toFixed(2);
+        updateVoiceInfo();
+      }
+
+      function updatePitchDisplay() {
+        pitchValue.textContent = parseFloat(pitchControl.value).toFixed(2);
+        updateVoiceInfo();
+      }
+
+      function updateVolumeDisplay() {
+        volumeValue.textContent = parseFloat(volumeControl.value).toFixed(2);
+      }
+
+      function updateFormantDisplay() {
+        formantValue.textContent = parseFloat(formantControl.value).toFixed(2);
+        updateVoiceInfo();
+      }
+
+      rateControl.addEventListener('input', updateRateDisplay);
+      pitchControl.addEventListener('input', updatePitchDisplay);
+      volumeControl.addEventListener('input', updateVolumeDisplay);
+      formantControl.addEventListener('input', updateFormantDisplay);
+
+      // ----- Preset buttons -----
+      document.querySelectorAll('.preset-btn[data-rate]').forEach(btn => {
+        btn.addEventListener('click', function() {
+          const rate = parseFloat(this.dataset.rate);
+          const pitch = parseFloat(this.dataset.pitch);
+          const formant = parseFloat(this.dataset.formant);
+          rateControl.value = rate;
+          pitchControl.value = pitch;
+          formantControl.value = formant;
+          updateRateDisplay();
+          updatePitchDisplay();
+          updateFormantDisplay();
+          messageBox.textContent = `🎛️ Applied preset: ${this.textContent.trim()}`;
+        });
+      });
+
+      resetPresetBtn.addEventListener('click', function() {
+        rateControl.value = 0.95;
+        pitchControl.value = 1.0;
+        formantControl.value = 1.0;
+        chorusAmount.value = 0.5;
+        reverbAmount.value = 0.5;
+        echoAmount.value = 0.3;
+        distortAmount.value = 0.3;
+        tremoloAmount.value = 0.5;
+        updateRateDisplay();
+        updatePitchDisplay();
+        updateFormantDisplay();
+        updateEffectDisplays();
+        messageBox.textContent = '↺ Reset to default settings';
+      });
+
+      // ----- voices -----
+      function loadVoices() {
+        const available = speechSynthesis.getVoices();
+        if (!available || available.length === 0) return;
+
+        const currentSelected = voiceSelect.value;
+        voiceSelect.innerHTML = '';
+
+        const enVoices = available.filter(v => v.lang.startsWith('en'));
+        const maleVoices = [];
+        const femaleVoices = [];
+        const otherVoices = [];
+
+        enVoices.forEach(voice => {
+          const name = voice.name.toLowerCase();
+          if (name.includes('male') || name.includes('man') || name.includes('guy') ||
+              name.includes('david') || name.includes('daniel') || name.includes('mark') ||
+              name.includes('john') || name.includes('james') || name.includes('michael') ||
+              name.includes('robert') || name.includes('william') || name.includes('thomas') ||
+              name.includes('christopher') || name.includes('matthew') || name.includes('andrew') ||
+              name.includes('paul') || name.includes('george') || name.includes('jack') ||
+              name.includes('oliver') || name.includes('charlie') || name.includes('harry') ||
+              name.includes('jake') || name.includes('liam') || name.includes('noah') ||
+              name.includes('ethan') || name.includes('logan') || name.includes('ben') ||
+              name.includes('sam') || name.includes('alex') || name.includes('max')) {
+            maleVoices.push(voice);
+          } else if (name.includes('female') || name.includes('woman') || name.includes('girl') ||
+                     name.includes('sarah') || name.includes('emma') || name.includes('olivia') ||
+                     name.includes('ava') || name.includes('mia') || name.includes('sophia') ||
+                     name.includes('amelia') || name.includes('elizabeth') || name.includes('charlotte') ||
+                     name.includes('grace') || name.includes('hannah') || name.includes('lily') ||
+                     name.includes('rose') || name.includes('ella') || name.includes('sophie') ||
+                     name.includes('zoe') || name.includes('luna') || name.includes('stella')) {
+            femaleVoices.push(voice);
+          } else {
+            otherVoices.push(voice);
+          }
+        });
+
+        if (maleVoices.length > 0) {
+          const maleGroup = document.createElement('optgroup');
+          maleGroup.label = '👨 Male Voices';
+          maleVoices.forEach(voice => {
+            const option = document.createElement('option');
+            option.value = voice.voiceURI;
+            option.textContent = `${voice.name} (${voice.lang})`;
+            maleGroup.appendChild(option);
+          });
+          voiceSelect.appendChild(maleGroup);
+        }
+
+        if (femaleVoices.length > 0) {
+          const femaleGroup = document.createElement('optgroup');
+          femaleGroup.label = '👩 Female Voices';
+          femaleVoices.forEach(voice => {
+            const option = document.createElement('option');
+            option.value = voice.voiceURI;
+            option.textContent = `${voice.name} (${voice.lang})`;
+            femaleGroup.appendChild(option);
+          });
+          voiceSelect.appendChild(femaleGroup);
+        }
+
+        if (otherVoices.length > 0) {
+          const otherGroup = document.createElement('optgroup');
+          otherGroup.label = '🔊 Other Voices';
+          otherVoices.forEach(voice => {
+            const option = document.createElement('option');
+            option.value = voice.voiceURI;
+            option.textContent = `${voice.name} (${voice.lang})`;
+            otherGroup.appendChild(option);
+          });
+          voiceSelect.appendChild(otherGroup);
+        }
+
+        if (maleVoices.length > 0) voiceSelect.value = maleVoices[0].voiceURI;
+        else if (femaleVoices.length > 0) voiceSelect.value = femaleVoices[0].voiceURI;
+
+        if (currentSelected && [...voiceSelect.querySelectorAll('option')].some(o => o.value === currentSelected)) {
+          voiceSelect.value = currentSelected;
+        }
+        setCurrentVoiceFromSelect();
+        if (enVoices.length === 0) {
+          messageBox.textContent = '⚠️ No English voices found.';
+        } else {
+          messageBox.textContent = '✅ Voice ready. Upload audio or record!';
+        }
+      }
+
+      function setCurrentVoiceFromSelect() {
+        const selectedURI = voiceSelect.value;
+        const voices = speechSynthesis.getVoices();
+        const found = voices.find(v => v.voiceURI === selectedURI);
+        currentVoice = found || (voices.length > 0 ? voices[0] : null);
+      }
+
+      if (speechSynthesis.onvoiceschanged !== undefined) {
+        speechSynthesis.onvoiceschanged = loadVoices;
+      }
+      setTimeout(loadVoices, 100);
+      voiceSelect.addEventListener('change', function() {
+        setCurrentVoiceFromSelect();
+        if (!isSpeaking && !isPaused) {
+          messageBox.textContent = `🔊 Voice selected: ${currentVoice ? currentVoice.name : 'default'}`;
+        }
+      });
+
+      // ----- TTS functions -----
+      function createUtterance(text) {
+        if (!text || text.trim() === '') {
+          messageBox.textContent = '✏️ Please enter some text.';
+          return null;
+        }
+        if (text.length > MAX_CHARS) {
+          text = text.substring(0, MAX_CHARS);
+          textarea.value = text;
+          updateCharCount();
+          messageBox.textContent = `✂️ Trimmed to ${MAX_CHARS} characters.`;
+        }
+        const newUtterance = new SpeechSynthesisUtterance(text);
+        if (currentVoice) newUtterance.voice = currentVoice;
+        newUtterance.rate = parseFloat(rateControl.value);
+        newUtterance.pitch = parseFloat(pitchControl.value);
+        newUtterance.volume = parseFloat(volumeControl.value);
+        const words = text.trim().split(/\s+/).length;
+        currentDuration = Math.max(1, (words / 150) * 60 / parseFloat(rateControl.value));
+        return newUtterance;
+      }
+
+      function startSpeaking() {
+        if (utterance) {
+          if (isPaused) {
+            speechSynthesis.resume();
+            isPaused = false;
+            isSpeaking = true;
+            updateStatus('speaking', 'Speaking');
+            messageBox.textContent = '▶️ Resumed';
+            startProgressSimulation();
+            return;
+          }
+          stopSpeaking(true);
+        }
+
+        let text = textarea.value;
+        if (!text || text.trim() === '') {
+          messageBox.textContent = '📝 Please write something to speak.';
+          return;
+        }
+        if (text.length > MAX_CHARS) {
+          text = text.substring(0, MAX_CHARS);
+          textarea.value = text;
+          updateCharCount();
+          messageBox.textContent = `✂️ Trimmed to ${MAX_CHARS} characters for playback.`;
+        }
+
+        utterance = createUtterance(text);
+        if (!utterance) return;
+
+        utterance.onstart = function() {
+          isSpeaking = true;
+          isPaused = false;
+          updateStatus('speaking', 'Speaking');
+          messageBox.textContent = '🔊 Playing TTS...';
+          startProgressSimulation();
+        };
+
+        utterance.onend = function() {
+          resetPlaybackState();
+          messageBox.textContent = '✅ Done';
+          updateStatus('idle', 'Ready');
+          progressFill.style.width = '100%';
+          timeLabel.textContent = formatTime(currentDuration);
+          clearProgressInterval();
+        };
+
+        utterance.onerror = function(e) {
+          console.warn('Speech error:', e);
+          if (e.error === 'interrupted' || e.error === 'canceled') {
+            resetPlaybackState();
+            updateStatus('idle', 'Stopped');
+            return;
+          }
+          resetPlaybackState();
+          updateStatus('idle', 'Error');
+          messageBox.textContent = '⚠️ Speech error: ' + e.error;
+          clearProgressInterval();
+        };
+
+        utterance.onpause = function() {
+          isPaused = true;
+          isSpeaking = true;
+          updateStatus('idle', 'Paused');
+          messageBox.textContent = '⏸️ Paused';
+          clearProgressInterval();
+        };
+
+        utterance.onresume = function() {
+          isPaused = false;
+          isSpeaking = true;
+          updateStatus('speaking', 'Speaking');
+          messageBox.textContent = '▶️ Resumed';
+          startProgressSimulation();
+        };
+
+        speechSynthesis.speak(utterance);
+      }
+
+      function pauseSpeaking() {
+        if (isSpeaking && !isPaused) {
+          speechSynthesis.pause();
+        } else {
+          messageBox.textContent = '⏸️ Nothing to pause.';
+        }
+      }
+
+      function stopSpeaking(silent = false) {
+        if (speechSynthesis.speaking || speechSynthesis.pending) {
+          speechSynthesis.cancel();
+        }
+        resetPlaybackState();
+        if (!silent) {
+          messageBox.textContent = '⏹ Stopped';
+          updateStatus('idle', 'Stopped');
+          clearProgressInterval();
+          progressFill.style.width = '0%';
+          timeLabel.textContent = '0:00';
+        }
+      }
+
+      function resetPlaybackState() {
+        isSpeaking = false;
+        isPaused = false;
+        if (utterance) {
+          utterance.onstart = null;
+          utterance.onend = null;
+          utterance.onerror = null;
+          utterance.onpause = null;
+          utterance.onresume = null;
+          utterance = null;
+        }
+        clearProgressInterval();
+        updateStatus('idle', 'Ready');
+      }
+
+      // ----- progress -----
+      function startProgressSimulation() {
+        clearProgressInterval();
+        let startTime = performance.now();
+        const durationMs = currentDuration * 1000;
+        progressFill.style.width = '0%';
+        timeLabel.textContent = '0:00';
+
+        progressInterval = setInterval(() => {
+          if (!isSpeaking || isPaused) return;
+          const elapsed = (performance.now() - startTime) / 1000;
+          const progress = Math.min(elapsed / currentDuration, 1);
+          progressFill.style.width = (progress * 100) + '%';
+          timeLabel.textContent = formatTime(Math.min(elapsed, currentDuration));
+          if (progress >= 1) clearProgressInterval();
+        }, 60);
+      }
+
+      function clearProgressInterval() {
+        if (progressInterval) {
+          clearInterval(progressInterval);
+          progressInterval = null;
+        }
+      }
+
+      function formatTime(seconds) {
+        if (!seconds || isNaN(seconds)) return '0:00';
+        const m = Math.floor(seconds / 60);
+        const s = Math.floor(seconds % 60);
+        return `${m}:${s.toString().padStart(2, '0')}`;
+      }
+
+      // ----- status -----
+      function updateStatus(state, label) {
+        statusDot.className = 'pulse-dot';
+        if (state === 'speaking') {
+          statusDot.classList.add('speaking');
+        } else if (state === 'recording') {
+          statusDot.classList.add('recording');
+        } else {
+          statusDot.classList.add('idle');
+        }
+        statusText.textContent = label;
+      }
+
+      // ----- Build effects chain with adjustable amounts -----
+      function buildEffectsChain(source) {
+        const activeEffects = getActiveEffects();
+        const ctx = audioContext || new (window.AudioContext || window.webkitAudioContext)();
+        if (!audioContext) audioContext = ctx;
+
+        // Create gain node for volume
+        const gainNode = ctx.createGain();
+        gainNode.gain.value = parseFloat(volumeControl.value);
+        currentGainNode = gainNode;
+
+        let currentNode = source;
+        const filterNodes = [];
+        let delayNode = null;
+        let convolverNode = null;
+
+        // Connect source to gain first
+        currentNode.connect(gainNode);
+        currentNode = gainNode;
+
+        // Formant shifting
+        if (activeEffects.includes('formant')) {
+          const formantVal = parseFloat(formantControl.value);
+          const f1 = ctx.createBiquadFilter();
+          f1.type = 'peaking';
+          f1.frequency.value = 500 / formantVal;
+          f1.gain.value = (formantVal - 1) * 8;
+          f1.Q.value = 1.5;
+
+          const f2 = ctx.createBiquadFilter();
+          f2.type = 'peaking';
+          f2.frequency.value = 1500 / formantVal;
+          f2.gain.value = (formantVal - 1) * 6;
+          f2.Q.value = 1.5;
+
+          const f3 = ctx.createBiquadFilter();
+          f3.type = 'peaking';
+          f3.frequency.value = 2500 / formantVal;
+          f3.gain.value = (formantVal - 1) * 4;
+          f3.Q.value = 1.5;
+
+          currentNode.connect(f1);
+          f1.connect(f2);
+          f2.connect(f3);
+          currentNode = f3;
+          filterNodes.push(f1, f2, f3);
+        }
+
+        // Chorus effect with adjustable amount
+        if (activeEffects.includes('chorus')) {
+          const chorusAmt = parseFloat(chorusAmount.value);
+          const chorusGain = ctx.createGain();
+          chorusGain.gain.value = chorusAmt * 0.5;
+
+          const delay1 = ctx.createDelay();
+          delay1.delayTime.value = 0.015 + chorusAmt * 0.015;
+          const delay2 = ctx.createDelay();
+          delay2.delayTime.value = 0.020 + chorusAmt * 0.020;
+
+          const osc = ctx.createOscillator();
+          osc.frequency.value = 1.5 + chorusAmt * 2;
+          const gain = ctx.createGain();
+          gain.gain.value = 0.004 + chorusAmt * 0.006;
+          osc.connect(gain);
+          gain.connect(delay1.delayTime);
+          gain.connect(delay2.delayTime);
+          osc.start();
+          currentChorusOsc = osc;
+
+          const dry = ctx.createGain();
+          dry.gain.value = 1 - chorusAmt * 0.4;
+          const wet = ctx.createGain();
+          wet.gain.value = chorusAmt * 0.4;
+
+          currentNode.connect(dry);
+          currentNode.connect(delay1);
+          delay1.connect(wet);
+          currentNode.connect(delay2);
+          delay2.connect(wet);
+
+          const mix = ctx.createGain();
+          dry.connect(mix);
+          wet.connect(mix);
+          currentNode = mix;
+        }
+
+        // Reverb effect with adjustable amount
+        if (activeEffects.includes('reverb')) {
+          const reverbAmt = parseFloat(reverbAmount.value);
+          const impulseLength = 1 + reverbAmt * 2;
+          const impulseBuffer = ctx.createBuffer(2, ctx.sampleRate * impulseLength, ctx.sampleRate);
+          const left = impulseBuffer.getChannelData(0);
+          const right = impulseBuffer.getChannelData(1);
+          for (let i = 0; i < impulseBuffer.length; i++) {
+            const n = i / impulseBuffer.length;
+            const decay = Math.exp(-n * (3 + (1 - reverbAmt) * 2));
+            left[i] = (Math.random() * 2 - 1) * decay;
+            right[i] = (Math.random() * 2 - 1) * decay;
+          }
+
+          const convolver = ctx.createConvolver();
+          convolver.buffer = impulseBuffer;
+
+          const reverbDry = ctx.createGain();
+          reverbDry.gain.value = 1 - reverbAmt * 0.5;
+          const reverbWet = ctx.createGain();
+          reverbWet.gain.value = reverbAmt * 0.5;
+
+          currentNode.connect(reverbDry);
+          currentNode.connect(convolver);
+          convolver.connect(reverbWet);
+
+          const reverbMix = ctx.createGain();
+          reverbDry.connect(reverbMix);
+          reverbWet.connect(reverbMix);
+          currentNode = reverbMix;
+          convolverNode = convolver;
+        }
+
+        // Echo/Delay effect with adjustable amount
+        if (activeEffects.includes('echo')) {
+          const echoAmt = parseFloat(echoAmount.value);
+          const delayTime = 0.1 + echoAmt * 0.5;
+          const echoDelay = ctx.createDelay();
+          echoDelay.delayTime.value = delayTime;
+
+          const echoGain = ctx.createGain();
+          echoGain.gain.value = 0.3 + echoAmt * 0.4;
+
+          const echoDry = ctx.createGain();
+          echoDry.gain.value = 0.7 - echoAmt * 0.3;
+          const echoWet = ctx.createGain();
+          echoWet.gain.value = 0.3 + echoAmt * 0.3;
+
+          currentNode.connect(echoDry);
+          currentNode.connect(echoDelay);
+          echoDelay.connect(echoGain);
+          echoGain.connect(echoDelay);
+
+          const echoOut = ctx.createGain();
+          echoDelay.connect(echoOut);
+          echoOut.connect(echoWet);
+
+          const echoMix = ctx.createGain();
+          echoDry.connect(echoMix);
+          echoWet.connect(echoMix);
+          currentNode = echoMix;
+          delayNode = echoDelay;
+        }
+
+        // Distortion with adjustable amount
+        if (activeEffects.includes('distortion')) {
+          const distortAmt = parseFloat(distortAmount.value);
+          const distGain = ctx.createGain();
+          distGain.gain.value = 1 + distortAmt * 3;
+
+          const waveshaper = ctx.createWaveShaper();
+          const amount = 50 + distortAmt * 250;
+          const curve = new Float32Array(44100);
+          for (let i = 0; i < curve.length; i++) {
+            const x = (i - curve.length / 2) / (curve.length / 2);
+            curve[i] = (3 + amount) * x * 20 * Math.PI / (Math.PI + amount * Math.abs(x));
+          }
+          waveshaper.curve = curve;
+          waveshaper.oversample = '4x';
+
+          const cleanGain = ctx.createGain();
+          cleanGain.gain.value = 1 - distortAmt * 0.5;
+          const dirtyGain = ctx.createGain();
+          dirtyGain.gain.value = distortAmt * 0.5;
+
+          currentNode.connect(cleanGain);
+          currentNode.connect(distGain);
+          distGain.connect(waveshaper);
+          waveshaper.connect(dirtyGain);
+
+          const distMix = ctx.createGain();
+          cleanGain.connect(distMix);
+          dirtyGain.connect(distMix);
+          currentNode = distMix;
+        }
+
+        // Tremolo with adjustable amount
+        if (activeEffects.includes('tremolo')) {
+          const tremAmt = parseFloat(tremoloAmount.value);
+          const tremGain = ctx.createGain();
+          tremGain.gain.value = 1;
+
+          const osc = ctx.createOscillator();
+          osc.frequency.value = 4 + tremAmt * 4;
+          const gain = ctx.createGain();
+          gain.gain.value = 0.3 + tremAmt * 0.5;
+          osc.connect(gain);
+          gain.connect(tremGain.gain);
+          osc.start();
+
+          currentNode.connect(tremGain);
+          currentNode = tremGain;
+          currentOscillator = osc;
+        }
+
+        // Lowpass filter
+        if (activeEffects.includes('lowpass')) {
+          const lp = ctx.createBiquadFilter();
+          lp.type = 'lowpass';
+          lp.frequency.value = 600 + 400 * (1 - parseFloat(volumeControl.value) * 0.5);
+          lp.Q.value = 1;
+
+          currentNode.connect(lp);
+          currentNode = lp;
+          filterNodes.push(lp);
+        }
+
+        // Highpass filter
+        if (activeEffects.includes('highpass')) {
+          const hp = ctx.createBiquadFilter();
+          hp.type = 'highpass';
+          hp.frequency.value = 400 + 600 * (1 - parseFloat(volumeControl.value) * 0.5);
+          hp.Q.value = 1;
+
+          currentNode.connect(hp);
+          currentNode = hp;
+          filterNodes.push(hp);
+        }
+
+        currentFilterNodes = filterNodes;
+        currentDelayNode = delayNode;
+        currentConvolver = convolverNode;
+
+        return currentNode;
+      }
+
+      // ----- Apply effects to audio buffer -----
+      function applyEffectsToBuffer(audioBuffer, callback) {
+        const ctx = audioContext || new (window.AudioContext || window.webkitAudioContext)();
+        if (!audioContext) audioContext = ctx;
+
+        // Clean up previous nodes
+        cleanupAudioNodes();
+
+        // Create source from buffer
+        const source = ctx.createBufferSource();
+        source.buffer = audioBuffer;
+
+        // Apply rate and pitch
+        source.playbackRate.value = parseFloat(rateControl.value);
+        const pitchVal = parseFloat(pitchControl.value);
+        const detuneCents = (pitchVal - 1) * 1200;
+        source.detune.value = detuneCents;
+
+        // Build effects chain
+        const outputNode = buildEffectsChain(source);
+
+        // Connect to destination
+        outputNode.connect(ctx.destination);
+
+        // Update duration
+        currentDuration = audioBuffer.duration / parseFloat(rateControl.value);
+
+        // Start playing
+        source.start(0);
+
+        // Store source for cleanup
+        currentSource = source;
+
+        // Status updates
+        isSpeaking = true;
+        updateStatus('speaking', 'Playing with effects');
+        const activeEffects = getActiveEffects();
+        const effectNames = activeEffects.length > 0 ? activeEffects.join(', ') : 'none';
+        const voiceName = currentVoice ? currentVoice.name : 'selected';
+        messageBox.textContent = `🎛️ Applying ${effectNames} to "${voiceName}" voice!`;
+        startProgressSimulation();
+
+        // Handle end
+        source.onended = () => {
+          cleanupAudioNodes();
+          resetPlaybackState();
+          messageBox.textContent = '✅ Effects applied successfully!';
+          updateStatus('idle', 'Ready');
+          progressFill.style.width = '100%';
+          timeLabel.textContent = formatTime(currentDuration);
+          clearProgressInterval();
+          if (callback) callback();
+        };
+
+        return source;
+      }
+
+      function cleanupAudioNodes() {
+        if (currentSource) {
+          try { currentSource.disconnect(); } catch(e) {}
+          currentSource = null;
+        }
+        if (currentGainNode) {
+          try { currentGainNode.disconnect(); } catch(e) {}
+          currentGainNode = null;
+        }
+        if (currentFilterNodes.length > 0) {
+          currentFilterNodes.forEach(node => {
+            try { node.disconnect(); } catch(e) {}
+          });
+          currentFilterNodes = [];
+        }
+        if (currentDelayNode) {
+          try { currentDelayNode.disconnect(); } catch(e) {}
+          currentDelayNode = null;
+        }
+        if (currentConvolver) {
+          try { currentConvolver.disconnect(); } catch(e) {}
+          currentConvolver = null;
+        }
+        if (currentOscillator) {
+          try { currentOscillator.stop(); } catch(e) {}
+          currentOscillator = null;
+        }
+        if (currentChorusOsc) {
+          try { currentChorusOsc.stop(); } catch(e) {}
+          currentChorusOsc = null;
+        }
+      }
+
+      // ----- File upload handler -----
+      fileInput.addEventListener('change', function(e) {
+        const file = e.target.files[0];
+        if (file) {
+          fileName.textContent = file.name;
+          messageBox.textContent = `📁 Loaded: ${file.name}`;
+          const reader = new FileReader();
+          reader.onload = async function(event) {
+            try {
+              const arrayBuffer = event.target.result;
+              if (!audioContext) {
+                audioContext = new (window.AudioContext || window.webkitAudioContext)();
+              }
+              const audioBuffer = await audioContext.decodeAudioData(arrayBuffer);
+              uploadedAudioBuffer = audioBuffer;
+              messageBox.textContent = `✅ Audio loaded! Duration: ${formatTime(audioBuffer.duration)}`;
+            } catch (err) {
+              console.error('Error decoding audio:', err);
+              messageBox.textContent = '⚠️ Could not decode audio file. Please try another format.';
+              uploadedAudioBuffer = null;
+            }
+          };
+          reader.readAsArrayBuffer(file);
+        } else {
+          fileName.textContent = 'No file';
+          uploadedAudioBuffer = null;
+        }
+      });
+
+      // ----- Convert uploaded file with effects -----
+      function convertUploadedFile() {
+        if (!uploadedAudioBuffer) {
+          messageBox.textContent = '⚠️ Please upload an audio file first.';
+          return;
+        }
+
+        // Stop any ongoing playback
+        if (isSpeaking || isPaused) {
+          stopSpeaking(true);
+        }
+        if (isRecording) {
+          stopMediaRecording();
+        }
+
+        cleanupAudioNodes();
+
+        if (!audioContext) {
+          audioContext = new (window.AudioContext || window.webkitAudioContext)();
+        }
+
+        applyEffectsToBuffer(uploadedAudioBuffer);
+      }
+
+      // ----- Record from microphone with effects -----
+      async function handleRecord() {
+        if (isChangingVoice) {
+          messageBox.textContent = '⏳ Already recording...';
+          return;
+        }
+
+        if (isSpeaking || isPaused) {
+          stopSpeaking(true);
+        }
+
+        isChangingVoice = true;
+        messageBox.textContent = '🎤 Recording your voice (3 seconds)...';
+
+        try {
+          const stream = await navigator.mediaDevices.getUserMedia({
+            audio: {
+              echoCancellation: true,
+              noiseSuppression: true,
+              autoGainControl: true,
+            }
+          });
+
+          const recorder = new MediaRecorder(stream);
+          const chunks = [];
+
+          recorder.ondataavailable = (e) => {
+            if (e.data.size > 0) chunks.push(e.data);
+          };
+
+          recorder.start();
+          updateStatus('recording', 'Recording');
+
+          await new Promise(resolve => setTimeout(resolve, 3000));
+
+          recorder.stop();
+          await new Promise(resolve => {
+            recorder.onstop = resolve;
+          });
+
+          stream.getTracks().forEach(track => track.stop());
+
+          const audioBlob = new Blob(chunks, { type: 'audio/webm' });
+          const audioUrl = URL.createObjectURL(audioBlob);
+
+          if (!audioContext) {
+            audioContext = new (window.AudioContext || window.webkitAudioContext)();
+          }
+
+          const response = await fetch(audioUrl);
+          const arrayBuffer = await response.arrayBuffer();
+          const audioBuffer = await audioContext.decodeAudioData(arrayBuffer);
+
+          applyEffectsToBuffer(audioBuffer);
+
+          setTimeout(() => {
+            URL.revokeObjectURL(audioUrl);
+          }, 10000);
+
+          isChangingVoice = false;
+
+        } catch (err) {
+          console.error('Recording error:', err);
+          messageBox.textContent = '⚠️ Could not access microphone. Please allow microphone access.';
+          updateStatus('idle', 'Ready');
+          isChangingVoice = false;
+        }
+      }
+
+      // ----- Media Recording for download -----
+      async function startMediaRecording() {
+        try {
+          const stream = await navigator.mediaDevices.getUserMedia({
+            audio: { echoCancellation: false, noiseSuppression: false, autoGainControl: false }
+          });
+
+          recordingStream = stream;
+          mediaRecorder = new MediaRecorder(stream, { mimeType: 'audio/webm;codecs=opus' });
+
+          audioChunks = [];
+          mediaRecorder.ondataavailable = event => {
+            if (event.data.size > 0) audioChunks.push(event.data);
+          };
+
+          mediaRecorder.onstop = function() {
+            const audioBlob = new Blob(audioChunks, { type: 'audio/webm' });
+            downloadAudioFile(audioBlob);
+            if (recordingStream) {
+              recordingStream.getTracks().forEach(track => track.stop());
+              recordingStream = null;
+            }
+            isRecording = false;
+            updateStatus('idle', 'Ready');
+            downloadProgress.classList.remove('active');
+          };
+
+          mediaRecorder.start();
+          isRecording = true;
+          updateStatus('recording', 'Recording...');
+          messageBox.textContent = '🔴 Recording audio for download...';
+          downloadProgress.classList.add('active');
+          downloadProgressBar.style.width = '0%';
+
+          let progress = 0;
+          const progressInterval = setInterval(() => {
+            if (!isRecording) { clearInterval(progressInterval); return; }
+            progress = Math.min(progress + 2, 90);
+            downloadProgressBar.style.width = progress + '%';
+          }, 200);
+
+          mediaRecorder._progressInterval = progressInterval;
+        } catch (err) {
+          console.error('Recording error:', err);
+          messageBox.textContent = '⚠️ Could not access audio.';
+          isRecording = false;
+          downloadProgress.classList.remove('active');
+          updateStatus('idle', 'Ready');
+        }
+      }
+
+      function stopMediaRecording() {
+        if (mediaRecorder && mediaRecorder.state === 'recording') {
+          mediaRecorder.stop();
+          if (mediaRecorder._progressInterval) {
+            clearInterval(mediaRecorder._progressInterval);
+          }
+          downloadProgressBar.style.width = '100%';
+        }
+        isRecording = false;
+      }
+
+      function downloadAudioFile(blob) {
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        const text = textarea.value.substring(0, 30).replace(/[^a-zA-Z0-9]/g, '_') || 'audio';
+        a.download = `voice-fx_${text}_${Date.now()}.webm`;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        setTimeout(() => URL.revokeObjectURL(url), 10000);
+        messageBox.textContent = '✅ Audio downloaded!';
+        downloadProgress.classList.remove('active');
+        updateStatus('idle', 'Ready');
+        isRecording = false;
+      }
+
+      // ----- Download button (records TTS) -----
+      async function handleDownload() {
+        const text = textarea.value.trim();
+        if (!text) {
+          messageBox.textContent = '📝 Please enter text to download.';
+          return;
+        }
+
+        if (isSpeaking || isPaused) {
+          messageBox.textContent = '⏳ Please stop playback first.';
+          return;
+        }
+
+        if (isRecording) stopMediaRecording();
+        isRecording = true;
+        startSpeaking();
+      }
+
+      // ----- clear -----
+      function clearText() {
+        if (isSpeaking || isPaused) stopSpeaking(true);
+        if (isRecording) stopMediaRecording();
+        cleanupAudioNodes();
+        textarea.value = '';
+        updateCharCount();
+        progressFill.style.width = '0%';
+        timeLabel.textContent = '0:00';
+        messageBox.textContent = '🧹 Cleared';
+        updateStatus('idle', 'Ready');
+        clearProgressInterval();
+        downloadProgress.classList.remove('active');
+        isChangingVoice = false;
+        uploadedAudioBuffer = null;
+        fileName.textContent = 'No file';
+        fileInput.value = '';
+      }
+
+      // ----- event binding -----
+      speakBtn.addEventListener('click', function() { isRecording = false; startSpeaking(); });
+      pauseBtn.addEventListener('click', pauseSpeaking);
+      stopBtn.addEventListener('click', function() { stopSpeaking(false); cleanupAudioNodes(); });
+      downloadBtn.addEventListener('click', handleDownload);
+      clearBtn.addEventListener('click', clearText);
+      recordBtn.addEventListener('click', handleRecord);
+      convertFileBtn.addEventListener('click', convertUploadedFile);
+
+      window.addEventListener('beforeunload', function() {
+        if (speechSynthesis) speechSynthesis.cancel();
+        if (isRecording) stopMediaRecording();
+        cleanupAudioNodes();
+        if (audioContext) audioContext.close();
+      });
+
+      setTimeout(loadVoices, 500);
+      updateStatus('idle', 'Ready');
+      messageBox.textContent = '🎤 Upload audio, record, or use TTS. Toggle effects above!';
+      setTimeout(() => { setCurrentVoiceFromSelect(); }, 300);
+      progressFill.style.width = '0%';
+      timeLabel.textContent = '0:00';
+      updateVoiceInfo();
+    })();
+  </script>
+</body>
+</html>
