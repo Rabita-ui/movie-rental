@@ -15,8 +15,6 @@
 
 <body>
 
-<!-- Navigation -->
-
 <nav>
 
 <div class="logo">
@@ -24,16 +22,11 @@
 </div>
 
 <ul>
-
 <li><a href="index.html">Home</a></li>
-
 <li><a href="login.html">Login</a></li>
-
 </ul>
 
 </nav>
-
-<!-- Register Form -->
 
 <section class="login-page">
 
@@ -43,37 +36,40 @@
 
 <p>Join KBTV and enjoy premium movies.</p>
 
-<form>
+<form id="registerForm">
 
 <input
+id="fullName"
 type="text"
 placeholder="Full Name"
 required>
 
 <input
+id="email"
 type="email"
 placeholder="Email Address"
 required>
 
 <input
+id="mobile"
 type="tel"
 placeholder="Mobile Number"
 required>
 
 <input
+id="password"
 type="password"
 placeholder="Password"
 required>
 
 <input
+id="confirmPassword"
 type="password"
 placeholder="Confirm Password"
 required>
 
 <button type="submit">
-
 Create Account
-
 </button>
 
 </form>
@@ -94,8 +90,6 @@ Login
 
 </section>
 
-<!-- Footer -->
-
 <footer>
 
 <h2>KBTV</h2>
@@ -103,6 +97,9 @@ Login
 <p>© 2026 KBTV Movie Rental. All Rights Reserved.</p>
 
 </footer>
+
+<script type="module" src="firebase.js"></script>
+<script type="module" src="auth.js"></script>
 
 </body>
 </html>
