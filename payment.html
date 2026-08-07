@@ -7,37 +7,80 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Payment</title>
+<title>KBTV - Payment</title>
 
 <link rel="stylesheet" href="style.css">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
 
 </head>
 
 <body>
 
-<header>
+<nav>
 
-<h1>Pay ₹100</h1>
+<div class="logo">
+<span>K</span>BTV
+</div>
 
-</header>
+<ul>
 
-<div class="card" style="max-width:500px;margin:30px auto;">
+<li><a href="index.html">Home</a></li>
 
-<h2>Scan QR Code</h2>
+<li><a href="movie.html">Movie</a></li>
 
-<img src="Qrc.png" alt="QR Code">
+<li><a href="login.html">Login</a></li>
 
-<h3>UPI ID</h3>
+</ul>
 
-<p><b>9862728802m@pnb</b></p>
+</nav>
 
-<p>
+<section class="payment-page">
 
-After payment send the screenshot to verify your payment.
+<div class="payment-card">
 
-</p>
+<h1>Complete Your Rental</h1>
+
+<img src="moovie1jpg.jpeg" class="movie-payment-poster" alt="Movie">
+
+<h2>Movie One</h2>
+
+<p class="price">Rental Price: <strong>₹100</strong></p>
+
+<h3>Scan QR Code</h3>
+
+<img src="Qrc.png" class="qr-image" alt="QR Code">
+
+<p class="upi-title">UPI ID</p>
+
+<div class="upi-box">
+
+<input type="text" value="9862728802m@pnb" readonly>
 
 </div>
+
+<p class="note">
+After payment, keep your screenshot safe. In the next version of KBTV you'll be able to upload it directly here for verification.
+</p>
+
+<button class="pay-btn">
+I've Paid
+</button>
+
+</div>
+
+</section>
+
+<footer>
+
+<h2>KBTV</h2>
+
+<p>© 2026 KBTV Movie Rental. All Rights Reserved.</p>
+
+</footer>
 
 </body>
 
