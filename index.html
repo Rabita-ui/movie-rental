@@ -3,58 +3,159 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Movie Rental</title>
+<title>KBTV - Movie Rental</title>
 
 <link rel="stylesheet" href="style.css">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
 
 </head>
 
 <body>
 
-<header>
-<h1>🎬 Movie Rental</h1>
-<p>Rent your favourite movie for 24 Hours</p>
-</header>
+<!-- Navigation -->
 
-<div class="movies">
+<nav>
+
+<div class="logo">
+<span>K</span>BTV
+</div>
+
+<ul>
+
+<li><a href="#">Home</a></li>
+
+<li><a href="#">Movies</a></li>
+
+<li><a href="#">My Rentals</a></li>
+
+<li><a href="login.html">Login</a></li>
+
+</ul>
+
+</nav>
+
+<!-- Hero -->
+
+<section class="hero">
+
+<h1>Unlimited Entertainment</h1>
+
+<p>Rent your favourite movies for only ₹100 and enjoy 24-hour access.</p>
+
+<a href="#movies">
+<button class="hero-btn">Browse Movies</button>
+</a>
+
+</section>
+
+<!-- Search -->
+
+<section class="search">
+
+<input
+type="text"
+placeholder="Search Movies...">
+
+</section>
+
+<!-- Categories -->
+
+<section class="categories">
+
+<button>Action</button>
+
+<button>Comedy</button>
+
+<button>Romance</button>
+
+<button>Horror</button>
+
+<button>Sci-Fi</button>
+
+</section>
+
+<!-- Movies -->
+
+<section id="movies" class="movies">
 
 <div class="card">
-<img src="moovie1jpg.jpeg" alt="Movie 1">
-<h2>Movie 1</h2>
-<p>Rent for ₹100</p>
+
+<img src="moovie1jpg.jpeg">
+
+<h2>Movie One</h2>
+
+<p>⭐⭐⭐⭐☆</p>
+
+<h3>₹100</h3>
+
 <a href="payment.html">
 <button>Rent Now</button>
 </a>
+
 </div>
 
 <div class="card">
-<img src="moovie2jpg.jpeg" alt="Movie 2">
-<h2>Movie 2</h2>
-<p>Rent for ₹100</p>
+
+<img src="moovie2jpg.jpeg">
+
+<h2>Movie Two</h2>
+
+<p>⭐⭐⭐⭐⭐</p>
+
+<h3>₹120</h3>
+
 <a href="payment.html">
 <button>Rent Now</button>
 </a>
+
 </div>
 
 <div class="card">
-<img src="moovie3jpg.jpeg" alt="Movie 3">
-<h2>Movie 3</h2>
-<p>Rent for ₹100</p>
+
+<img src="moovie3jpg.jpeg">
+
+<h2>Movie Three</h2>
+
+<p>⭐⭐⭐⭐☆</p>
+
+<h3>₹80</h3>
+
 <a href="payment.html">
 <button>Rent Now</button>
 </a>
+
 </div>
 
 <div class="card">
-<img src="moovie4jpg.jpeg" alt="Movie 4">
-<h2>Movie 4</h2>
-<p>Rent for ₹100</p>
+
+<img src="moovie4jpg.jpeg">
+
+<h2>Movie Four</h2>
+
+<p>⭐⭐⭐⭐⭐</p>
+
+<h3>₹150</h3>
+
 <a href="payment.html">
 <button>Rent Now</button>
 </a>
-</div>
 
 </div>
+
+</section>
+
+<footer>
+
+<h2>KBTV</h2>
+
+<p>© 2026 KBTV Movie Rental. All Rights Reserved.</p>
+
+</footer>
 
 </body>
+
 </html>
