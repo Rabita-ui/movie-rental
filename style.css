@@ -344,5 +344,78 @@ nav ul{
 .movie-info h1{
     font-size:35px;
 }
+/* ===========================
+   Login & Register
+=========================== */
 
+.login-page{
+    min-height:80vh;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    padding:40px;
+}
+
+.login-box{
+    background:#1a1a1a;
+    width:100%;
+    max-width:420px;
+    padding:35px;
+    border-radius:12px;
+    box-shadow:0 0 20px rgba(0,0,0,.4);
+}
+
+.login-box h1{
+    text-align:center;
+    margin-bottom:10px;
+}
+
+.login-box p{
+    text-align:center;
+    color:#bbb;
+    margin-bottom:20px;
+}
+
+.login-box form{
+    display:flex;
+    flex-direction:column;
+    gap:15px;
+}
+
+.login-box input{
+    padding:15px;
+    border:none;
+    border-radius:8px;
+    background:#2a2a2a;
+    color:white;
+    font-size:16px;
+}
+
+.login-box input:focus{
+    outline:2px solid #e50914;
+}
+
+.login-box button{
+    padding:15px;
+    background:#e50914;
+    color:white;
+    border:none;
+    border-radius:8px;
+    cursor:pointer;
+    font-size:17px;
+}
+
+.login-box button:hover{
+    background:#b20710;
+}
+
+.login-box a{
+    color:#e50914;
+    text-decoration:none;
+    font-weight:bold;
+}
+
+.login-box a:hover{
+    text-decoration:underline;
+}
 }
