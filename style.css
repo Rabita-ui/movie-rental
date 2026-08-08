@@ -1,568 +1,245 @@
-/* ===========================
-   KBTV Movie Rental Website
-=========================== */
-
-*{
-    margin:0;
-    padding:0;
-    box-sizing:border-box;
-    font-family:'Poppins',sans-serif;
-}
-
-body{
-    background:#111;
-    color:white;
-}
-
-/* ===========================
-   Navigation
-=========================== */
-
-nav{
-    background:#000;
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
-    padding:18px 50px;
-    position:sticky;
-    top:0;
-    z-index:1000;
-}
-
-.logo{
-    font-size:35px;
-    font-weight:700;
-    color:#fff;
-}
-
-.logo span{
-    color:#e50914;
-}
-
-nav ul{
-    display:flex;
-    list-style:none;
-    gap:30px;
-}
-
-nav ul li a{
-    text-decoration:none;
-    color:#fff;
-    font-size:17px;
-    transition:.3s;
-}
-
-nav ul li a:hover{
-    color:#e50914;
-}
-
-/* ===========================
-   Hero
-=========================== */
-
-.hero{
-    height:70vh;
-    display:flex;
-    flex-direction:column;
-    justify-content:center;
-    align-items:center;
-    text-align:center;
-    background:linear-gradient(rgba(0,0,0,.6),rgba(0,0,0,.8));
-    padding:20px;
-}
-
-.hero h1{
-    font-size:60px;
-    margin-bottom:20px;
-}
-
-.hero p{
-    font-size:22px;
-    color:#ddd;
-    margin-bottom:30px;
-}
-
-.hero-btn{
-    background:#e50914;
-    color:#fff;
-    border:none;
-    padding:15px 40px;
-    border-radius:6px;
-    font-size:18px;
-    cursor:pointer;
-    transition:.3s;
-}
-
-.hero-btn:hover{
-    background:#b20710;
-}
-
-/* ===========================
-   Search
-=========================== */
-
-.search{
-    padding:30px;
-    text-align:center;
-}
-
-.search input{
-    width:60%;
-    max-width:600px;
-    padding:15px;
-    border:none;
-    border-radius:8px;
-    font-size:18px;
-    outline:none;
-}
-
-/* ===========================
-   Categories
-=========================== */
-
-.categories{
-    display:flex;
-    justify-content:center;
-    flex-wrap:wrap;
-    gap:15px;
-    margin-bottom:40px;
-}
-
-.categories button{
-    background:#222;
-    color:white;
-    border:none;
-    padding:12px 25px;
-    border-radius:30px;
-    cursor:pointer;
-    transition:.3s;
-}
-
-.categories button:hover{
-    background:#e50914;
-}
-
-/* ===========================
-   Movie Cards
-=========================== */
-
-.movies{
-    width:90%;
-    margin:auto;
-    display:grid;
-    grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
-    gap:30px;
-    padding-bottom:60px;
-}
-
-.card{
-    background:#1a1a1a;
-    border-radius:12px;
-    overflow:hidden;
-    transition:.3s;
-    box-shadow:0 0 15px rgba(0,0,0,.4);
-}
-
-.card:hover{
-    transform:translateY(-10px);
-}
-
-.card img{
-    width:100%;
-    height:350px;
-    object-fit:cover;
-}
-
-.card h2{
-    margin:15px;
-}
-
-.card p{
-    margin:0 15px;
-    color:#ffd700;
-}
-
-.card h3{
-    margin:15px;
-    color:#00e676;
-}
-
-.card button{
-    width:90%;
-    margin:15px;
-    padding:14px;
-    background:#e50914;
-    color:#fff;
-    border:none;
-    border-radius:6px;
-    cursor:pointer;
-    font-size:17px;
-    transition:.3s;
-}
-
-.card button:hover{
-    background:#b20710;
-}
-
-/* ===========================
-   Movie Details Page
-=========================== */
-
-.movie-page{
-    width:90%;
-    margin:50px auto;
-    display:grid;
-    grid-template-columns:1fr 1fr;
-    gap:40px;
-    align-items:center;
-}
-
-.movie-poster img{
-    width:100%;
-    border-radius:12px;
-}
-
-.movie-info h1{
-    font-size:45px;
-    margin-bottom:20px;
-}
-
-.rating{
-    color:#ffd700;
-    font-size:22px;
-    margin-bottom:20px;
-}
-
-.movie-info p{
-    line-height:1.8;
-    color:#ddd;
-    margin-bottom:25px;
-}
-
-.movie-info table{
-    width:100%;
-    margin-bottom:30px;
-}
-
-.movie-info td{
-    padding:12px;
-    border-bottom:1px solid #333;
-}
-
-.buttons{
-    display:flex;
-    gap:20px;
-    flex-wrap:wrap;
-}
-
-.watch-trailer,
-.rent-now{
-    border:none;
-    padding:15px 30px;
-    border-radius:6px;
-    color:white;
-    font-size:17px;
-    cursor:pointer;
-    transition:.3s;
-}
-
-.watch-trailer{
-    background:#555;
-}
-
-.watch-trailer:hover{
-    background:#777;
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
 }
 
-.rent-now{
-    background:#e50914;
+body {
+    font-family: 'Poppins', sans-serif;
+    background: #0f0f0f;
+    color: white;
+    min-height: 100vh;
 }
 
-.rent-now:hover{
-    background:#b20710;
+/* Navigation */
+nav {
+    background: #111;
+    padding: 18px 7%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid #333;
 }
 
-/* ===========================
-   Footer
-=========================== */
-
-footer{
-    background:#000;
-    text-align:center;
-    padding:40px;
-}
-
-footer h2{
-    color:#e50914;
-    margin-bottom:10px;
+.logo {
+    font-size: 28px;
+    font-weight: 700;
+    color: white;
 }
 
-footer p{
-    color:#999;
+.logo span {
+    color: #e50914;
 }
-
-/* ===========================
-   Responsive
-=========================== */
 
-@media(max-width:768px){
-
-nav{
-    flex-direction:column;
-    gap:20px;
+nav ul {
+    list-style: none;
+    display: flex;
+    gap: 25px;
 }
 
-nav ul{
-    flex-wrap:wrap;
-    justify-content:center;
+nav ul li a {
+    color: white;
+    text-decoration: none;
+    font-weight: 500;
 }
 
-.hero h1{
-    font-size:40px;
+nav ul li a:hover {
+    color: #e50914;
 }
 
-.hero p{
-    font-size:18px;
+/* Hero */
+.hero {
+    padding: 80px 7%;
+    text-align: center;
+    background: linear-gradient(135deg, #111, #250000);
 }
 
-.search input{
-    width:90%;
+.hero h1 {
+    font-size: 48px;
+    margin-bottom: 15px;
 }
 
-.movies{
-    grid-template-columns:1fr;
+.hero p {
+    color: #ccc;
+    margin-bottom: 25px;
 }
 
-.card img{
-    height:250px;
+.btn {
+    display: inline-block;
+    background: #e50914;
+    color: white;
+    padding: 12px 25px;
+    border-radius: 6px;
+    text-decoration: none;
+    border: none;
+    cursor: pointer;
+    font-size: 16px;
 }
 
-.movie-page{
-    grid-template-columns:1fr;
+.btn:hover {
+    background: #b20710;
 }
 
-.movie-info h1{
-    font-size:35px;
+/* Movies */
+.movies-section {
+    padding: 50px 7%;
 }
-/* ===========================
-   Login & Register
-=========================== */
 
-.login-page{
-    min-height:80vh;
-    display:flex;
-    justify-content:center;
-    align-items:center;
-    padding:40px;
+.movies-section h2 {
+    margin-bottom: 30px;
+    font-size: 30px;
 }
 
-.login-box{
-    background:#1a1a1a;
-    width:100%;
-    max-width:420px;
-    padding:35px;
-    border-radius:12px;
-    box-shadow:0 0 20px rgba(0,0,0,.4);
+.movie-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 25px;
 }
 
-.login-box h1{
-    text-align:center;
-    margin-bottom:10px;
+.movie-card {
+    background: #1b1b1b;
+    border-radius: 10px;
+    overflow: hidden;
+    transition: 0.3s;
 }
 
-.login-box p{
-    text-align:center;
-    color:#bbb;
-    margin-bottom:20px;
+.movie-card:hover {
+    transform: translateY(-5px);
 }
 
-.login-box form{
-    display:flex;
-    flex-direction:column;
-    gap:15px;
+.movie-card img {
+    width: 100%;
+    height: 280px;
+    object-fit: cover;
 }
 
-.login-box input{
-    padding:15px;
-    border:none;
-    border-radius:8px;
-    background:#2a2a2a;
-    color:white;
-    font-size:16px;
+.movie-info {
+    padding: 18px;
 }
 
-.login-box input:focus{
-    outline:2px solid #e50914;
+.movie-info h3 {
+    margin-bottom: 8px;
 }
 
-.login-box button{
-    padding:15px;
-    background:#e50914;
-    color:white;
-    border:none;
-    border-radius:8px;
-    cursor:pointer;
-    font-size:17px;
+.movie-info p {
+    color: #aaa;
+    margin-bottom: 12px;
 }
 
-.login-box button:hover{
-    background:#b20710;
+.price {
+    font-size: 20px;
+    font-weight: 600;
+    margin-bottom: 15px;
 }
 
-.login-box a{
-    color:#e50914;
-    text-decoration:none;
-    font-weight:bold;
+/* Login/Register */
+.login-page,
+.register-page {
+    min-height: 75vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 40px 20px;
 }
 
-.login-box a:hover{
-    text-decoration:underline;
+.login-box,
+.register-box {
+    width: 100%;
+    max-width: 430px;
+    background: #1b1b1b;
+    padding: 35px;
+    border-radius: 12px;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.5);
 }
-   /* ===========================
-   Payment Page
-=========================== */
-
-.payment-page{
-
-display:flex;
-
-justify-content:center;
-
-align-items:center;
 
-padding:60px 20px;
-
+.login-box h1,
+.register-box h1 {
+    margin-bottom: 10px;
 }
-
-.payment-card{
-
-background:#1b1b1b;
-
-padding:35px;
-
-border-radius:12px;
-
-width:100%;
-
-max-width:500px;
-
-text-align:center;
-
-box-shadow:0 0 20px rgba(0,0,0,.5);
 
+.login-box > p,
+.register-box > p {
+    color: #aaa;
+    margin-bottom: 25px;
 }
 
-.payment-card h1{
-
-margin-bottom:20px;
-
+.login-box input,
+.register-box input {
+    width: 100%;
+    padding: 13px;
+    margin-bottom: 15px;
+    background: #111;
+    border: 1px solid #444;
+    border-radius: 6px;
+    color: white;
+    font-size: 15px;
 }
-
-.movie-payment-poster{
-
-width:220px;
 
-border-radius:10px;
-
-margin-bottom:20px;
-
+.login-box button,
+.register-box button {
+    width: 100%;
+    padding: 13px;
+    background: #e50914;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: 600;
 }
-
-.price{
-
-font-size:22px;
-
-margin-bottom:20px;
 
-color:#00e676;
-
+.login-box button:hover,
+.register-box button:hover {
+    background: #b20710;
 }
-
-.qr-image{
-
-width:250px;
-
-margin:20px auto;
 
-display:block;
-
-border-radius:10px;
-
-background:white;
-
-padding:10px;
-
+.login-box a,
+.register-box a {
+    color: #e50914;
 }
-
-.upi-title{
 
-margin-top:15px;
-
-font-weight:bold;
-
+/* Footer */
+footer {
+    background: #111;
+    text-align: center;
+    padding: 30px;
+    margin-top: 40px;
 }
-
-.upi-box{
-
-margin:15px 0;
 
+footer h2 {
+    margin-bottom: 8px;
 }
-
-.upi-box input{
-
-width:100%;
-
-padding:14px;
-
-border:none;
-
-border-radius:8px;
 
-background:#333;
-
-color:white;
-
-text-align:center;
-
-font-size:16px;
-
+footer p {
+    color: #888;
 }
 
-.note{
-
-margin:20px 0;
-
-color:#ccc;
-
-line-height:1.6;
-
+/* Mobile */
+@media (max-width: 900px) {
+    .movie-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
 }
-
-.pay-btn{
 
-width:100%;
+@media (max-width: 600px) {
+    nav {
+        flex-direction: column;
+        gap: 15px;
+    }
 
-padding:15px;
+    nav ul {
+        gap: 15px;
+    }
 
-background:#e50914;
+    .hero h1 {
+        font-size: 34px;
+    }
 
-color:white;
+    .movie-grid {
+        grid-template-columns: 1fr;
+    }
 
-border:none;
-
-border-radius:8px;
-
-font-size:18px;
-
-cursor:pointer;
-
-transition:.3s;
-
-}
-
-.pay-btn:hover{
-
-background:#b20710;
-
-}
+    .movie-card img {
+        height: 320px;
+    }
 }
