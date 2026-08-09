@@ -1,114 +1,166 @@
-import { auth, db } from "./firebase.js";
+import {
+  getAuth,
+  createUserWithEmailAndPassword,
+  signInWithEmailAndPassword,
+  signOut
+} from "https://www.gstatic.com/firebasejs/12.0.0/firebase-auth.js";
 
 import {
-createUserWithEmailAndPassword,
-signInWithEmailAndPassword
-} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+  getFirestore,
+  doc,
+  setDoc
+} from "https://www.gstatic.com/firebasejs/12.0.0/firebase-firestore.js";
 
-import {
-doc,
-setDoc
-} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+import { app } from "./firebase.js";
 
-// ------------------------
+const auth = getAuth(app);
+const db = getFirestore(app);
+
+// ===============================
 // REGISTER
-// ------------------------
+// ===============================
 
-const registerForm=document.getElementById("registerForm");
+const registerForm = document.querySelector("#registerForm");
 
-if(registerForm){
+if (registerForm) {
 
-registerForm.addEventListener("submit",async(e)=>{
+  registerForm.addEventListener("submit", async (e) => {
 
-e.preventDefault();
+    e.preventDefault();
 
-const name=document.getElementById("fullName").value;
+    const name = document.querySelector("#name")?.value.trim();
+    const email = document.querySelector("#email")?.value.trim();
+    const password = document.querySelector("#password")?.value;
+    const mobile = document.querySelector("#mobile")?.value.trim();
 
-const mobile=document.getElementById("mobile").value;
+    if (!name || !email || !password) {
+      alert("Please fill in all required fields.");
+      return;
+    }
 
-const email=document.getElementById("email").value;
+    try {
 
-const password=document.getElementById("password").value;
+      const userCredential =
+        await createUserWithEmailAndPassword(
+          auth,
+          email,
+          password
+        );
 
-const confirm=document.getElementById("confirmPassword").value;
+      const user = userCredential.user;
 
-if(password!==confirm){
+      // Save user information in Firestore
+      await setDoc(doc(db, "users", user.uid), {
+        name: name,
+        email: email,
+        mobile: mobile || "",
+        createdAt: new Date()
+      });
 
-alert("Passwords do not match.");
+      alert("Registration successful!");
 
-return;
+      window.location.href = "login.html";
+
+    } catch (error) {
+
+      console.error(error);
+
+      if (error.code === "auth/email-already-in-use") {
+        alert("This email is already registered.");
+      } else if (error.code === "auth/weak-password") {
+        alert("Password should be at least 6 characters.");
+      } else if (error.code === "auth/invalid-email") {
+        alert("Please enter a valid email address.");
+      } else {
+        alert("Registration failed: " + error.message);
+      }
+
+    }
+
+  });
 
 }
 
-try{
 
-const userCredential=
-await createUserWithEmailAndPassword(
-auth,
-email,
-password
-);
-
-await setDoc(doc(db,"users",userCredential.user.uid),{
-
-name:name,
-
-mobile:mobile,
-
-email:email,
-
-createdAt:new Date()
-
-});
-
-alert("Account Created Successfully!");
-
-window.location="login.html";
-
-}catch(error){
-
-alert(error.message);
-
-}
-
-});
-
-}
-
-// ------------------------
+// ===============================
 // LOGIN
-// ------------------------
+// ===============================
 
-const loginForm=document.getElementById("loginForm");
+const loginForm = document.querySelector("#loginForm");
 
-if(loginForm){
+if (loginForm) {
 
-loginForm.addEventListener("submit",async(e)=>{
+  loginForm.addEventListener("submit", async (e) => {
 
-e.preventDefault();
+    e.preventDefault();
 
-const email=document.getElementById("loginEmail").value;
+    const email = document.querySelector("#email")?.value.trim();
+    const password = document.querySelector("#password")?.value;
 
-const password=document.getElementById("loginPassword").value;
+    if (!email || !password) {
+      alert("Please enter your email and password.");
+      return;
+    }
 
-try{
+    try {
 
-await signInWithEmailAndPassword(
-auth,
-email,
-password
-);
+      await signInWithEmailAndPassword(
+        auth,
+        email,
+        password
+      );
 
-alert("Login Successful!");
+      alert("Login successful!");
 
-window.location="index.html";
+      window.location.href = "index.html";
 
-}catch(error){
+    } catch (error) {
 
-alert(error.message);
+      console.error(error);
+
+      if (
+        error.code === "auth/invalid-credential" ||
+        error.code === "auth/wrong-password" ||
+        error.code === "auth/user-not-found"
+      ) {
+        alert("Incorrect email or password.");
+      } else {
+        alert("Login failed: " + error.message);
+      }
+
+    }
+
+  });
 
 }
 
-});
+
+// ===============================
+// LOGOUT
+// ===============================
+
+const logoutButton = document.querySelector("#logoutBtn");
+
+if (logoutButton) {
+
+  logoutButton.addEventListener("click", async () => {
+
+    try {
+
+      await signOut(auth);
+
+      alert("You have been logged out.");
+
+      window.location.href = "index.html";
+
+    } catch (error) {
+
+      console.error(error);
+
+      alert("Logout failed.");
+
+    }
+
+  });
 
 }
