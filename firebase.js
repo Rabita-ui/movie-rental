@@ -4,11 +4,11 @@ import { getFirestore } from "https://www.gstatic.com/firebasejs/10.12.2/firebas
 
 const firebaseConfig = {
   apiKey: "YOUR_API_KEY",
-  authDomain: "YOUR_AUTH_DOMAIN",
-  projectId: "YOUR_PROJECT_ID",
-  storageBucket: "YOUR_STORAGE_BUCKET",
-  messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
-  appId: "YOUR_APP_ID"
+  authDomain: "kbtv-59002.firebaseapp.com",
+  projectId: "kbtv-59002",
+  storageBucket: "kbtv-59002.firebasestorage.app",
+  messagingSenderId: "1025817799349",
+  appId: "1:1025817799349:web:54a437762aea2c9971acfc"
 };
 
 const app = initializeApp(firebaseConfig);
