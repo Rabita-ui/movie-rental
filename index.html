@@ -2,7 +2,9 @@
 <html lang="en">
 
 <head>
+
     <meta charset="UTF-8">
+
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <title>KBTV - Movie Rental</title>
@@ -15,164 +17,256 @@
     <link
         href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap"
         rel="stylesheet">
+
 </head>
 
 <body>
 
-    <!-- Navigation -->
-    <nav>
 
-        <div class="logo">
-            <span>K</span>BTV
-        </div>
+<!-- =========================
+     NAVIGATION
+========================= -->
 
-        <ul>
-            <li><a href="index.html">Home</a></li>
-            <li><a href="moovie.html">Movies</a></li>
-            <li><a href="register.html">Register</a></li>
-            <li><a href="login.html">Login</a></li>
-        </ul>
+<nav>
 
-    </nav>
+    <div class="logo">
+        <span>K</span>BTV
+    </div>
 
+    <ul>
 
-    <!-- Hero Section -->
-    <section class="hero">
+        <li>
+            <a href="index.html">Home</a>
+        </li>
 
-        <h1>Unlimited Entertainment</h1>
+        <li>
+            <a href="moovie.html">Movies</a>
+        </li>
 
-        <p>
-            Rent your favourite movies for only ₹100
-            and enjoy 24-hour access.
-        </p>
+        <li>
+            <a href="register.html">Register</a>
+        </li>
 
-        <a href="#movies" class="btn">
-            Browse Movies
-        </a>
+        <li>
+            <a href="login.html">Login</a>
+        </li>
 
-    </section>
+        <li>
+            <button id="logoutBtn">
+                Logout
+            </button>
+        </li>
 
+    </ul>
 
-    <!-- Movies Section -->
-    <section class="movies-section" id="movies">
-
-        <h2>Featured Movies</h2>
-
-        <div class="movie-grid">
+</nav>
 
 
-            <!-- Movie 1 -->
-            <div class="movie-card">
+<!-- =========================
+     HERO SECTION
+========================= -->
 
-                <img src="moovie1jpg.jpeg" alt="Movie One">
+<section class="hero">
 
-                <div class="movie-info">
+    <h1>
+        Unlimited Entertainment
+    </h1>
 
-                    <h3>Movie One</h3>
+    <p>
+        Rent your favourite movies for only ₹100
+        and enjoy 24-hour access.
+    </p>
 
-                    <p>⭐ ⭐ ⭐ ⭐ ☆</p>
+    <a href="#movies" class="btn">
+        Browse Movies
+    </a>
 
-                    <div class="price">
-                        ₹100
-                    </div>
+</section>
 
-                    <a href="payment.html" class="btn">
-                        Rent Now
-                    </a>
 
+<!-- =========================
+     MOVIES SECTION
+========================= -->
+
+<section class="movies-section" id="movies">
+
+    <h2>
+        Featured Movies
+    </h2>
+
+
+    <div class="movie-grid">
+
+
+        <!-- =================
+             MOVIE 1
+        ================== -->
+
+        <div class="movie-card">
+
+            <img
+                src="moovie1jpg.jpeg"
+                alt="Movie One">
+
+            <div class="movie-info">
+
+                <h3>
+                    Movie One
+                </h3>
+
+                <p>
+                    ⭐ ⭐ ⭐ ⭐ ☆
+                </p>
+
+                <div class="price">
+                    ₹100
                 </div>
 
-            </div>
-
-
-            <!-- Movie 2 -->
-            <div class="movie-card">
-
-                <img src="moovie2jpg.jpeg" alt="Movie Two">
-
-                <div class="movie-info">
-
-                    <h3>Movie Two</h3>
-
-                    <p>⭐ ⭐ ⭐ ⭐ ⭐</p>
-
-                    <div class="price">
-                        ₹100
-                    </div>
-
-                    <a href="payment.html" class="btn">
-                        Rent Now
-                    </a>
-
-                </div>
-
-            </div>
-
-
-            <!-- Movie 3 -->
-            <div class="movie-card">
-
-                <img src="moovie3jpg.jpeg" alt="Movie Three">
-
-                <div class="movie-info">
-
-                    <h3>Movie Three</h3>
-
-                    <p>⭐ ⭐ ⭐ ⭐ ☆</p>
-
-                    <div class="price">
-                        ₹100
-                    </div>
-
-                    <a href="payment.html" class="btn">
-                        Rent Now
-                    </a>
-
-                </div>
-
-            </div>
-
-
-            <!-- Movie 4 -->
-            <div class="movie-card">
-
-                <img src="moovie4jpg.jpeg" alt="Movie Four">
-
-                <div class="movie-info">
-
-                    <h3>Movie Four</h3>
-
-                    <p>⭐ ⭐ ⭐ ⭐ ⭐</p>
-
-                    <div class="price">
-                        ₹100
-                    </div>
-
-                    <a href="payment.html" class="btn">
-                        Rent Now
-                    </a>
-
-                </div>
+                <a
+                    href="payment.html"
+                    class="btn">
+                    Rent Now
+                </a>
 
             </div>
 
         </div>
 
-    </section>
+
+        <!-- =================
+             MOVIE 2
+        ================== -->
+
+        <div class="movie-card">
+
+            <img
+                src="moovie2jpg.jpeg"
+                alt="Movie Two">
+
+            <div class="movie-info">
+
+                <h3>
+                    Movie Two
+                </h3>
+
+                <p>
+                    ⭐ ⭐ ⭐ ⭐ ⭐
+                </p>
+
+                <div class="price">
+                    ₹100
+                </div>
+
+                <a
+                    href="payment.html"
+                    class="btn">
+                    Rent Now
+                </a>
+
+            </div>
+
+        </div>
 
 
-    <!-- Footer -->
-    <footer>
+        <!-- =================
+             MOVIE 3
+        ================== -->
 
-        <h2>KBTV</h2>
+        <div class="movie-card">
 
-        <p>
-            © 2026 KBTV Movie Rental
-        </p>
+            <img
+                src="moovie3jpg.jpeg"
+                alt="Movie Three">
 
-    </footer>
+            <div class="movie-info">
+
+                <h3>
+                    Movie Three
+                </h3>
+
+                <p>
+                    ⭐ ⭐ ⭐ ⭐ ☆
+                </p>
+
+                <div class="price">
+                    ₹100
+                </div>
+
+                <a
+                    href="payment.html"
+                    class="btn">
+                    Rent Now
+                </a>
+
+            </div>
+
+        </div>
+
+
+        <!-- =================
+             MOVIE 4
+        ================== -->
+
+        <div class="movie-card">
+
+            <img
+                src="moovie4jpg.jpeg"
+                alt="Movie Four">
+
+            <div class="movie-info">
+
+                <h3>
+                    Movie Four
+                </h3>
+
+                <p>
+                    ⭐ ⭐ ⭐ ⭐ ⭐
+                </p>
+
+                <div class="price">
+                    ₹100
+                </div>
+
+                <a
+                    href="payment.html"
+                    class="btn">
+                    Rent Now
+                </a>
+
+            </div>
+
+        </div>
+
+
+    </div>
+
+</section>
+
+
+<!-- =========================
+     FOOTER
+========================= -->
+
+<footer>
+
+    <h2>
+        KBTV
+    </h2>
+
+    <p>
+        © 2026 KBTV Movie Rental
+    </p>
+
+</footer>
+
+
+<!-- =========================
+     FIREBASE / AUTH
+========================= -->
+
 <script type="module" src="auth.js"></script>
-</body>
+
+
 </body>
 
 </html>
