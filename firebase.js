@@ -1,23 +1,19 @@
-// Firebase SDK
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-
 import { getAuth } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
-
 import { getFirestore } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
-// Your Firebase Configuration
 const firebaseConfig = {
-  apiKey: "AIzaSyASv2BbNq3ki5HfDowL_tMntqOT9-TmsEM",
-  authDomain: "kbtv-59002.firebaseapp.com",
-  projectId: "kbtv-59002",
-  storageBucket: "kbtv-59002.firebasestorage.app",
-  messagingSenderId: "1025817799349",
-  appId: "1:1025817799349:web:54a437762aea2c9971acfc"
+  apiKey: "YOUR_API_KEY",
+  authDomain: "YOUR_AUTH_DOMAIN",
+  projectId: "YOUR_PROJECT_ID",
+  storageBucket: "YOUR_STORAGE_BUCKET",
+  messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
+  appId: "YOUR_APP_ID"
 };
 
-// Initialize Firebase
 const app = initializeApp(firebaseConfig);
 
-// Export Authentication and Firestore
-export const auth = getAuth(app);
-export const db = getFirestore(app);
+const auth = getAuth(app);
+const db = getFirestore(app);
+
+export { app, auth, db };
