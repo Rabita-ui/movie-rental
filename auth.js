@@ -1,166 +1,150 @@
 import {
-  getAuth,
-  createUserWithEmailAndPassword,
-  signInWithEmailAndPassword,
-  signOut
-} from "https://www.gstatic.com/firebasejs/12.0.0/firebase-auth.js";
+    getAuth,
+    createUserWithEmailAndPassword,
+    signInWithEmailAndPassword,
+    signOut
+} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 
 import {
-  getFirestore,
-  doc,
-  setDoc
-} from "https://www.gstatic.com/firebasejs/12.0.0/firebase-firestore.js";
+    getFirestore,
+    doc,
+    setDoc
+} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
 import { app } from "./firebase.js";
 
 const auth = getAuth(app);
 const db = getFirestore(app);
 
-// ===============================
-// REGISTER
-// ===============================
 
-const registerForm = document.querySelector("#registerForm");
+// ==========================
+// REGISTER
+// ==========================
+
+const registerForm = document.getElementById("registerForm");
 
 if (registerForm) {
 
-  registerForm.addEventListener("submit", async (e) => {
+    registerForm.addEventListener("submit", async function (event) {
 
-    e.preventDefault();
+        event.preventDefault();
 
-    const name = document.querySelector("#name")?.value.trim();
-    const email = document.querySelector("#email")?.value.trim();
-    const password = document.querySelector("#password")?.value;
-    const mobile = document.querySelector("#mobile")?.value.trim();
+        const name = document.getElementById("fullName").value.trim();
+        const email = document.getElementById("email").value.trim();
+        const mobile = document.getElementById("mobile").value.trim();
+        const password = document.getElementById("password").value;
+        const confirmPassword =
+            document.getElementById("confirmPassword").value;
 
-    if (!name || !email || !password) {
-      alert("Please fill in all required fields.");
-      return;
-    }
+        if (password !== confirmPassword) {
+            alert("Passwords do not match.");
+            return;
+        }
 
-    try {
+        try {
 
-      const userCredential =
-        await createUserWithEmailAndPassword(
-          auth,
-          email,
-          password
-        );
+            const userCredential =
+                await createUserWithEmailAndPassword(
+                    auth,
+                    email,
+                    password
+                );
 
-      const user = userCredential.user;
+            const user = userCredential.user;
 
-      // Save user information in Firestore
-      await setDoc(doc(db, "users", user.uid), {
-        name: name,
-        email: email,
-        mobile: mobile || "",
-        createdAt: new Date()
-      });
+            await setDoc(doc(db, "users", user.uid), {
+                name: name,
+                email: email,
+                mobile: mobile,
+                createdAt: new Date()
+            });
 
-      alert("Registration successful!");
+            alert("Registration successful!");
 
-      window.location.href = "login.html";
+            window.location.href = "login.html";
 
-    } catch (error) {
+        } catch (error) {
 
-      console.error(error);
+            console.error(error);
 
-      if (error.code === "auth/email-already-in-use") {
-        alert("This email is already registered.");
-      } else if (error.code === "auth/weak-password") {
-        alert("Password should be at least 6 characters.");
-      } else if (error.code === "auth/invalid-email") {
-        alert("Please enter a valid email address.");
-      } else {
-        alert("Registration failed: " + error.message);
-      }
+            if (error.code === "auth/email-already-in-use") {
+                alert("This email is already registered.");
+            } else if (error.code === "auth/weak-password") {
+                alert("Password must be at least 6 characters.");
+            } else if (error.code === "auth/invalid-email") {
+                alert("Please enter a valid email address.");
+            } else {
+                alert("Registration failed: " + error.message);
+            }
+        }
 
-    }
-
-  });
-
+    });
 }
 
 
-// ===============================
+// ==========================
 // LOGIN
-// ===============================
+// ==========================
 
-const loginForm = document.querySelector("#loginForm");
+const loginForm = document.getElementById("loginForm");
 
 if (loginForm) {
 
-  loginForm.addEventListener("submit", async (e) => {
+    loginForm.addEventListener("submit", async function (event) {
 
-    e.preventDefault();
+        event.preventDefault();
 
-    const email = document.querySelector("#email")?.value.trim();
-    const password = document.querySelector("#password")?.value;
+        const email = document.getElementById("loginEmail").value.trim();
+        const password =
+            document.getElementById("loginPassword").value;
 
-    if (!email || !password) {
-      alert("Please enter your email and password.");
-      return;
-    }
+        try {
 
-    try {
+            await signInWithEmailAndPassword(
+                auth,
+                email,
+                password
+            );
 
-      await signInWithEmailAndPassword(
-        auth,
-        email,
-        password
-      );
+            alert("Login successful!");
 
-      alert("Login successful!");
+            window.location.href = "index.html";
 
-      window.location.href = "index.html";
+        } catch (error) {
 
-    } catch (error) {
+            console.error(error);
 
-      console.error(error);
+            alert("Login failed: " + error.message);
+        }
 
-      if (
-        error.code === "auth/invalid-credential" ||
-        error.code === "auth/wrong-password" ||
-        error.code === "auth/user-not-found"
-      ) {
-        alert("Incorrect email or password.");
-      } else {
-        alert("Login failed: " + error.message);
-      }
-
-    }
-
-  });
-
+    });
 }
 
 
-// ===============================
+// ==========================
 // LOGOUT
-// ===============================
+// ==========================
 
-const logoutButton = document.querySelector("#logoutBtn");
+const logoutButton = document.getElementById("logoutBtn");
 
 if (logoutButton) {
 
-  logoutButton.addEventListener("click", async () => {
+    logoutButton.addEventListener("click", async function () {
 
-    try {
+        try {
 
-      await signOut(auth);
+            await signOut(auth);
 
-      alert("You have been logged out.");
+            alert("Logged out successfully.");
 
-      window.location.href = "index.html";
+            window.location.href = "index.html";
 
-    } catch (error) {
+        } catch (error) {
 
-      console.error(error);
+            console.error(error);
 
-      alert("Logout failed.");
+            alert("Logout failed.");
+        }
 
-    }
-
-  });
-
+    });
 }
