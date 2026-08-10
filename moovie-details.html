@@ -2,14 +2,17 @@
 <html lang="en">
 
 <head>
+
     <meta charset="UTF-8">
+
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>Movie Details - KBTV</title>
+    <title>KBTV - Movie Details</title>
 
     <link rel="stylesheet" href="style.css">
 
     <style>
+
         .movie-details {
             max-width: 1000px;
             margin: 60px auto;
@@ -22,9 +25,15 @@
             align-items: flex-start;
         }
 
-        .movie-details img {
+        .movie-details-image {
             width: 350px;
-            max-width: 100%;
+            flex-shrink: 0;
+        }
+
+        .movie-details-image img {
+            width: 100%;
+            height: auto;
+            display: block;
             border-radius: 10px;
         }
 
@@ -34,7 +43,7 @@
 
         .movie-details-info h1 {
             font-size: 36px;
-            margin-bottom: 15px;
+            margin-top: 0;
         }
 
         .movie-description {
@@ -43,23 +52,23 @@
         }
 
         .movie-price {
-            font-size: 28px;
+            font-size: 26px;
             font-weight: bold;
             margin: 20px 0;
         }
 
         .rent-button {
             display: inline-block;
-            padding: 14px 30px;
-            background: #e50914;
+            padding: 13px 28px;
+            background: #ff0000;
             color: white;
             text-decoration: none;
             border-radius: 6px;
-            font-weight: bold;
+            font-weight: 600;
         }
 
         .rent-button:hover {
-            opacity: 0.85;
+            background: #cc0000;
         }
 
         @media (max-width: 700px) {
@@ -68,111 +77,238 @@
                 flex-direction: column;
             }
 
-            .movie-details img {
+            .movie-details-image {
                 width: 100%;
             }
 
             .movie-details-info h1 {
                 font-size: 28px;
             }
+
         }
+
     </style>
 
 </head>
 
+
 <body>
 
-    <!-- Navigation -->
 
-    <nav>
+<!-- =========================
+     NAVIGATION
+========================= -->
 
-        <div class="logo">
-            <span>K</span>BTV
-        </div>
+<nav>
 
-        <ul>
-            <li>
-                <a href="index.html">Home</a>
-            </li>
+    <div class="logo">
+        <span>K</span>BTV
+    </div>
 
-            <li>
-                <a href="moovie.html">Movies</a>
-            </li>
+    <ul>
 
-            <li>
-                <a href="register.html">Register</a>
-            </li>
+        <li>
+            <a href="index.html">Home</a>
+        </li>
 
-            <li>
-                <a href="login.html">Login</a>
-            </li>
+        <li>
+            <a href="moovie.html">Movies</a>
+        </li>
 
-            <li>
-                <button id="logoutBtn" type="button">
-                    Logout
-                </button>
-            </li>
-        </ul>
+        <li>
+            <a href="register.html">Register</a>
+        </li>
 
-    </nav>
+        <li>
+            <a href="login.html">Login</a>
+        </li>
+
+        <li>
+
+            <button
+                id="logoutBtn"
+                type="button"
+                style="
+                    display: inline-block;
+                    padding: 10px 18px;
+                    background: red;
+                    color: white;
+                    border: none;
+                    border-radius: 6px;
+                    cursor: pointer;
+                    font-size: 15px;
+                ">
+
+                Logout
+
+            </button>
+
+        </li>
+
+    </ul>
+
+</nav>
 
 
-    <!-- Movie Details -->
+<!-- =========================
+     MOVIE DETAILS
+========================= -->
 
-    <section class="movie-details">
+<section class="movie-details">
 
-        <div class="movie-details-container">
-
-            <div>
-
-                <img
-                    id="movieImage"
-                    src="moovie1jpg.jpeg"
-                    alt="Movie">
-
-            </div>
+    <div class="movie-details-container">
 
 
-            <div class="movie-details-info">
+        <!-- MOVIE POSTER -->
 
-                <h1 id="movieTitle">
-                    Movie One
-                </h1>
+        <div class="movie-details-image">
 
-                <p>
-                    ⭐ ⭐ ⭐ ⭐ ☆
-                </p>
-
-                <p class="movie-description">
-
-                    Enjoy this movie on KBTV.
-                    Rent this movie for ₹100 and get
-                    24-hour access after successful payment.
-
-                </p>
-
-                <div class="movie-price">
-                    ₹100
-                </div>
-
-                <a
-                    href="payment.html"
-                    class="rent-button">
-
-                    Rent Now
-
-                </a>
-
-            </div>
+            <img
+                id="movieImage"
+                src="moovie1jpg.jpeg"
+                alt="Movie">
 
         </div>
 
-    </section>
+
+        <!-- MOVIE INFORMATION -->
+
+        <div class="movie-details-info">
+
+            <h1 id="movieTitle">
+                Movie One
+            </h1>
+
+            <p id="movieRating">
+                ⭐⭐⭐⭐☆
+            </p>
+
+            <p
+                id="movieDescription"
+                class="movie-description">
+
+                Enjoy this movie on KBTV.
+                Rent this movie for ₹100 and
+                get 24-hour access after payment.
+
+            </p>
+
+            <div
+                id="moviePrice"
+                class="movie-price">
+
+                ₹100
+
+            </div>
+
+            <a
+                id="rentButton"
+                href="payment.html"
+                class="rent-button">
+
+                Rent Now
+
+            </a>
+
+        </div>
+
+    </div>
+
+</section>
 
 
-    <!-- Firebase Authentication -->
+<!-- =========================
+     MOVIE DATA
+========================= -->
 
-    <script type="module" src="auth.js"></script>
+<script>
+
+const movies = {
+
+    1: {
+        title: "Movie One",
+        image: "moovie1jpg.jpeg",
+        rating: "⭐⭐⭐⭐☆",
+        description:
+            "Enjoy Movie One on KBTV. Rent this movie for ₹100 and get 24-hour access.",
+        price: "₹100"
+    },
+
+    2: {
+        title: "Movie Two",
+        image: "moovie2jpg.jpeg",
+        rating: "⭐⭐⭐⭐⭐",
+        description:
+            "Enjoy Movie Two on KBTV. Rent this movie for ₹100 and get 24-hour access.",
+        price: "₹100"
+    },
+
+    3: {
+        title: "Movie Three",
+        image: "moovie3jpg.jpeg",
+        rating: "⭐⭐⭐⭐☆",
+        description:
+            "Enjoy Movie Three on KBTV. Rent this movie for ₹100 and get 24-hour access.",
+        price: "₹100"
+    },
+
+    4: {
+        title: "Movie Four",
+        image: "moovie4jpg.jpeg",
+        rating: "⭐⭐⭐⭐⭐",
+        description:
+            "Enjoy Movie Four on KBTV. Rent this movie for ₹100 and get 24-hour access.",
+        price: "₹100"
+    }
+
+};
+
+
+// Get movie number from URL
+
+const params = new URLSearchParams(
+    window.location.search
+);
+
+const movieNumber = params.get("movie") || "1";
+
+const movie = movies[movieNumber];
+
+
+// Display selected movie
+
+if (movie) {
+
+    document.getElementById("movieImage").src =
+        movie.image;
+
+    document.getElementById("movieTitle").textContent =
+        movie.title;
+
+    document.getElementById("movieRating").textContent =
+        movie.rating;
+
+    document.getElementById("movieDescription").textContent =
+        movie.description;
+
+    document.getElementById("moviePrice").textContent =
+        movie.price;
+
+    document.getElementById("rentButton").href =
+        "payment.html?movie=" + movieNumber;
+
+}
+
+</script>
+
+
+<!-- FIREBASE AUTH -->
+
+<script
+    type="module"
+    src="auth.js">
+</script>
+
 
 </body>
 
