@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Movie Details - KBTV</title>
+
+    <link rel="stylesheet" href="style.css">
+
+    <style>
+        .movie-details {
+            max-width: 1000px;
+            margin: 60px auto;
+            padding: 20px;
+        }
+
+        .movie-details-container {
+            display: flex;
+            gap: 40px;
+            align-items: flex-start;
+        }
+
+        .movie-details img {
+            width: 350px;
+            max-width: 100%;
+            border-radius: 10px;
+        }
+
+        .movie-details-info {
+            flex: 1;
+        }
+
+        .movie-details-info h1 {
+            font-size: 36px;
+            margin-bottom: 15px;
+        }
+
+        .movie-description {
+            line-height: 1.7;
+            margin: 20px 0;
+        }
+
+        .movie-price {
+            font-size: 28px;
+            font-weight: bold;
+            margin: 20px 0;
+        }
+
+        .rent-button {
+            display: inline-block;
+            padding: 14px 30px;
+            background: #e50914;
+            color: white;
+            text-decoration: none;
+            border-radius: 6px;
+            font-weight: bold;
+        }
+
+        .rent-button:hover {
+            opacity: 0.85;
+        }
+
+        @media (max-width: 700px) {
+
+            .movie-details-container {
+                flex-direction: column;
+            }
+
+            .movie-details img {
+                width: 100%;
+            }
+
+            .movie-details-info h1 {
+                font-size: 28px;
+            }
+        }
+    </style>
+
+</head>
+
+<body>
+
+    <!-- Navigation -->
+
+    <nav>
+
+        <div class="logo">
+            <span>K</span>BTV
+        </div>
+
+        <ul>
+            <li>
+                <a href="index.html">Home</a>
+            </li>
+
+            <li>
+                <a href="moovie.html">Movies</a>
+            </li>
+
+            <li>
+                <a href="register.html">Register</a>
+            </li>
+
+            <li>
+                <a href="login.html">Login</a>
+            </li>
+
+            <li>
+                <button id="logoutBtn" type="button">
+                    Logout
+                </button>
+            </li>
+        </ul>
+
+    </nav>
+
+
+    <!-- Movie Details -->
+
+    <section class="movie-details">
+
+        <div class="movie-details-container">
+
+            <div>
+
+                <img
+                    id="movieImage"
+                    src="moovie1jpg.jpeg"
+                    alt="Movie">
+
+            </div>
+
+
+            <div class="movie-details-info">
+
+                <h1 id="movieTitle">
+                    Movie One
+                </h1>
+
+                <p>
+                    ⭐ ⭐ ⭐ ⭐ ☆
+                </p>
+
+                <p class="movie-description">
+
+                    Enjoy this movie on KBTV.
+                    Rent this movie for ₹100 and get
+                    24-hour access after successful payment.
+
+                </p>
+
+                <div class="movie-price">
+                    ₹100
+                </div>
+
+                <a
+                    href="payment.html"
+                    class="rent-button">
+
+                    Rent Now
+
+                </a>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- Firebase Authentication -->
+
+    <script type="module" src="auth.js"></script>
+
+</body>
+
+</html>
