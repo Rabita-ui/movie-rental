@@ -3,84 +3,237 @@
 
 <head>
 
-<meta charset="UTF-8">
+    <meta charset="UTF-8">
 
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>KBTV - Payment</title>
+    <title>KBTV - Payment</title>
 
-<link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="style.css">
 
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap"
+        rel="stylesheet">
 
 </head>
 
 <body>
 
+
+<!-- =========================
+     NAVIGATION
+========================= -->
+
 <nav>
 
-<div class="logo">
-<span>K</span>BTV
-</div>
+    <div class="logo">
+        <span>K</span>BTV
+    </div>
 
-<ul>
+    <ul>
 
-<li><a href="index.html">Home</a></li>
+        <li>
+            <a href="index.html">Home</a>
+        </li>
 
-<li><a href="movie.html">Movie</a></li>
+        <li>
+            <a href="moovie.html">Movies</a>
+        </li>
 
-<li><a href="login.html">Login</a></li>
+        <li>
+            <a href="login.html">Login</a>
+        </li>
 
-</ul>
+        <li>
+            <button
+                id="logoutBtn"
+                type="button"
+                style="
+                    display: inline-block;
+                    padding: 10px 18px;
+                    background: red;
+                    color: white;
+                    border: none;
+                    border-radius: 6px;
+                    cursor: pointer;
+                ">
+                Logout
+            </button>
+        </li>
+
+    </ul>
 
 </nav>
 
+
+<!-- =========================
+     PAYMENT
+========================= -->
+
 <section class="payment-page">
 
-<div class="payment-card">
+    <div class="payment-card">
 
-<h1>Complete Your Rental</h1>
+        <h1>
+            Complete Your Rental
+        </h1>
 
-<img src="moovie1jpg.jpeg" class="movie-payment-poster" alt="Movie">
 
-<h2>Movie One</h2>
+        <!-- Movie poster -->
 
-<p class="price">Rental Price: <strong>₹100</strong></p>
+        <img
+            id="paymentPoster"
+            src="moovie1jpg.jpeg"
+            class="movie-payment-poster"
+            alt="Movie">
 
-<h3>Scan QR Code</h3>
 
-<img src="Qrc.png" class="qr-image" alt="QR Code">
+        <!-- Movie title -->
 
-<p class="upi-title">UPI ID</p>
+        <h2 id="paymentMovieTitle">
+            Movie One
+        </h2>
 
-<div class="upi-box">
 
-<input type="text" value="9862728802m@pnb" readonly>
+        <!-- Price -->
 
-</div>
+        <p class="price">
+            Rental Price:
+            <strong id="paymentPrice">
+                ₹100
+            </strong>
+        </p>
 
-<p class="note">
-After payment, keep your screenshot safe. In the next version of KBTV you'll be able to upload it directly here for verification.
-</p>
 
-<button class="pay-btn">
-I've Paid
-</button>
+        <h3>
+            Scan QR Code
+        </h3>
 
-</div>
+
+        <!-- Your QR code -->
+
+        <img
+            src="Qrc.png"
+            class="qr-image"
+            alt="QR Code">
+
+
+        <p class="upi-title">
+            UPI ID
+        </p>
+
+
+        <div class="upi-box">
+
+            <input
+                type="text"
+                value="9862728802m@pnb"
+                readonly>
+
+        </div>
+
+
+        <p class="note">
+
+            After payment, keep your screenshot safe.
+            In the next step, you will be able to submit
+            your payment for verification.
+
+        </p>
+
+
+        <button
+            id="paidBtn"
+            class="pay-btn"
+            type="button">
+
+            I've Paid
+
+        </button>
+
+    </div>
 
 </section>
 
-<footer>
 
-<h2>KBTV</h2>
+<!-- =========================
+     MOVIE INFORMATION
+========================= -->
 
-<p>© 2026 KBTV Movie Rental. All Rights Reserved.</p>
+<script>
 
-</footer>
+const movies = {
+
+    1: {
+        title: "Movie One",
+        image: "moovie1jpg.jpeg",
+        price: "₹100"
+    },
+
+    2: {
+        title: "Movie Two",
+        image: "moovie2jpg.jpeg",
+        price: "₹100"
+    },
+
+    3: {
+        title: "Movie Three",
+        image: "moovie3jpg.jpeg",
+        price: "₹100"
+    },
+
+    4: {
+        title: "Movie Four",
+        image: "moovie4jpg.jpeg",
+        price: "₹100"
+    }
+
+};
+
+
+// Read movie number from URL
+
+const params =
+    new URLSearchParams(window.location.search);
+
+const movieNumber =
+    params.get("movie") || "1";
+
+
+// Find movie
+
+const movie =
+    movies[movieNumber];
+
+
+// Display movie
+
+if (movie) {
+
+    document.getElementById("paymentPoster").src =
+        movie.image;
+
+    document.getElementById("paymentMovieTitle").textContent =
+        movie.title;
+
+    document.getElementById("paymentPrice").textContent =
+        movie.price;
+
+}
+
+</script>
+
+
+<!-- Firebase Authentication -->
+
+<script
+    type="module"
+    src="auth.js">
+</script>
+
 
 </body>
 
