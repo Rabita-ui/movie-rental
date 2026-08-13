@@ -1,114 +1,564 @@
-import { auth, db } from "./firebase.js";
+<!-- watch.html - Secure Movie Player -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>KBTV - Watch Movie</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+            background: #0a0a0a;
+            color: white;
+            min-height: 100vh;
+        }
 
-import {
-createUserWithEmailAndPassword,
-signInWithEmailAndPassword
-} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+        /* Header */
+        .header {
+            background: rgba(0,0,0,0.9);
+            padding: 15px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #333;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        .header .logo {
+            font-size: 24px;
+            font-weight: bold;
+            color: #fff;
+            text-decoration: none;
+        }
+        .header .logo span {
+            color: #4CAF50;
+        }
+        .header .user-info {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            color: #aaa;
+        }
+        .header .user-info .email {
+            font-size: 14px;
+        }
+        .btn-logout {
+            background: transparent;
+            border: 1px solid #555;
+            color: #aaa;
+            padding: 6px 18px;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .btn-logout:hover {
+            border-color: #dc3545;
+            color: #dc3545;
+        }
 
-import {
-doc,
-setDoc
-} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+        /* Main Player */
+        .player-wrapper {
+            max-width: 1100px;
+            margin: 20px auto;
+            padding: 0 20px;
+        }
 
-// ------------------------
-// REGISTER
-// ------------------------
+        .video-container {
+            background: #000;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.8);
+            position: relative;
+        }
+        .video-container video {
+            width: 100%;
+            display: block;
+            max-height: 80vh;
+        }
+        .video-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(0,0,0,0.5);
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+        .video-container:hover .video-overlay {
+            opacity: 1;
+        }
+        .video-overlay .play-icon {
+            font-size: 80px;
+            color: white;
+            text-shadow: 0 0 20px rgba(0,0,0,0.8);
+        }
 
-const registerForm=document.getElementById("registerForm");
+        /* Movie Info */
+        .movie-info {
+            padding: 20px 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+        .movie-info .title {
+            font-size: 28px;
+            font-weight: bold;
+        }
+        .movie-info .rental-timer {
+            background: rgba(255,255,255,0.1);
+            padding: 12px 24px;
+            border-radius: 8px;
+            text-align: center;
+            min-width: 200px;
+        }
+        .movie-info .rental-timer .label {
+            font-size: 12px;
+            color: #888;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        .movie-info .rental-timer .time {
+            font-size: 28px;
+            font-weight: bold;
+            color: #4CAF50;
+            font-family: 'Courier New', monospace;
+        }
+        .movie-info .rental-timer .time.warning {
+            color: #ff9800;
+        }
+        .movie-info .rental-timer .time.danger {
+            color: #f44336;
+            animation: blink 1s infinite;
+        }
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.3; }
+        }
 
-if(registerForm){
+        /* Rental Info Card */
+        .rental-info {
+            background: rgba(255,255,255,0.05);
+            border-radius: 12px;
+            padding: 20px;
+            margin-top: 20px;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+        }
+        .rental-info .info-item {
+            text-align: center;
+        }
+        .rental-info .info-item .label {
+            font-size: 12px;
+            color: #888;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        .rental-info .info-item .value {
+            font-size: 18px;
+            font-weight: 500;
+            margin-top: 5px;
+        }
 
-registerForm.addEventListener("submit",async(e)=>{
+        /* Access Denied */
+        .access-denied {
+            text-align: center;
+            padding: 80px 20px;
+            max-width: 500px;
+            margin: 0 auto;
+        }
+        .access-denied .icon {
+            font-size: 80px;
+            margin-bottom: 20px;
+        }
+        .access-denied h2 {
+            font-size: 32px;
+            color: #f44336;
+            margin-bottom: 15px;
+        }
+        .access-denied p {
+            color: #aaa;
+            font-size: 16px;
+            line-height: 1.6;
+        }
+        .btn-rent {
+            display: inline-block;
+            margin-top: 25px;
+            padding: 14px 40px;
+            background: #4CAF50;
+            color: white;
+            text-decoration: none;
+            border-radius: 8px;
+            font-weight: 600;
+            transition: background 0.3s;
+        }
+        .btn-rent:hover {
+            background: #45a049;
+        }
+        .btn-back {
+            display: inline-block;
+            margin-top: 15px;
+            color: #888;
+            text-decoration: none;
+        }
+        .btn-back:hover {
+            color: #fff;
+        }
 
-e.preventDefault();
+        /* Loading */
+        .loading {
+            text-align: center;
+            padding: 100px 20px;
+        }
+        .loading .spinner {
+            border: 4px solid #333;
+            border-top: 4px solid #4CAF50;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 20px;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        .loading p {
+            color: #888;
+        }
 
-const name=document.getElementById("fullName").value;
+        /* Responsive */
+        @media (max-width: 768px) {
+            .header {
+                flex-direction: column;
+                gap: 10px;
+                padding: 10px 15px;
+            }
+            .header .user-info {
+                width: 100%;
+                justify-content: space-between;
+            }
+            .movie-info {
+                flex-direction: column;
+                align-items: stretch;
+                text-align: center;
+            }
+            .movie-info .title {
+                font-size: 22px;
+            }
+            .movie-info .rental-timer .time {
+                font-size: 24px;
+            }
+            .rental-info {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+        @media (max-width: 480px) {
+            .rental-info {
+                grid-template-columns: 1fr;
+            }
+            .access-denied h2 {
+                font-size: 24px;
+            }
+        }
+    </style>
+</head>
+<body>
 
-const mobile=document.getElementById("mobile").value;
+    <!-- Header -->
+    <header class="header">
+        <a href="index.html" class="logo">🎬 KBTV <span>Movies</span></a>
+        <div class="user-info">
+            <span class="email" id="userEmail">Loading...</span>
+            <button class="btn-logout" onclick="logoutUser()">Logout</button>
+        </div>
+    </header>
 
-const email=document.getElementById("email").value;
+    <!-- Main Content -->
+    <div class="player-wrapper" id="playerContent">
+        <div class="loading">
+            <div class="spinner"></div>
+            <p>Checking your rental status...</p>
+        </div>
+    </div>
 
-const password=document.getElementById("password").value;
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { 
+            getAuth, 
+            onAuthStateChanged,
+            signOut 
+        } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+        import { 
+            getFirestore, 
+            collection, 
+            query, 
+            where, 
+            getDocs,
+            onSnapshot,
+            doc,
+            getDoc
+        } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
-const confirm=document.getElementById("confirmPassword").value;
+        const firebaseConfig = {
+            apiKey: "YOUR_API_KEY",
+            authDomain: "YOUR_PROJECT.firebaseapp.com",
+            projectId: "YOUR_PROJECT_ID",
+            storageBucket: "YOUR_PROJECT.appspot.com",
+            messagingSenderId: "YOUR_SENDER_ID",
+            appId: "YOUR_APP_ID"
+        };
 
-if(password!==confirm){
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
 
-alert("Passwords do not match.");
+        // Get movie info from URL
+        const urlParams = new URLSearchParams(window.location.search);
+        const movieId = urlParams.get('movieId') || '1';
+        const movieTitle = urlParams.get('title') || 'Movie';
 
-return;
+        let timerInterval = null;
+        let rentalDocId = null;
 
-}
+        // Check authentication
+        onAuthStateChanged(auth, (user) => {
+            if (!user) {
+                window.location.href = 'login.html';
+                return;
+            }
+            document.getElementById('userEmail').textContent = user.email;
+            checkRentalStatus(user.uid);
+        });
 
-try{
+        async function checkRentalStatus(userId) {
+            const content = document.getElementById('playerContent');
 
-const userCredential=
-await createUserWithEmailAndPassword(
-auth,
-email,
-password
-);
+            try {
+                // Check for active rental
+                const rentalsQuery = query(
+                    collection(db, 'rentals'),
+                    where('userId', '==', userId),
+                    where('movieId', '==', movieId),
+                    where('status', '==', 'active')
+                );
 
-await setDoc(doc(db,"users",userCredential.user.uid),{
+                const rentalsSnapshot = await getDocs(rentalsQuery);
+                
+                if (rentalsSnapshot.empty) {
+                    // Check for pending payment
+                    const pendingQuery = query(
+                        collection(db, 'payments'),
+                        where('userId', '==', userId),
+                        where('movieId', '==', movieId),
+                        where('status', '==', 'pending')
+                    );
+                    const pendingSnapshot = await getDocs(pendingQuery);
 
-name:name,
+                    let message = "You don't have an active rental for this movie.";
+                    let actionLink = `<a href="movie-details.html?movieId=${movieId}" class="btn-rent">🎬 Rent Now</a>`;
+                    
+                    if (!pendingSnapshot.empty) {
+                        message = "Your payment is pending verification. Please wait for admin approval.";
+                        actionLink = `<a href="movie-details.html?movieId=${movieId}" class="btn-back">← Back to Movie</a>`;
+                    }
 
-mobile:mobile,
+                    content.innerHTML = `
+                        <div class="access-denied">
+                            <div class="icon">🔒</div>
+                            <h2>Access Denied</h2>
+                            <p>${message}</p>
+                            ${actionLink}
+                            <br>
+                            <a href="moovie.html" class="btn-back">← Browse Movies</a>
+                        </div>
+                    `;
+                    return;
+                }
 
-email:email,
+                // Get the rental document
+                const rentalDoc = rentalsSnapshot.docs[0];
+                rentalDocId = rentalDoc.id;
+                const rentalData = rentalDoc.data();
+                const expiresAt = rentalData.expiresAt.toDate();
+                const now = new Date();
+                const timeRemaining = expiresAt - now;
 
-createdAt:new Date()
+                if (timeRemaining <= 0) {
+                    // Rental expired
+                    content.innerHTML = `
+                        <div class="access-denied">
+                            <div class="icon">⏰</div>
+                            <h2>Rental Expired</h2>
+                            <p>Your rental for "${movieTitle}" has expired.</p>
+                            <a href="movie-details.html?movieId=${movieId}" class="btn-rent">🔄 Rent Again</a>
+                            <br>
+                            <a href="moovie.html" class="btn-back">← Browse Movies</a>
+                        </div>
+                    `;
+                    return;
+                }
 
-});
+                // Show the player
+                showPlayer(movieTitle, timeRemaining, expiresAt, rentalData);
 
-alert("Account Created Successfully!");
+                // Set up timer
+                if (timerInterval) {
+                    clearInterval(timerInterval);
+                }
+                timerInterval = setInterval(() => {
+                    const now = new Date();
+                    const remaining = expiresAt - now;
+                    if (remaining <= 0) {
+                        clearInterval(timerInterval);
+                        location.reload();
+                    } else {
+                        updateTimer(remaining);
+                    }
+                }, 1000);
 
-window.location="login.html";
+                // Listen for real-time rental updates
+                const rentalRef = doc(db, 'rentals', rentalDocId);
+                onSnapshot(rentalRef, (doc) => {
+                    if (doc.exists()) {
+                        const data = doc.data();
+                        if (data.status !== 'active') {
+                            clearInterval(timerInterval);
+                            location.reload();
+                        }
+                    }
+                });
 
-}catch(error){
+            } catch (error) {
+                console.error('Error checking rental:', error);
+                content.innerHTML = `
+                    <div class="access-denied">
+                        <div class="icon">❌</div>
+                        <h2>Error</h2>
+                        <p>Could not verify your rental status.</p>
+                        <p style="font-size:14px;color:#888;">${error.message}</p>
+                        <a href="movie-details.html?movieId=${movieId}" class="btn-back">← Back</a>
+                    </div>
+                `;
+            }
+        }
 
-alert(error.message);
+        function showPlayer(title, timeRemaining, expiresAt, rentalData) {
+            const content = document.getElementById('playerContent');
+            
+            // In production, this should be a secure video URL
+            // For demo, use a placeholder or sample video
+            const videoUrl = `videos/${movieId}.mp4`;
+            
+            const hours = Math.floor(timeRemaining / (1000 * 60 * 60));
+            const minutes = Math.floor((timeRemaining % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((timeRemaining % (1000 * 60)) / 1000);
 
-}
+            content.innerHTML = `
+                <div class="video-container">
+                    <video id="moviePlayer" controls autoplay>
+                        <source src="${videoUrl}" type="video/mp4">
+                        <p>Your browser doesn't support HTML5 video.</p>
+                    </video>
+                    <div class="video-overlay">
+                        <span class="play-icon">▶️</span>
+                    </div>
+                </div>
 
-});
+                <div class="movie-info">
+                    <div class="title">🎬 ${title}</div>
+                    <div class="rental-timer">
+                        <div class="label">Time Remaining</div>
+                        <div class="time" id="rentalTimer">
+                            ${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}
+                        </div>
+                    </div>
+                </div>
 
-}
+                <div class="rental-info">
+                    <div class="info-item">
+                        <div class="label">Rental ID</div>
+                        <div class="value">#${rentalDocId.slice(0, 8)}</div>
+                    </div>
+                    <div class="info-item">
+                        <div class="label">Expires At</div>
+                        <div class="value">${expiresAt.toLocaleString()}</div>
+                    </div>
+                    <div class="info-item">
+                        <div class="label">Status</div>
+                        <div class="value" style="color:#4CAF50;">✅ Active</div>
+                    </div>
+                    <div class="info-item">
+                        <div class="label">Movie ID</div>
+                        <div class="value">#${movieId}</div>
+                    </div>
+                </div>
+            `;
 
-// ------------------------
-// LOGIN
-// ------------------------
+            // Apply warning/danger styles to timer
+            updateTimerStyle(timeRemaining);
+        }
 
-const loginForm=document.getElementById("loginForm");
+        function updateTimer(timeRemaining) {
+            const timerElement = document.getElementById('rentalTimer');
+            if (!timerElement) return;
 
-if(loginForm){
+            const hours = Math.floor(timeRemaining / (1000 * 60 * 60));
+            const minutes = Math.floor((timeRemaining % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((timeRemaining % (1000 * 60)) / 1000);
 
-loginForm.addEventListener("submit",async(e)=>{
+            timerElement.textContent = 
+                `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
+            
+            updateTimerStyle(timeRemaining);
+        }
 
-e.preventDefault();
+        function updateTimerStyle(timeRemaining) {
+            const timerElement = document.getElementById('rentalTimer');
+            if (!timerElement) return;
 
-const email=document.getElementById("loginEmail").value;
+            // Remove existing classes
+            timerElement.classList.remove('warning', 'danger');
 
-const password=document.getElementById("loginPassword").value;
+            if (timeRemaining < 300000) { // Less than 5 minutes
+                timerElement.classList.add('danger');
+            } else if (timeRemaining < 600000) { // Less than 10 minutes
+                timerElement.classList.add('warning');
+            }
+        }
 
-try{
+        window.logoutUser = function() {
+            if (confirm('Are you sure you want to logout?')) {
+                if (timerInterval) {
+                    clearInterval(timerInterval);
+                }
+                signOut(auth).then(() => {
+                    window.location.href = 'login.html';
+                });
+            }
+        };
 
-await signInWithEmailAndPassword(
-auth,
-email,
-password
-);
+        // Clean up on page unload
+        window.addEventListener('beforeunload', () => {
+            if (timerInterval) {
+                clearInterval(timerInterval);
+            }
+        });
 
-alert("Login Successful!");
-
-window.location="index.html";
-
-}catch(error){
-
-alert(error.message);
-
-}
-
-});
-
-}
+        console.log('🎬 KBTV Player loaded');
+    </script>
+</body>
+</html>
