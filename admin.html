@@ -1,126 +1,201 @@
-<!-- setup-admin.html -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>KBTV - Setup Admin</title>
+    <title>KBTV Admin Login</title>
     <link rel="stylesheet" href="style.css" />
     <style>
-        .setup-container {
-            max-width: 500px;
-            margin: 50px auto;
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .admin-login {
+            max-width: 420px;
+            width: 100%;
+            margin: 20px;
             padding: 40px;
             background: white;
-            border-radius: 12px;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+            border-radius: 16px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
         }
-        .setup-container h2 {
+        .admin-login .logo {
             text-align: center;
-            margin-bottom: 20px;
-        }
-        .form-group {
-            margin-bottom: 20px;
-        }
-        .form-group label {
-            display: block;
+            font-size: 32px;
+            font-weight: bold;
+            color: #333;
             margin-bottom: 5px;
-            font-weight: 600;
         }
-        .form-group input {
+        .admin-login .logo span {
+            color: #4CAF50;
+        }
+        .admin-login .subtitle {
+            text-align: center;
+            color: #888;
+            font-size: 14px;
+            margin-bottom: 30px;
+        }
+        .admin-login .shield {
+            text-align: center;
+            font-size: 48px;
+            margin-bottom: 10px;
+        }
+        .admin-login h2 {
+            text-align: center;
+            font-size: 24px;
+            color: #333;
+            margin-bottom: 5px;
+        }
+        .admin-login .form-group {
+            margin-bottom: 20px;
+        }
+        .admin-login label {
+            display: block;
+            margin-bottom: 6px;
+            font-weight: 600;
+            color: #555;
+            font-size: 14px;
+        }
+        .admin-login input {
             width: 100%;
-            padding: 12px;
-            border: 2px solid #ddd;
+            padding: 12px 16px;
+            border: 2px solid #e0e0e0;
             border-radius: 8px;
             font-size: 16px;
+            transition: border-color 0.3s;
         }
-        .btn-primary {
+        .admin-login input:focus {
+            border-color: #4CAF50;
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(76, 175, 80, 0.1);
+        }
+        .admin-login button {
             width: 100%;
-            padding: 12px;
+            padding: 14px;
             background: #4CAF50;
             color: white;
             border: none;
             border-radius: 8px;
             font-size: 16px;
+            font-weight: 600;
             cursor: pointer;
+            transition: background 0.3s, transform 0.2s;
         }
-        .btn-primary:hover {
+        .admin-login button:hover {
             background: #45a049;
         }
-        .btn-primary:disabled {
+        .admin-login button:active {
+            transform: scale(0.98);
+        }
+        .admin-login button:disabled {
             background: #ccc;
             cursor: not-allowed;
+            transform: none;
         }
-        .result {
-            margin-top: 20px;
-            padding: 10px;
-            border-radius: 8px;
+        .error-message {
+            color: #f44336;
             text-align: center;
+            margin-top: 12px;
+            font-size: 14px;
+            min-height: 20px;
         }
-        .success {
-            background: #d4edda;
-            color: #155724;
+        .admin-login .links {
+            text-align: center;
+            margin-top: 20px;
+            font-size: 14px;
+            color: #888;
         }
-        .error {
-            background: #f8d7da;
-            color: #721c24;
+        .admin-login .links a {
+            color: #4CAF50;
+            text-decoration: none;
+            font-weight: 500;
         }
-        .info {
-            background: #cce5ff;
-            color: #004085;
+        .admin-login .links a:hover {
+            text-decoration: underline;
         }
-        .loading {
-            background: #fff3cd;
-            color: #856404;
+        .admin-login .divider {
+            border: none;
+            border-top: 1px solid #eee;
+            margin: 20px 0;
+        }
+        .admin-login .info-box {
+            background: #e3f2fd;
+            padding: 12px;
+            border-radius: 8px;
+            font-size: 13px;
+            color: #1565c0;
+            text-align: center;
+            margin-top: 15px;
+        }
+        .admin-login .info-box strong {
+            display: block;
+            margin-bottom: 4px;
         }
     </style>
 </head>
 <body>
-    <header>
-        <div class="container">
-            <h1>🎬 KBTV</h1>
-            <nav>
-                <a href="index.html">Home</a>
-                <a href="login.html">Login</a>
-                <a href="admin-dashboard.html">Admin</a>
-            </nav>
-        </div>
-    </header>
 
-    <main class="container">
-        <div class="setup-container">
-            <h2>🔑 Setup Admin Account</h2>
-            <p style="text-align:center;color:#666;margin-bottom:20px;">
-                Make an existing user an administrator
-            </p>
-            
+    <div class="admin-login">
+        <div class="logo">🎬 KBTV <span>Admin</span></div>
+        <div class="subtitle">Administrator Access Only</div>
+        
+        <div class="shield">🔐</div>
+        <h2>Admin Login</h2>
+        <p style="text-align:center;color:#888;font-size:14px;margin-bottom:25px;">
+            Enter your admin credentials to continue
+        </p>
+
+        <form id="adminLoginForm">
             <div class="form-group">
-                <label for="adminEmail">Admin Email Address</label>
+                <label for="adminEmail">📧 Admin Email</label>
                 <input 
                     type="email" 
                     id="adminEmail" 
-                    placeholder="Enter the email you want to make admin"
-                    required
+                    placeholder="admin@kbtv.com" 
+                    required 
+                    autocomplete="email"
                 />
             </div>
-            
             <div class="form-group">
-                <label for="adminPassword">Your Password</label>
+                <label for="adminPassword">🔑 Password</label>
                 <input 
                     type="password" 
                     id="adminPassword" 
-                    placeholder="Enter your password to confirm"
-                    required
+                    placeholder="Enter your password" 
+                    required 
+                    autocomplete="current-password"
                 />
             </div>
             
-            <button id="setupBtn" onclick="setupAdmin()" class="btn-primary">
-                Make this user an Admin
+            <button type="submit" id="loginBtn">
+                🚀 Login as Admin
             </button>
             
-            <div id="result" class="result"></div>
+            <div id="loginError" class="error-message"></div>
+        </form>
+
+        <hr class="divider" />
+
+        <div class="links">
+            <a href="index.html">← Back to Home</a> &nbsp;|&nbsp; 
+            <a href="setup-admin.html">⚙️ Setup Admin</a>
         </div>
-    </main>
+
+        <div class="info-box">
+            <strong>⚠️ Admin Access Only</strong>
+            This area is restricted to authorized administrators only.
+            Unauthorized access is prohibited.
+        </div>
+    </div>
 
     <!-- =========================
          FIREBASE AUTH - UPDATED
@@ -132,95 +207,70 @@
         import { 
             signInWithEmailAndPassword,
             onAuthStateChanged,
-            updateProfile
+            signOut
         } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
-        import { 
-            doc, 
-            setDoc,
-            getDoc,
-            serverTimestamp
-        } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+        import { doc, getDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
-        // ============ SETUP ADMIN FUNCTION ============
-        window.setupAdmin = async function() {
-            const email = document.getElementById('adminEmail').value.trim();
-            const password = document.getElementById('adminPassword').value;
-            const resultDiv = document.getElementById('result');
-            const setupBtn = document.getElementById('setupBtn');
+        // ============ DOM ELEMENTS ============
+        const form = document.getElementById('adminLoginForm');
+        const emailInput = document.getElementById('adminEmail');
+        const passwordInput = document.getElementById('adminPassword');
+        const errorDiv = document.getElementById('loginError');
+        const loginBtn = document.getElementById('loginBtn');
+
+        // ============ FORM SUBMIT ============
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
             
-            // Clear previous messages
-            resultDiv.className = 'result';
+            const email = emailInput.value.trim();
+            const password = passwordInput.value;
+            
+            // Clear previous errors
+            errorDiv.textContent = '';
             
             // Validate inputs
             if (!email || !password) {
-                resultDiv.className = 'result error';
-                resultDiv.innerHTML = '❌ Please enter both email and password';
+                errorDiv.textContent = '❌ Please enter both email and password.';
                 return;
             }
 
-            // Disable button during processing
-            setupBtn.disabled = true;
-            setupBtn.textContent = '⏳ Processing...';
+            // Disable button during login
+            loginBtn.disabled = true;
+            loginBtn.textContent = '⏳ Logging in...';
 
             try {
-                // Show loading status
-                resultDiv.className = 'result loading';
-                resultDiv.innerHTML = '⏳ Logging in and setting up admin...';
-                
-                // Sign in with the provided credentials
+                // Sign in with Firebase Auth
                 const userCredential = await signInWithEmailAndPassword(auth, email, password);
                 const user = userCredential.user;
 
                 console.log('✅ Logged in as:', user.email);
 
-                // Check if user document exists, create if not
-                const userRef = doc(db, 'users', user.uid);
-                const userDoc = await getDoc(userRef);
+                // Check if user is admin
+                const userDoc = await getDoc(doc(db, 'users', user.uid));
+                const userData = userDoc.data();
                 
-                if (!userDoc.exists()) {
-                    // Create user document if it doesn't exist
-                    await setDoc(userRef, {
-                        email: user.email,
-                        role: 'admin',
-                        createdAt: serverTimestamp(),
-                        uid: user.uid,
-                        fullName: user.displayName || 'Admin'
-                    });
-                    console.log('✅ Created new user document with admin role');
+                if (userData && userData.role === 'admin') {
+                    // Admin access granted - redirect to dashboard
+                    console.log('✅ Admin access granted');
+                    window.location.href = 'admin-dashboard.html';
                 } else {
-                    // Update existing user to admin
-                    await setDoc(userRef, {
-                        role: 'admin',
-                        updatedAt: serverTimestamp()
-                    }, { merge: true });
-                    console.log('✅ Updated existing user to admin role');
+                    // Not an admin - sign out and show error
+                    errorDiv.textContent = '❌ Access denied. Admin privileges required.';
+                    await signOut(auth);
+                    loginBtn.disabled = false;
+                    loginBtn.textContent = '🚀 Login as Admin';
                 }
-
-                // Update the user's display name
-                await updateProfile(user, {
-                    displayName: 'Admin'
-                });
-
-                // Show success message
-                resultDiv.className = 'result success';
-                resultDiv.innerHTML = `
-                    ✅ <strong>${email}</strong> is now an admin!<br><br>
-                    <a href="admin-dashboard.html" style="color:#155724;font-weight:bold;font-size:18px;">
-                        🚀 Go to Admin Dashboard →
-                    </a>
-                `;
-
             } catch (error) {
-                console.error('Setup Error:', error);
+                console.error('Login error:', error);
                 
                 // Show user-friendly error message
                 let message = '';
                 switch (error.code) {
                     case 'auth/user-not-found':
-                        message = 'User not found. Please create this account first.';
+                        message = 'No account found with this email.';
                         break;
                     case 'auth/wrong-password':
-                        message = 'Wrong password. Please try again.';
+                        message = 'Incorrect password. Please try again.';
                         break;
                     case 'auth/invalid-email':
                         message = 'Invalid email format. Please check and try again.';
@@ -234,33 +284,27 @@
                     default:
                         message = error.message;
                 }
-                resultDiv.className = 'result error';
-                resultDiv.innerHTML = '❌ ' + message;
-            } finally {
-                // Re-enable button
-                setupBtn.disabled = false;
-                setupBtn.textContent = 'Make this user an Admin';
+                errorDiv.textContent = '❌ ' + message;
+                loginBtn.disabled = false;
+                loginBtn.textContent = '🚀 Login as Admin';
             }
-        };
+        });
 
-        // ============ CHECK IF ALREADY ADMIN ============
+        // ============ CHECK IF ALREADY LOGGED IN ============
         onAuthStateChanged(auth, async (user) => {
-            const resultDiv = document.getElementById('result');
-            
             if (user) {
                 try {
                     const userDoc = await getDoc(doc(db, 'users', user.uid));
-                    if (userDoc.exists() && userDoc.data().role === 'admin') {
-                        resultDiv.className = 'result success';
-                        resultDiv.innerHTML = `
-                            ✅ You are already an admin!<br><br>
-                            <a href="admin-dashboard.html" style="color:#155724;font-weight:bold;font-size:18px;">
-                                🚀 Go to Dashboard →
-                            </a>
-                        `;
-                        // Disable the setup button
-                        document.getElementById('setupBtn').disabled = true;
-                        document.getElementById('setupBtn').textContent = '✅ Already Admin';
+                    const userData = userDoc.data();
+                    
+                    if (userData && userData.role === 'admin') {
+                        // Already logged in as admin - redirect to dashboard
+                        console.log('✅ Already logged in as admin');
+                        window.location.href = 'admin-dashboard.html';
+                    } else {
+                        // Logged in but not admin - sign out
+                        console.log('⚠️ User is not admin, signing out...');
+                        await signOut(auth);
                     }
                 } catch (error) {
                     console.error('Error checking admin status:', error);
@@ -268,7 +312,17 @@
             }
         });
 
-        console.log('✅ setup-admin.html - Firebase imported from firebase.js');
+        // ============ KEYBOARD SHORTCUTS ============
+        document.addEventListener('keydown', (e) => {
+            // Press 'Esc' to clear error
+            if (e.key === 'Escape') {
+                errorDiv.textContent = '';
+            }
+        });
+
+        console.log('✅ admin.html - Firebase imported from firebase.js');
+        console.log('🔐 Admin login page ready');
     </script>
+
 </body>
 </html>
