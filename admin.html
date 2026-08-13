@@ -47,6 +47,10 @@
         .btn-primary:hover {
             background: #45a049;
         }
+        .btn-primary:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+        }
         .result {
             margin-top: 20px;
             padding: 10px;
@@ -61,6 +65,14 @@
             background: #f8d7da;
             color: #721c24;
         }
+        .info {
+            background: #cce5ff;
+            color: #004085;
+        }
+        .loading {
+            background: #fff3cd;
+            color: #856404;
+        }
     </style>
 </head>
 <body>
@@ -70,6 +82,7 @@
             <nav>
                 <a href="index.html">Home</a>
                 <a href="login.html">Login</a>
+                <a href="admin-dashboard.html">Admin</a>
             </nav>
         </div>
     </header>
@@ -101,7 +114,7 @@
                 />
             </div>
             
-            <button onclick="setupAdmin()" class="btn-primary">
+            <button id="setupBtn" onclick="setupAdmin()" class="btn-primary">
                 Make this user an Admin
             </button>
             
@@ -109,52 +122,56 @@
         </div>
     </main>
 
+    <!-- =========================
+         FIREBASE AUTH - UPDATED
+    ========================= -->
+
     <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        // ============ IMPORT FROM FIREBASE.JS ============
+        import { auth, db } from './firebase.js';
         import { 
-            getAuth, 
             signInWithEmailAndPassword,
-            onAuthStateChanged
-        } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+            onAuthStateChanged,
+            updateProfile
+        } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
         import { 
-            getFirestore, 
             doc, 
             setDoc,
             getDoc,
             serverTimestamp
-        } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+        } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
-        const firebaseConfig = {
-            apiKey: "YOUR_API_KEY",
-            authDomain: "YOUR_PROJECT.firebaseapp.com",
-            projectId: "YOUR_PROJECT_ID",
-            storageBucket: "YOUR_PROJECT.appspot.com",
-            messagingSenderId: "YOUR_SENDER_ID",
-            appId: "YOUR_APP_ID"
-        };
-
-        const app = initializeApp(firebaseConfig);
-        const auth = getAuth(app);
-        const db = getFirestore(app);
-
+        // ============ SETUP ADMIN FUNCTION ============
         window.setupAdmin = async function() {
             const email = document.getElementById('adminEmail').value.trim();
             const password = document.getElementById('adminPassword').value;
             const resultDiv = document.getElementById('result');
+            const setupBtn = document.getElementById('setupBtn');
             
+            // Clear previous messages
+            resultDiv.className = 'result';
+            
+            // Validate inputs
             if (!email || !password) {
                 resultDiv.className = 'result error';
                 resultDiv.innerHTML = '❌ Please enter both email and password';
                 return;
             }
 
+            // Disable button during processing
+            setupBtn.disabled = true;
+            setupBtn.textContent = '⏳ Processing...';
+
             try {
-                // Sign in with the provided credentials
-                resultDiv.className = 'result';
-                resultDiv.innerHTML = '⏳ Logging in...';
+                // Show loading status
+                resultDiv.className = 'result loading';
+                resultDiv.innerHTML = '⏳ Logging in and setting up admin...';
                 
+                // Sign in with the provided credentials
                 const userCredential = await signInWithEmailAndPassword(auth, email, password);
                 const user = userCredential.user;
+
+                console.log('✅ Logged in as:', user.email);
 
                 // Check if user document exists, create if not
                 const userRef = doc(db, 'users', user.uid);
@@ -166,59 +183,92 @@
                         email: user.email,
                         role: 'admin',
                         createdAt: serverTimestamp(),
-                        uid: user.uid
+                        uid: user.uid,
+                        fullName: user.displayName || 'Admin'
                     });
+                    console.log('✅ Created new user document with admin role');
                 } else {
                     // Update existing user to admin
                     await setDoc(userRef, {
                         role: 'admin',
                         updatedAt: serverTimestamp()
                     }, { merge: true });
+                    console.log('✅ Updated existing user to admin role');
                 }
 
-                resultDiv.className = 'result success';
-                resultDiv.innerHTML = `
-                    ✅ <strong>${email}</strong> is now an admin!<br>
-                    <a href="admin.html" style="color:#155724;font-weight:bold;">Go to Admin Dashboard →</a>
-                `;
-                
-                // Also update the user's display name if needed
-                await user.updateProfile({
+                // Update the user's display name
+                await updateProfile(user, {
                     displayName: 'Admin'
                 });
 
+                // Show success message
+                resultDiv.className = 'result success';
+                resultDiv.innerHTML = `
+                    ✅ <strong>${email}</strong> is now an admin!<br><br>
+                    <a href="admin-dashboard.html" style="color:#155724;font-weight:bold;font-size:18px;">
+                        🚀 Go to Admin Dashboard →
+                    </a>
+                `;
+
             } catch (error) {
-                console.error('Error:', error);
-                resultDiv.className = 'result error';
-                if (error.code === 'auth/user-not-found') {
-                    resultDiv.innerHTML = '❌ User not found. Please create this account first.';
-                } else if (error.code === 'auth/wrong-password') {
-                    resultDiv.innerHTML = '❌ Wrong password. Please try again.';
-                } else if (error.code === 'auth/invalid-email') {
-                    resultDiv.innerHTML = '❌ Invalid email format. Please check and try again.';
-                } else {
-                    resultDiv.innerHTML = '❌ Error: ' + error.message;
+                console.error('Setup Error:', error);
+                
+                // Show user-friendly error message
+                let message = '';
+                switch (error.code) {
+                    case 'auth/user-not-found':
+                        message = 'User not found. Please create this account first.';
+                        break;
+                    case 'auth/wrong-password':
+                        message = 'Wrong password. Please try again.';
+                        break;
+                    case 'auth/invalid-email':
+                        message = 'Invalid email format. Please check and try again.';
+                        break;
+                    case 'auth/too-many-requests':
+                        message = 'Too many failed attempts. Please try again later.';
+                        break;
+                    case 'auth/network-request-failed':
+                        message = 'Network error. Please check your internet connection.';
+                        break;
+                    default:
+                        message = error.message;
                 }
+                resultDiv.className = 'result error';
+                resultDiv.innerHTML = '❌ ' + message;
+            } finally {
+                // Re-enable button
+                setupBtn.disabled = false;
+                setupBtn.textContent = 'Make this user an Admin';
             }
         };
 
-        // Check if already logged in as admin
+        // ============ CHECK IF ALREADY ADMIN ============
         onAuthStateChanged(auth, async (user) => {
+            const resultDiv = document.getElementById('result');
+            
             if (user) {
                 try {
                     const userDoc = await getDoc(doc(db, 'users', user.uid));
                     if (userDoc.exists() && userDoc.data().role === 'admin') {
-                        document.getElementById('result').className = 'result success';
-                        document.getElementById('result').innerHTML = `
-                            ✅ You are already an admin!<br>
-                            <a href="admin-dashboard.html" style="color:#155724;font-weight:bold;">Go to Dashboard →</a>
+                        resultDiv.className = 'result success';
+                        resultDiv.innerHTML = `
+                            ✅ You are already an admin!<br><br>
+                            <a href="admin-dashboard.html" style="color:#155724;font-weight:bold;font-size:18px;">
+                                🚀 Go to Dashboard →
+                            </a>
                         `;
+                        // Disable the setup button
+                        document.getElementById('setupBtn').disabled = true;
+                        document.getElementById('setupBtn').textContent = '✅ Already Admin';
                     }
                 } catch (error) {
                     console.error('Error checking admin status:', error);
                 }
             }
         });
+
+        console.log('✅ setup-admin.html - Firebase imported from firebase.js');
     </script>
 </body>
 </html>
