@@ -1,114 +1,164 @@
-import { auth, db } from "./firebase.js";
+<!DOCTYPE html>
+<html lang="en">
 
-import {
-createUserWithEmailAndPassword,
-signInWithEmailAndPassword
-} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+<head>
 
-import {
-doc,
-setDoc
-} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+    <meta charset="UTF-8">
 
-// ------------------------
-// REGISTER
-// ------------------------
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-const registerForm=document.getElementById("registerForm");
+    <title>KBTV - Payment Confirmation</title>
 
-if(registerForm){
+    <link rel="stylesheet" href="style.css">
 
-registerForm.addEventListener("submit",async(e)=>{
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 
-e.preventDefault();
+    <link
+        href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap"
+        rel="stylesheet">
 
-const name=document.getElementById("fullName").value;
+</head>
 
-const mobile=document.getElementById("mobile").value;
+<body>
 
-const email=document.getElementById("email").value;
 
-const password=document.getElementById("password").value;
+<nav>
 
-const confirm=document.getElementById("confirmPassword").value;
+    <div class="logo">
+        <span>K</span>BTV
+    </div>
 
-if(password!==confirm){
+    <ul>
 
-alert("Passwords do not match.");
+        <li>
+            <a href="index.html">Home</a>
+        </li>
 
-return;
+        <li>
+            <a href="moovie.html">Movies</a>
+        </li>
 
-}
+        <li>
+            <a href="login.html">Login</a>
+        </li>
 
-try{
+        <li>
+            <button
+                id="logoutBtn"
+                type="button"
+                style="
+                    padding: 10px 18px;
+                    background: red;
+                    color: white;
+                    border: none;
+                    border-radius: 6px;
+                    cursor: pointer;
+                ">
+                Logout
+            </button>
+        </li>
 
-const userCredential=
-await createUserWithEmailAndPassword(
-auth,
-email,
-password
-);
+    </ul>
 
-await setDoc(doc(db,"users",userCredential.user.uid),{
+</nav>
 
-name:name,
 
-mobile:mobile,
+<section class="payment-page">
 
-email:email,
+    <div class="payment-card">
 
-createdAt:new Date()
+        <h1>
+            Payment Confirmation
+        </h1>
 
-});
+        <p>
+            Thank you for your payment.
+        </p>
 
-alert("Account Created Successfully!");
+        <p>
+            Your payment will be verified before
+            the movie is made available.
+        </p>
 
-window.location="login.html";
+        <h2 id="confirmationMovie">
+            Movie
+        </h2>
 
-}catch(error){
+        <p>
+            Rental Price:
+            <strong>₹100</strong>
+        </p>
 
-alert(error.message);
+        <button
+            id="submitPaymentBtn"
+            class="pay-btn"
+            type="button">
 
-}
+            Submit Payment Details
 
-});
+        </button>
 
-}
+    </div>
 
-// ------------------------
-// LOGIN
-// ------------------------
+</section>
 
-const loginForm=document.getElementById("loginForm");
 
-if(loginForm){
+<footer>
 
-loginForm.addEventListener("submit",async(e)=>{
+    <h2>KBTV</h2>
 
-e.preventDefault();
+    <p>
+        © 2026 KBTV Movie Rental
+    </p>
 
-const email=document.getElementById("loginEmail").value;
+</footer>
 
-const password=document.getElementById("loginPassword").value;
 
-try{
+<script>
 
-await signInWithEmailAndPassword(
-auth,
-email,
-password
-);
+const params =
+    new URLSearchParams(window.location.search);
 
-alert("Login Successful!");
+const movieNumber =
+    params.get("movie") || "1";
 
-window.location="index.html";
 
-}catch(error){
+const movies = {
 
-alert(error.message);
+    1: "Movie One",
+    2: "Movie Two",
+    3: "Movie Three",
+    4: "Movie Four"
 
-}
+};
 
-});
 
-}
+const movieTitle =
+    movies[movieNumber] || "Movie";
+
+
+document.getElementById("confirmationMovie").textContent =
+    movieTitle;
+
+
+document.getElementById("submitPaymentBtn")
+    .addEventListener("click", function () {
+
+        window.location.href =
+            "payment-upload.html?movie=" + movieNumber;
+
+    });
+
+</script>
+
+
+<script
+    type="module"
+    src="auth.js">
+</script>
+
+
+</body>
+
+</html>
