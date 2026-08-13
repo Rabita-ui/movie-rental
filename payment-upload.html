@@ -16,22 +16,6 @@
 href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap"
 rel="stylesheet">
 
-<style>
-    .payment-method-display {
-        background: #e3f2fd;
-        padding: 10px 15px;
-        border-radius: 8px;
-        margin: 10px 0;
-        text-align: center;
-        color: #1565c0;
-        font-weight: 500;
-    }
-    .payment-method-display .method-icon {
-        font-size: 24px;
-        margin-right: 10px;
-    }
-</style>
-
 </head>
 
 <body>
@@ -93,12 +77,6 @@ Logout
 Rental Price:
 <strong>₹100</strong>
 </p>
-
-<!-- ============ PAYMENT METHOD DISPLAY ============ -->
-<div id="paymentMethodDisplay" class="payment-method-display">
-    <span class="method-icon">📱</span>
-    Payment Method: <strong id="selectedMethod">UPI</strong>
-</div>
 
 <label for="transactionId">
 Transaction / Reference Number
@@ -175,28 +153,6 @@ const movieNumber = params.get("movieId") || params.get("movie") || "1";
 const movieTitle = params.get("movieTitle") || params.get("title") || "Movie";
 const moviePrice = params.get("price") || "100";
 const paymentMethod = params.get("method") || "UPI";
-
-// ============ DISPLAY PAYMENT METHOD ============
-const methodIcons = {
-    'upi': '📱',
-    'card': '💳',
-    'netbanking': '🏦',
-    'wallet': '👛'
-};
-
-const methodNames = {
-    'upi': 'UPI',
-    'card': 'Credit/Debit Card',
-    'netbanking': 'Net Banking',
-    'wallet': 'Digital Wallet'
-};
-
-const selectedMethodDisplay = document.getElementById('selectedMethod');
-const methodIconDisplay = document.querySelector('.method-icon');
-
-const methodKey = paymentMethod.toLowerCase();
-selectedMethodDisplay.textContent = methodNames[methodKey] || 'UPI';
-methodIconDisplay.textContent = methodIcons[methodKey] || '📱';
 
 // Update movie title
 document.getElementById("uploadMovieTitle").textContent = movieTitle;
