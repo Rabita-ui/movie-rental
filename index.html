@@ -43,15 +43,19 @@
             <a href="moovie.html">Movies</a>
         </li>
 
-        <li>
+        <li id="registerLink">
             <a href="register.html">Register</a>
         </li>
 
-        <li>
+        <li id="loginLink">
             <a href="login.html">Login</a>
         </li>
 
-        <li>
+        <li id="userInfo" style="display:none;">
+            <span id="userEmail" style="color:white;margin-right:10px;"></span>
+        </li>
+
+        <li id="logoutLi" style="display:none;">
 
             <button
                 id="logoutBtn"
@@ -120,7 +124,7 @@
 
         <div class="movie-card">
 
-            <a href="movie-details.html?movie=1">
+            <a href="movie-details.html?movieId=1">
 
                 <img
                     src="moovie1jpg.jpeg"
@@ -133,7 +137,7 @@
 
                 <h3>
 
-                    <a href="movie-details.html?movie=1">
+                    <a href="movie-details.html?movieId=1">
                         Movie One
                     </a>
 
@@ -151,7 +155,7 @@
 
 
                 <a
-                    href="payment.html?movie=1"
+                    href="payment-upload.html?movieId=1&movieTitle=Movie%20One&price=100"
                     class="btn">
 
                     Rent Now
@@ -169,7 +173,7 @@
 
         <div class="movie-card">
 
-            <a href="movie-details.html?movie=2">
+            <a href="movie-details.html?movieId=2">
 
                 <img
                     src="moovie2jpg.jpeg"
@@ -182,7 +186,7 @@
 
                 <h3>
 
-                    <a href="movie-details.html?movie=2">
+                    <a href="movie-details.html?movieId=2">
                         Movie Two
                     </a>
 
@@ -200,7 +204,7 @@
 
 
                 <a
-                    href="payment.html?movie=2"
+                    href="payment-upload.html?movieId=2&movieTitle=Movie%20Two&price=100"
                     class="btn">
 
                     Rent Now
@@ -218,7 +222,7 @@
 
         <div class="movie-card">
 
-            <a href="movie-details.html?movie=3">
+            <a href="movie-details.html?movieId=3">
 
                 <img
                     src="moovie3jpg.jpeg"
@@ -231,7 +235,7 @@
 
                 <h3>
 
-                    <a href="movie-details.html?movie=3">
+                    <a href="movie-details.html?movieId=3">
                         Movie Three
                     </a>
 
@@ -249,7 +253,7 @@
 
 
                 <a
-                    href="payment.html?movie=3"
+                    href="payment-upload.html?movieId=3&movieTitle=Movie%20Three&price=100"
                     class="btn">
 
                     Rent Now
@@ -267,7 +271,7 @@
 
         <div class="movie-card">
 
-            <a href="movie-details.html?movie=4">
+            <a href="movie-details.html?movieId=4">
 
                 <img
                     src="moovie4jpg.jpeg"
@@ -280,7 +284,7 @@
 
                 <h3>
 
-                    <a href="movie-details.html?movie=4">
+                    <a href="movie-details.html?movieId=4">
                         Movie Four
                     </a>
 
@@ -298,7 +302,7 @@
 
 
                 <a
-                    href="payment.html?movie=4"
+                    href="payment-upload.html?movieId=4&movieTitle=Movie%20Four&price=100"
                     class="btn">
 
                     Rent Now
@@ -333,12 +337,50 @@
 
 
 <!-- =========================
-     FIREBASE AUTH
+     FIREBASE AUTH - UPDATED
 ========================= -->
 
-<script
-    type="module"
-    src="auth.js">
+<script type="module">
+    // ============ IMPORT FROM FIREBASE.JS ============
+    import { auth } from './firebase.js';
+    import { onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+
+    // ============ CHECK AUTH STATUS ============
+    const userEmail = document.getElementById('userEmail');
+    const registerLink = document.getElementById('registerLink');
+    const loginLink = document.getElementById('loginLink');
+    const userInfo = document.getElementById('userInfo');
+    const logoutLi = document.getElementById('logoutLi');
+    const logoutBtn = document.getElementById('logoutBtn');
+
+    onAuthStateChanged(auth, (user) => {
+        if (user) {
+            // User is logged in
+            registerLink.style.display = 'none';
+            loginLink.style.display = 'none';
+            userInfo.style.display = 'inline-block';
+            logoutLi.style.display = 'inline-block';
+            userEmail.textContent = '👤 ' + user.email;
+        } else {
+            // User is logged out
+            registerLink.style.display = 'inline-block';
+            loginLink.style.display = 'inline-block';
+            userInfo.style.display = 'none';
+            logoutLi.style.display = 'none';
+        }
+    });
+
+    // ============ LOGOUT FUNCTION ============
+    logoutBtn.addEventListener('click', async () => {
+        try {
+            await signOut(auth);
+            window.location.href = 'login.html';
+        } catch (error) {
+            alert('Logout error: ' + error.message);
+        }
+    });
+
+    console.log('✅ index.html - Firebase imported from firebase.js');
 </script>
 
 
