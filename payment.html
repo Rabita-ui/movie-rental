@@ -4,116 +4,126 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>KBTV - Payment Options</title>
+    <title>KBTV - Pay with UPI</title>
     <link rel="stylesheet" href="style.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
     <style>
         .payment-container {
-            max-width: 700px;
+            max-width: 500px;
             margin: 40px auto;
             padding: 30px;
             background: white;
             border-radius: 16px;
             box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+            text-align: center;
         }
         .payment-container h1 {
-            text-align: center;
             color: #333;
-            margin-bottom: 10px;
+            margin-bottom: 5px;
         }
         .payment-container .subtitle {
-            text-align: center;
             color: #888;
-            margin-bottom: 30px;
+            font-size: 14px;
+            margin-bottom: 25px;
         }
+        
         .movie-summary {
             background: #f8f9fa;
-            padding: 20px;
+            padding: 15px;
             border-radius: 12px;
-            margin-bottom: 30px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            flex-wrap: wrap;
-            gap: 15px;
+            margin-bottom: 25px;
         }
-        .movie-summary .movie-info h3 {
+        .movie-summary h3 {
             margin: 0 0 5px 0;
             color: #333;
         }
-        .movie-summary .movie-info p {
-            margin: 0;
-            color: #666;
-        }
         .movie-summary .price {
-            font-size: 28px;
+            font-size: 24px;
             font-weight: 700;
             color: #4CAF50;
         }
-        .payment-options {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 15px;
+        
+        /* QR Code Section */
+        .qr-section {
+            text-align: center;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 12px;
             margin: 20px 0;
         }
-        .payment-option {
-            padding: 25px;
-            border: 2px solid #e0e0e0;
-            border-radius: 12px;
-            text-align: center;
-            cursor: pointer;
-            transition: all 0.3s;
+        .qr-section h4 {
+            color: #333;
+            margin-bottom: 15px;
+            font-size: 18px;
+        }
+        .qr-section .qr-container {
+            display: inline-block;
+            padding: 15px;
             background: white;
+            border-radius: 12px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
         }
-        .payment-option:hover {
-            border-color: #4CAF50;
-            transform: translateY(-2px);
-            box-shadow: 0 4px 15px rgba(76, 175, 80, 0.1);
-        }
-        .payment-option.selected {
-            border-color: #4CAF50;
-            background: #f0f8f0;
-            box-shadow: 0 4px 15px rgba(76, 175, 80, 0.2);
-        }
-        .payment-option .icon {
-            font-size: 40px;
+        .qr-section .qr-container img {
+            max-width: 200px;
+            height: auto;
             display: block;
-            margin-bottom: 10px;
         }
-        .payment-option .name {
+        .qr-section .upi-id {
+            background: #e3f2fd;
+            padding: 10px 20px;
+            border-radius: 8px;
+            display: inline-block;
+            color: #1565c0;
+            font-weight: 600;
+            font-size: 16px;
+            margin-top: 10px;
+            word-break: break-all;
+        }
+        .qr-section .pay-amount {
+            font-size: 20px;
             font-weight: 600;
             color: #333;
+            margin: 10px 0;
         }
-        .payment-option .description {
-            font-size: 12px;
-            color: #888;
-            margin-top: 5px;
+        
+        /* UPI Payment Buttons */
+        .upi-buttons {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin: 15px 0;
         }
-        .payment-option .radio {
-            width: 20px;
-            height: 20px;
-            border-radius: 50%;
-            border: 2px solid #ddd;
-            display: inline-block;
-            margin-top: 10px;
-            position: relative;
+        .upi-btn {
+            padding: 12px 10px;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            background: white;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            font-weight: 500;
+            color: #333;
+            font-size: 14px;
         }
-        .payment-option.selected .radio {
+        .upi-btn:hover {
             border-color: #4CAF50;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(76, 175, 80, 0.15);
         }
-        .payment-option.selected .radio::after {
-            content: '';
-            width: 12px;
-            height: 12px;
-            background: #4CAF50;
-            border-radius: 50%;
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
+        .upi-btn .icon {
+            font-size: 24px;
         }
+        .upi-btn.gpay:hover { border-color: #4285F4; background: #f0f4ff; }
+        .upi-btn.phonepe:hover { border-color: #5f259f; background: #f5edff; }
+        .upi-btn.paytm:hover { border-color: #00baf2; background: #f0faff; }
+        .upi-btn.bhim:hover { border-color: #0084b4; background: #f0f8ff; }
+        
         .btn-pay {
             width: 100%;
             padding: 16px;
@@ -125,7 +135,7 @@
             font-weight: 600;
             cursor: pointer;
             transition: background 0.3s;
-            margin-top: 20px;
+            margin-top: 15px;
         }
         .btn-pay:hover {
             background: #45a049;
@@ -143,6 +153,7 @@
             border-radius: 6px;
             margin-top: 15px;
             transition: background 0.3s;
+            font-size: 14px;
         }
         .btn-back:hover {
             background: #5a6268;
@@ -152,13 +163,20 @@
             padding: 15px;
             border-radius: 8px;
             border-left: 4px solid #ffc107;
-            margin: 20px 0;
+            margin: 15px 0;
+            text-align: left;
         }
         .info-box p {
             margin: 5px 0;
             color: #856404;
-            font-size: 14px;
+            font-size: 13px;
         }
+        .divider {
+            border: none;
+            border-top: 1px solid #eee;
+            margin: 20px 0;
+        }
+        
         /* Navigation */
         nav {
             display: flex;
@@ -223,7 +241,13 @@
             margin: 0 auto;
             padding: 0 20px;
         }
-        @media (max-width: 768px) {
+        @media (max-width: 600px) {
+            .upi-buttons {
+                grid-template-columns: 1fr 1fr;
+            }
+            .qr-section .qr-container img {
+                max-width: 150px;
+            }
             nav {
                 flex-direction: column;
                 gap: 10px;
@@ -233,13 +257,6 @@
                 width: 100%;
                 justify-content: center;
                 flex-wrap: wrap;
-            }
-            .payment-options {
-                grid-template-columns: 1fr;
-            }
-            .movie-summary {
-                flex-direction: column;
-                text-align: center;
             }
         }
     </style>
@@ -264,53 +281,54 @@
 
     <main class="container">
         <div class="payment-container">
-            <h1>💳 Payment Options</h1>
-            <p class="subtitle">Choose your preferred payment method</p>
+            <h1>📱 Pay with UPI</h1>
+            <p class="subtitle">Scan QR or use UPI app to pay</p>
 
             <!-- Movie Summary -->
             <div class="movie-summary">
-                <div class="movie-info">
-                    <h3 id="movieTitle">Movie One</h3>
-                    <p>🎬 24-Hour Rental Access</p>
-                </div>
-                <div class="price" id="moviePrice">₹100</div>
+                <h3 id="movieTitle">Movie One</h3>
+                <div class="price">₹<span id="moviePrice">100</span></div>
+                <p style="margin:5px 0 0 0;color:#888;font-size:13px;">🎬 24-Hour Rental Access</p>
             </div>
 
-            <!-- Payment Options -->
-            <div class="payment-options" id="paymentOptions">
-                <div class="payment-option selected" data-method="upi" onclick="selectPayment('upi')">
-                    <span class="icon">📱</span>
-                    <div class="name">UPI</div>
-                    <div class="description">Google Pay, PhonePe, Paytm</div>
-                    <span class="radio"></span>
+            <!-- QR Code Section -->
+            <div class="qr-section">
+                <h4>📱 Scan to Pay</h4>
+                <div class="qr-container">
+                    <img src="qrc.png" alt="UPI QR Code" id="qrCodeImage" />
                 </div>
-                <div class="payment-option" data-method="card" onclick="selectPayment('card')">
-                    <span class="icon">💳</span>
-                    <div class="name">Credit/Debit Card</div>
-                    <div class="description">Visa, Mastercard, RuPay</div>
-                    <span class="radio"></span>
-                </div>
-                <div class="payment-option" data-method="netbanking" onclick="selectPayment('netbanking')">
-                    <span class="icon">🏦</span>
-                    <div class="name">Net Banking</div>
-                    <div class="description">All major banks</div>
-                    <span class="radio"></span>
-                </div>
-                <div class="payment-option" data-method="wallet" onclick="selectPayment('wallet')">
-                    <span class="icon">👛</span>
-                    <div class="name">Digital Wallet</div>
-                    <div class="description">Paytm Wallet, Amazon Pay</div>
-                    <span class="radio"></span>
+                <div class="pay-amount">Amount: ₹<span id="qrPrice">100</span></div>
+                <div class="upi-id">📧 UPI ID: <span id="upiId">kbtv@upi</span></div>
+                
+                <!-- Divider -->
+                <hr class="divider">
+                
+                <!-- Or pay with UPI App -->
+                <p style="color:#888;font-size:13px;margin-bottom:10px;">Or pay using your UPI app</p>
+                
+                <div class="upi-buttons">
+                    <a href="#" id="gpayBtn" class="upi-btn gpay">
+                        <span class="icon">🟢</span> Google Pay
+                    </a>
+                    <a href="#" id="phonepeBtn" class="upi-btn phonepe">
+                        <span class="icon">🟣</span> PhonePe
+                    </a>
+                    <a href="#" id="paytmBtn" class="upi-btn paytm">
+                        <span class="icon">🔵</span> Paytm
+                    </a>
+                    <a href="#" id="bhimBtn" class="upi-btn bhim">
+                        <span class="icon">🔷</span> BHIM UPI
+                    </a>
                 </div>
             </div>
 
             <div class="info-box">
-                <p>💡 You will be redirected to upload your payment screenshot after confirming.</p>
+                <p>💡 After payment, click "Continue" to upload your payment screenshot.</p>
                 <p>⏱️ Verification usually takes 5-10 minutes.</p>
             </div>
 
             <button id="payNowBtn" class="btn-pay">
-                🎬 Continue to Payment
+                ✅ I've Made the Payment - Continue
             </button>
 
             <br>
@@ -335,6 +353,18 @@
             signOut 
         } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 
+        // ============ DOM ELEMENTS ============
+        const loginLink = document.getElementById('loginLink');
+        const userInfo = document.getElementById('userInfo');
+        const userEmail = document.getElementById('userEmail');
+        const logoutLi = document.getElementById('logoutLi');
+        const logoutBtn = document.getElementById('logoutBtn');
+        const payNowBtn = document.getElementById('payNowBtn');
+
+        // ============ CONFIGURATION ============
+        // ⭐ CHANGE THIS TO YOUR UPI ID ⭐
+        const UPI_ID = 'kbtv@upi';  // Replace with your actual UPI ID
+        
         // ============ GET MOVIE FROM URL ============
         const params = new URLSearchParams(window.location.search);
         const movieId = params.get('movieId') || '1';
@@ -343,15 +373,11 @@
 
         // Update movie details
         document.getElementById('movieTitle').textContent = movieTitle;
-        document.getElementById('moviePrice').textContent = '₹' + moviePrice;
+        document.getElementById('moviePrice').textContent = moviePrice;
+        document.getElementById('qrPrice').textContent = moviePrice;
+        document.getElementById('upiId').textContent = UPI_ID;
 
         // ============ NAVIGATION AUTH ============
-        const loginLink = document.getElementById('loginLink');
-        const userInfo = document.getElementById('userInfo');
-        const userEmail = document.getElementById('userEmail');
-        const logoutLi = document.getElementById('logoutLi');
-        const logoutBtn = document.getElementById('logoutBtn');
-
         onAuthStateChanged(auth, (user) => {
             if (user) {
                 loginLink.style.display = 'none';
@@ -362,10 +388,8 @@
                 loginLink.style.display = 'inline-block';
                 userInfo.style.display = 'none';
                 logoutLi.style.display = 'none';
-                // Redirect to login if trying to pay without login
-                const payBtn = document.getElementById('payNowBtn');
-                payBtn.textContent = '🔐 Login to Continue';
-                payBtn.onclick = () => {
+                payNowBtn.textContent = '🔐 Login to Continue';
+                payNowBtn.onclick = () => {
                     window.location.href = 'login.html';
                 };
             }
@@ -382,32 +406,67 @@
             }
         });
 
-        // ============ SELECT PAYMENT METHOD ============
-        let selectedMethod = 'upi';
+        // ============ UPI PAYMENT LINKS ============
+        function getUpiLink(upiId, amount, movieName) {
+            const payeeName = 'KBTV Movies';
+            const transactionNote = `Rental for ${movieName}`;
+            return `upi://pay?pa=${upiId}&pn=${encodeURIComponent(payeeName)}&am=${amount}&cu=INR&tn=${encodeURIComponent(transactionNote)}`;
+        }
 
-        window.selectPayment = function(method) {
-            selectedMethod = method;
-            document.querySelectorAll('.payment-option').forEach(el => {
-                el.classList.remove('selected');
-            });
-            document.querySelector(`.payment-option[data-method="${method}"]`).classList.add('selected');
-        };
+        function openUpiApp(upiLink) {
+            window.open(upiLink, '_blank');
+        }
 
-        // ============ PAY NOW ============
-        document.getElementById('payNowBtn').addEventListener('click', function() {
+        // Google Pay
+        document.getElementById('gpayBtn').addEventListener('click', (e) => {
+            e.preventDefault();
+            const upiLink = getUpiLink(UPI_ID, moviePrice, movieTitle);
+            // Google Pay specific deep link
+            window.open(`https://pay.google.com/gp/p/ui/pay?pa=${UPI_ID}&am=${moviePrice}&cu=INR`, '_blank');
+        });
+
+        // PhonePe
+        document.getElementById('phonepeBtn').addEventListener('click', (e) => {
+            e.preventDefault();
+            window.open(`https://phone.pe/pay?pa=${UPI_ID}&am=${moviePrice}&cu=INR`, '_blank');
+        });
+
+        // Paytm
+        document.getElementById('paytmBtn').addEventListener('click', (e) => {
+            e.preventDefault();
+            window.open(`https://paytm.com/pay?pa=${UPI_ID}&am=${moviePrice}&cu=INR`, '_blank');
+        });
+
+        // BHIM UPI
+        document.getElementById('bhimBtn').addEventListener('click', (e) => {
+            e.preventDefault();
+            const upiLink = getUpiLink(UPI_ID, moviePrice, movieTitle);
+            window.open(upiLink, '_blank');
+        });
+
+        // ============ CONTINUE TO PAYMENT UPLOAD ============
+        payNowBtn.addEventListener('click', function() {
             const user = auth.currentUser;
+            
             if (!user) {
                 window.location.href = 'login.html';
                 return;
             }
 
-            // Redirect to payment upload page with method
-            window.location.href = `payment-upload.html?movieId=${movieId}&movieTitle=${encodeURIComponent(movieTitle)}&price=${moviePrice}&method=${selectedMethod}`;
+            // Redirect to payment-upload.html
+            const redirectUrl = `payment-upload.html?movieId=${movieId}&movieTitle=${encodeURIComponent(movieTitle)}&price=${moviePrice}&method=upi`;
+            
+            console.log('🔄 Redirecting to:', redirectUrl);
+            console.log('💰 Amount:', moviePrice);
+            console.log('📱 UPI ID:', UPI_ID);
+            
+            window.location.href = redirectUrl;
         });
 
-        console.log('✅ payment.html - Payment options page loaded');
+        console.log('✅ payment.html - UPI Payment Page loaded');
         console.log('🎬 Movie:', movieTitle);
-        console.log('💰 Price:', moviePrice);
+        console.log('💰 Price: ₹' + moviePrice);
+        console.log('📱 UPI ID:', UPI_ID);
     </script>
 
 </body>
