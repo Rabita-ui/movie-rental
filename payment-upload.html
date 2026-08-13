@@ -1,114 +1,220 @@
-import { auth, db } from "./firebase.js";
+<!DOCTYPE html>
+<html lang="en">
 
-import {
-createUserWithEmailAndPassword,
-signInWithEmailAndPassword
-} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+<head>
 
-import {
-doc,
-setDoc
-} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+    <meta charset="UTF-8">
 
-// ------------------------
-// REGISTER
-// ------------------------
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-const registerForm=document.getElementById("registerForm");
+    <title>KBTV - Submit Payment</title>
 
-if(registerForm){
+    <link rel="stylesheet" href="style.css">
 
-registerForm.addEventListener("submit",async(e)=>{
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 
-e.preventDefault();
+    <link
+        href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap"
+        rel="stylesheet">
 
-const name=document.getElementById("fullName").value;
+</head>
 
-const mobile=document.getElementById("mobile").value;
+<body>
 
-const email=document.getElementById("email").value;
+<nav>
 
-const password=document.getElementById("password").value;
+    <div class="logo">
+        <span>K</span>BTV
+    </div>
 
-const confirm=document.getElementById("confirmPassword").value;
+    <ul>
 
-if(password!==confirm){
+        <li>
+            <a href="index.html">Home</a>
+        </li>
 
-alert("Passwords do not match.");
+        <li>
+            <a href="moovie.html">Movies</a>
+        </li>
 
-return;
+        <li>
+            <a href="login.html">Login</a>
+        </li>
 
-}
+        <li>
 
-try{
+            <button
+                id="logoutBtn"
+                type="button"
+                style="
+                    padding: 10px 18px;
+                    background: red;
+                    color: white;
+                    border: none;
+                    border-radius: 6px;
+                    cursor: pointer;
+                ">
 
-const userCredential=
-await createUserWithEmailAndPassword(
-auth,
-email,
-password
-);
+                Logout
 
-await setDoc(doc(db,"users",userCredential.user.uid),{
+            </button>
 
-name:name,
+        </li>
 
-mobile:mobile,
+    </ul>
 
-email:email,
+</nav>
 
-createdAt:new Date()
 
-});
+<section class="payment-page">
 
-alert("Account Created Successfully!");
+    <div class="payment-card">
 
-window.location="login.html";
+        <h1>
+            Submit Payment
+        </h1>
 
-}catch(error){
+        <h2 id="uploadMovieTitle">
+            Movie
+        </h2>
 
-alert(error.message);
+        <p>
+            Rental Price:
+            <strong>₹100</strong>
+        </p>
 
-}
 
-});
+        <!-- TRANSACTION NUMBER -->
 
-}
+        <label for="transactionId">
+            UPI Transaction / Reference Number
+        </label>
 
-// ------------------------
-// LOGIN
-// ------------------------
+        <input
+            type="text"
+            id="transactionId"
+            placeholder="Enter transaction number"
+            required>
 
-const loginForm=document.getElementById("loginForm");
 
-if(loginForm){
+        <!-- SCREENSHOT -->
 
-loginForm.addEventListener("submit",async(e)=>{
+        <label for="paymentScreenshot">
+            Payment Screenshot
+        </label>
 
-e.preventDefault();
+        <input
+            type="file"
+            id="paymentScreenshot"
+            accept="image/*"
+            required>
 
-const email=document.getElementById("loginEmail").value;
 
-const password=document.getElementById("loginPassword").value;
+        <p class="note">
 
-try{
+            Upload the screenshot showing your successful
+            ₹100 payment.
 
-await signInWithEmailAndPassword(
-auth,
-email,
-password
-);
+        </p>
 
-alert("Login Successful!");
 
-window.location="index.html";
+        <button
+            id="submitPayment"
+            class="pay-btn"
+            type="button">
 
-}catch(error){
+            Submit Payment
 
-alert(error.message);
+        </button>
 
-}
 
-});
+        <p
+            id="uploadMessage"
+            style="margin-top:20px;">
+        </p>
 
-}
+    </div>
+
+</section>
+
+
+<script>
+
+const params =
+    new URLSearchParams(window.location.search);
+
+const movieNumber =
+    params.get("movie") || "1";
+
+
+const movies = {
+
+    1: "Movie One",
+    2: "Movie Two",
+    3: "Movie Three",
+    4: "Movie Four"
+
+};
+
+
+const movieTitle =
+    movies[movieNumber] || "Movie";
+
+
+document.getElementById("uploadMovieTitle")
+    .textContent = movieTitle;
+
+
+// Submit button
+
+document.getElementById("submitPayment")
+    .addEventListener("click", function () {
+
+        const transactionId =
+            document.getElementById("transactionId").value.trim();
+
+        const screenshot =
+            document.getElementById("paymentScreenshot").files[0];
+
+        const message =
+            document.getElementById("uploadMessage");
+
+
+        if (!transactionId) {
+
+            message.textContent =
+                "Please enter your transaction/reference number.";
+
+            return;
+
+        }
+
+
+        if (!screenshot) {
+
+            message.textContent =
+                "Please select your payment screenshot.";
+
+            return;
+
+        }
+
+
+        message.textContent =
+            "Payment details received. Upload system will be connected next.";
+
+    });
+
+</script>
+
+
+<script
+    type="module"
+    src="auth.js">
+</script>
+
+
+</body>
+
+</html>
