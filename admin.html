@@ -4,7 +4,6 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>KBTV Admin Login</title>
-    <link rel="stylesheet" href="style.css" />
     <style>
         * {
             margin: 0;
@@ -197,10 +196,6 @@
         </div>
     </div>
 
-    <!-- =========================
-         FIREBASE AUTH - UPDATED
-    ========================= -->
-
     <script type="module">
         // ============ IMPORT FROM FIREBASE.JS ============
         import { auth, db } from './firebase.js';
@@ -225,36 +220,29 @@
             const email = emailInput.value.trim();
             const password = passwordInput.value;
             
-            // Clear previous errors
             errorDiv.textContent = '';
             
-            // Validate inputs
             if (!email || !password) {
                 errorDiv.textContent = '❌ Please enter both email and password.';
                 return;
             }
 
-            // Disable button during login
             loginBtn.disabled = true;
             loginBtn.textContent = '⏳ Logging in...';
 
             try {
-                // Sign in with Firebase Auth
                 const userCredential = await signInWithEmailAndPassword(auth, email, password);
                 const user = userCredential.user;
 
                 console.log('✅ Logged in as:', user.email);
 
-                // Check if user is admin
                 const userDoc = await getDoc(doc(db, 'users', user.uid));
                 const userData = userDoc.data();
                 
                 if (userData && userData.role === 'admin') {
-                    // Admin access granted - redirect to dashboard
                     console.log('✅ Admin access granted');
                     window.location.href = 'admin-dashboard.html';
                 } else {
-                    // Not an admin - sign out and show error
                     errorDiv.textContent = '❌ Access denied. Admin privileges required.';
                     await signOut(auth);
                     loginBtn.disabled = false;
@@ -263,7 +251,6 @@
             } catch (error) {
                 console.error('Login error:', error);
                 
-                // Show user-friendly error message
                 let message = '';
                 switch (error.code) {
                     case 'auth/user-not-found':
@@ -298,24 +285,15 @@
                     const userData = userDoc.data();
                     
                     if (userData && userData.role === 'admin') {
-                        // Already logged in as admin - redirect to dashboard
                         console.log('✅ Already logged in as admin');
                         window.location.href = 'admin-dashboard.html';
                     } else {
-                        // Logged in but not admin - sign out
                         console.log('⚠️ User is not admin, signing out...');
                         await signOut(auth);
                     }
                 } catch (error) {
                     console.error('Error checking admin status:', error);
                 }
-            }
-        });
-
-        // ============ KEYBOARD SHORTCUTS ============
-        document.addEventListener('keydown', (e) => {
-            if (e.key === 'Escape') {
-                errorDiv.textContent = '';
             }
         });
 
