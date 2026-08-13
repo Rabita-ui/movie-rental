@@ -2,9 +2,7 @@
 <html lang="en">
 
 <head>
-
     <meta charset="UTF-8">
-
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <title>KBTV - Submit Payment</title>
@@ -16,203 +14,539 @@
 
     <link
         href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap"
-        rel="stylesheet">
-
+        rel="stylesheet"
+    >
 </head>
 
 <body>
 
-<nav>
+    <!-- ============================= -->
+    <!-- NAVIGATION -->
+    <!-- ============================= -->
 
-    <div class="logo">
-        <span>K</span>BTV
-    </div>
+    <nav>
 
-    <ul>
+        <div class="logo">
+            <span>K</span>BTV
+        </div>
 
-        <li>
-            <a href="index.html">Home</a>
-        </li>
+        <ul>
 
-        <li>
-            <a href="moovie.html">Movies</a>
-        </li>
+            <li>
+                <a href="index.html">Home</a>
+            </li>
 
-        <li>
-            <a href="login.html">Login</a>
-        </li>
+            <li>
+                <a href="moovie.html">Movies</a>
+            </li>
 
-        <li>
+            <li>
+                <a href="login.html">Login</a>
+            </li>
+
+            <li>
+                <button
+                    id="logoutBtn"
+                    type="button"
+                    style="
+                        padding: 10px 18px;
+                        background: red;
+                        color: white;
+                        border: none;
+                        border-radius: 6px;
+                        cursor: pointer;
+                    "
+                >
+                    Logout
+                </button>
+            </li>
+
+        </ul>
+
+    </nav>
+
+
+    <!-- ============================= -->
+    <!-- PAYMENT SUBMISSION -->
+    <!-- ============================= -->
+
+    <section class="payment-page">
+
+        <div class="payment-card">
+
+            <h1>
+                Submit Payment
+            </h1>
+
+            <h2 id="uploadMovieTitle">
+                Movie
+            </h2>
+
+            <p>
+                Rental Price:
+                <strong>₹100</strong>
+            </p>
+
+
+            <!-- LOGIN STATUS -->
+
+            <p
+                id="userStatus"
+                style="
+                    margin: 15px 0;
+                    padding: 10px;
+                    border-radius: 6px;
+                "
+            >
+                Checking login status...
+            </p>
+
+
+            <!-- TRANSACTION NUMBER -->
+
+            <label for="transactionId">
+                UPI Transaction / Reference Number
+            </label>
+
+            <input
+                type="text"
+                id="transactionId"
+                placeholder="Enter transaction number"
+                maxlength="100"
+                required
+            >
+
+
+            <!-- SCREENSHOT -->
+
+            <label for="paymentScreenshot">
+                Payment Screenshot
+            </label>
+
+            <input
+                type="file"
+                id="paymentScreenshot"
+                accept="image/*"
+                required
+            >
+
+            <p class="note">
+                Select the screenshot showing your successful ₹100 payment.
+            </p>
+
+
+            <!-- SUBMIT -->
 
             <button
-                id="logoutBtn"
+                id="submitPayment"
+                class="pay-btn"
                 type="button"
-                style="
-                    padding: 10px 18px;
-                    background: red;
-                    color: white;
-                    border: none;
-                    border-radius: 6px;
-                    cursor: pointer;
-                ">
-
-                Logout
-
+            >
+                Submit Payment
             </button>
 
-        </li>
 
-    </ul>
+            <!-- MESSAGE -->
 
-</nav>
+            <p
+                id="uploadMessage"
+                style="
+                    margin-top: 20px;
+                    line-height: 1.6;
+                "
+            >
+            </p>
 
+        </div>
 
-<section class="payment-page">
-
-    <div class="payment-card">
-
-        <h1>
-            Submit Payment
-        </h1>
-
-        <h2 id="uploadMovieTitle">
-            Movie
-        </h2>
-
-        <p>
-            Rental Price:
-            <strong>₹100</strong>
-        </p>
+    </section>
 
 
-        <!-- TRANSACTION NUMBER -->
+    <!-- ============================= -->
+    <!-- FIREBASE PAYMENT SCRIPT -->
+    <!-- ============================= -->
 
-        <label for="transactionId">
-            UPI Transaction / Reference Number
-        </label>
+    <script type="module">
 
-        <input
-            type="text"
-            id="transactionId"
-            placeholder="Enter transaction number"
-            required>
+        import {
+            getAuth,
+            onAuthStateChanged
+        } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 
+        import {
+            collection,
+            addDoc,
+            serverTimestamp
+        } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
-        <!-- SCREENSHOT -->
-
-        <label for="paymentScreenshot">
-            Payment Screenshot
-        </label>
-
-        <input
-            type="file"
-            id="paymentScreenshot"
-            accept="image/*"
-            required>
+        import {
+            app,
+            db
+        } from "./firebase.js";
 
 
-        <p class="note">
+        // =========================================
+        // FIREBASE AUTH
+        // =========================================
 
-            Upload the screenshot showing your successful
-            ₹100 payment.
-
-        </p>
-
-
-        <button
-            id="submitPayment"
-            class="pay-btn"
-            type="button">
-
-            Submit Payment
-
-        </button>
+        const auth = getAuth(app);
 
 
-        <p
-            id="uploadMessage"
-            style="margin-top:20px;">
-        </p>
+        // =========================================
+        // GET MOVIE FROM URL
+        // Example:
+        // payment-upload.html?movie=1
+        // =========================================
 
-    </div>
+        const params =
+            new URLSearchParams(window.location.search);
 
-</section>
-
-
-<script>
-
-const params =
-    new URLSearchParams(window.location.search);
-
-const movieNumber =
-    params.get("movie") || "1";
+        const movieNumber =
+            params.get("movie") || "1";
 
 
-const movies = {
+        // =========================================
+        // MOVIE LIST
+        // =========================================
 
-    1: "Movie One",
-    2: "Movie Two",
-    3: "Movie Three",
-    4: "Movie Four"
+        const movies = {
 
-};
+            1: "Movie One",
+            2: "Movie Two",
+            3: "Movie Three",
+            4: "Movie Four"
 
-
-const movieTitle =
-    movies[movieNumber] || "Movie";
-
-
-document.getElementById("uploadMovieTitle")
-    .textContent = movieTitle;
+        };
 
 
-// Submit button
+        const movieTitle =
+            movies[movieNumber] || "Movie";
 
-document.getElementById("submitPayment")
-    .addEventListener("click", function () {
 
-        const transactionId =
-            document.getElementById("transactionId").value.trim();
+        document.getElementById("uploadMovieTitle")
+            .textContent = movieTitle;
 
-        const screenshot =
-            document.getElementById("paymentScreenshot").files[0];
+
+        // =========================================
+        // ELEMENTS
+        // =========================================
+
+        const transactionInput =
+            document.getElementById("transactionId");
+
+        const screenshotInput =
+            document.getElementById("paymentScreenshot");
+
+        const submitButton =
+            document.getElementById("submitPayment");
 
         const message =
             document.getElementById("uploadMessage");
 
+        const userStatus =
+            document.getElementById("userStatus");
 
-        if (!transactionId) {
+
+        // =========================================
+        // CURRENT USER
+        // =========================================
+
+        let currentUser = null;
+
+
+        onAuthStateChanged(auth, (user) => {
+
+            currentUser = user;
+
+
+            if (user) {
+
+                userStatus.textContent =
+                    "Logged in as: " + user.email;
+
+                userStatus.style.background =
+                    "#e8f5e9";
+
+                userStatus.style.color =
+                    "#2e7d32";
+
+            } else {
+
+                userStatus.textContent =
+                    "You must log in before submitting payment.";
+
+                userStatus.style.background =
+                    "#ffebee";
+
+                userStatus.style.color =
+                    "#c62828";
+
+            }
+
+        });
+
+
+        // =========================================
+        // SUBMIT PAYMENT
+        // =========================================
+
+        submitButton.addEventListener("click", async function () {
+
+
+            // -----------------------------------------
+            // CHECK LOGIN
+            // -----------------------------------------
+
+            if (!currentUser) {
+
+                message.textContent =
+                    "Please log in before submitting your payment.";
+
+                message.style.color =
+                    "red";
+
+                return;
+
+            }
+
+
+            // -----------------------------------------
+            // GET TRANSACTION NUMBER
+            // -----------------------------------------
+
+            const transactionId =
+                transactionInput.value.trim();
+
+
+            if (!transactionId) {
+
+                message.textContent =
+                    "Please enter your UPI transaction/reference number.";
+
+                message.style.color =
+                    "red";
+
+                transactionInput.focus();
+
+                return;
+
+            }
+
+
+            // -----------------------------------------
+            // GET SCREENSHOT
+            // -----------------------------------------
+
+            const screenshot =
+                screenshotInput.files[0];
+
+
+            if (!screenshot) {
+
+                message.textContent =
+                    "Please select your payment screenshot.";
+
+                message.style.color =
+                    "red";
+
+                return;
+
+            }
+
+
+            // -----------------------------------------
+            // CHECK FILE TYPE
+            // -----------------------------------------
+
+            if (!screenshot.type.startsWith("image/")) {
+
+                message.textContent =
+                    "Please select an image file.";
+
+                message.style.color =
+                    "red";
+
+                return;
+
+            }
+
+
+            // -----------------------------------------
+            // CHECK FILE SIZE
+            // -----------------------------------------
+
+            const maxFileSize =
+                5 * 1024 * 1024;
+
+
+            if (screenshot.size > maxFileSize) {
+
+                message.textContent =
+                    "Screenshot must be smaller than 5 MB.";
+
+                message.style.color =
+                    "red";
+
+                return;
+
+            }
+
+
+            // -----------------------------------------
+            // DISABLE BUTTON
+            // -----------------------------------------
+
+            submitButton.disabled = true;
+
+            submitButton.textContent =
+                "Submitting...";
 
             message.textContent =
-                "Please enter your transaction/reference number.";
+                "Saving your payment details...";
 
-            return;
-
-        }
-
-
-        if (!screenshot) {
-
-            message.textContent =
-                "Please select your payment screenshot.";
-
-            return;
-
-        }
+            message.style.color =
+                "#333";
 
 
-        message.textContent =
-            "Payment details received. Upload system will be connected next.";
-
-    });
-
-</script>
+            try {
 
 
-<script
-    type="module"
-    src="auth.js">
-</script>
+                // =====================================
+                // SAVE PAYMENT TO FIRESTORE
+                // =====================================
+
+                const paymentData = {
+
+                    // Movie information
+                    movieId: String(movieNumber),
+
+                    movieTitle: movieTitle,
+
+                    amount: 100,
+
+                    currency: "INR",
+
+
+                    // Customer information
+                    userId: currentUser.uid,
+
+                    userEmail: currentUser.email || "",
+
+
+                    // Payment information
+                    transactionId: transactionId,
+
+                    paymentMethod: "UPI",
+
+
+                    // Screenshot information
+                    screenshotName: screenshot.name,
+
+                    screenshotType: screenshot.type,
+
+                    screenshotSize: screenshot.size,
+
+
+                    // Payment status
+                    status: "pending",
+
+
+                    // Timestamp
+                    submittedAt: serverTimestamp()
+
+                };
+
+
+                const paymentRef =
+                    await addDoc(
+                        collection(db, "payments"),
+                        paymentData
+                    );
+
+
+                console.log(
+                    "Payment request created:",
+                    paymentRef.id
+                );
+
+
+                // =====================================
+                // SUCCESS MESSAGE
+                // =====================================
+
+                message.innerHTML =
+                    `
+                    <strong style="color:green;">
+                        Payment details submitted successfully.
+                    </strong>
+                    <br><br>
+
+                    Your payment is now waiting for verification.
+                    <br>
+
+                    <strong>Reference:</strong>
+                    ${paymentRef.id}
+                    <br><br>
+
+                    Please wait for payment approval before watching the movie.
+                    `;
+
+
+                // Clear fields
+                transactionInput.value = "";
+                screenshotInput.value = "";
+
+
+                submitButton.textContent =
+                    "Payment Submitted";
+
+
+            } catch (error) {
+
+
+                // =====================================
+                // ERROR
+                // =====================================
+
+                console.error(
+                    "Payment submission error:",
+                    error
+                );
+
+
+                message.innerHTML =
+                    `
+                    <strong style="color:red;">
+                        Payment submission failed.
+                    </strong>
+                    <br><br>
+
+                    ${error.message}
+                    <br><br>
+
+                    Please try again.
+                    `;
+
+
+                submitButton.disabled =
+                    false;
+
+                submitButton.textContent =
+                    "Submit Payment";
+
+            }
+
+        });
+
+    </script>
+
+
+    <!-- EXISTING AUTH SYSTEM -->
+
+    <script
+        type="module"
+        src="auth.js"
+    ></script>
 
 
 </body>
