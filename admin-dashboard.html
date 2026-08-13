@@ -596,15 +596,18 @@
     <!-- Toast Container -->
     <div id="toastContainer"></div>
 
+    <!-- =========================
+         FIREBASE AUTH - UPDATED
+    ========================= -->
+
     <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        // ============ IMPORT FROM FIREBASE.JS ============
+        import { auth, db } from './firebase.js';
         import { 
-            getAuth, 
             onAuthStateChanged,
             signOut 
-        } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+        } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
         import { 
-            getFirestore, 
             collection, 
             query, 
             where, 
@@ -615,23 +618,8 @@
             getDoc,
             orderBy,
             addDoc,
-            serverTimestamp,
-            writeBatch
-        } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
-
-        // Firebase Config - REPLACE WITH YOUR CONFIG
-        const firebaseConfig = {
-            apiKey: "AIzaSyBXXXXXXXXXXXXXX",
-            authDomain: "your-project.firebaseapp.com",
-            projectId: "your-project",
-            storageBucket: "your-project.appspot.com",
-            messagingSenderId: "123456789",
-            appId: "1:123456789:web:abcdef"
-        };
-
-        const app = initializeApp(firebaseConfig);
-        const auth = getAuth(app);
-        const db = getFirestore(app);
+            serverTimestamp
+        } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
         let allPayments = [];
         let currentFilter = 'all';
