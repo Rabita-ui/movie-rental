@@ -2,265 +2,413 @@
 <html lang="en">
 
 <head>
-
     <meta charset="UTF-8">
-
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-    <title>KBTV - Payment</title>
-
+    <title>KBTV - Payment Options</title>
     <link rel="stylesheet" href="style.css">
-
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-
-    <link
-        href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap"
-        rel="stylesheet">
-
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <style>
+        .payment-container {
+            max-width: 700px;
+            margin: 40px auto;
+            padding: 30px;
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+        }
+        .payment-container h1 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 10px;
+        }
+        .payment-container .subtitle {
+            text-align: center;
+            color: #888;
+            margin-bottom: 30px;
+        }
+        .movie-summary {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 12px;
+            margin-bottom: 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+        .movie-summary .movie-info h3 {
+            margin: 0 0 5px 0;
+            color: #333;
+        }
+        .movie-summary .movie-info p {
+            margin: 0;
+            color: #666;
+        }
+        .movie-summary .price {
+            font-size: 28px;
+            font-weight: 700;
+            color: #4CAF50;
+        }
+        .payment-options {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin: 20px 0;
+        }
+        .payment-option {
+            padding: 25px;
+            border: 2px solid #e0e0e0;
+            border-radius: 12px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+            background: white;
+        }
+        .payment-option:hover {
+            border-color: #4CAF50;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(76, 175, 80, 0.1);
+        }
+        .payment-option.selected {
+            border-color: #4CAF50;
+            background: #f0f8f0;
+            box-shadow: 0 4px 15px rgba(76, 175, 80, 0.2);
+        }
+        .payment-option .icon {
+            font-size: 40px;
+            display: block;
+            margin-bottom: 10px;
+        }
+        .payment-option .name {
+            font-weight: 600;
+            color: #333;
+        }
+        .payment-option .description {
+            font-size: 12px;
+            color: #888;
+            margin-top: 5px;
+        }
+        .payment-option .radio {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            border: 2px solid #ddd;
+            display: inline-block;
+            margin-top: 10px;
+            position: relative;
+        }
+        .payment-option.selected .radio {
+            border-color: #4CAF50;
+        }
+        .payment-option.selected .radio::after {
+            content: '';
+            width: 12px;
+            height: 12px;
+            background: #4CAF50;
+            border-radius: 50%;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+        .btn-pay {
+            width: 100%;
+            padding: 16px;
+            background: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 18px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.3s;
+            margin-top: 20px;
+        }
+        .btn-pay:hover {
+            background: #45a049;
+        }
+        .btn-pay:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+        }
+        .btn-back {
+            display: inline-block;
+            padding: 10px 20px;
+            background: #6c757d;
+            color: white;
+            text-decoration: none;
+            border-radius: 6px;
+            margin-top: 15px;
+            transition: background 0.3s;
+        }
+        .btn-back:hover {
+            background: #5a6268;
+        }
+        .info-box {
+            background: #fff3cd;
+            padding: 15px;
+            border-radius: 8px;
+            border-left: 4px solid #ffc107;
+            margin: 20px 0;
+        }
+        .info-box p {
+            margin: 5px 0;
+            color: #856404;
+            font-size: 14px;
+        }
+        /* Navigation */
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 30px;
+            background: #1a1a2e;
+            color: white;
+        }
+        nav .logo {
+            font-size: 24px;
+            font-weight: bold;
+        }
+        nav .logo span {
+            color: #4CAF50;
+        }
+        nav ul {
+            list-style: none;
+            display: flex;
+            gap: 20px;
+            align-items: center;
+            margin: 0;
+            padding: 0;
+        }
+        nav ul li a {
+            color: white;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+        nav ul li a:hover {
+            color: #4CAF50;
+        }
+        #userEmail {
+            color: #aaa;
+            margin-right: 10px;
+        }
+        #logoutBtn {
+            padding: 8px 18px;
+            background: #dc3545;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+        #logoutBtn:hover {
+            background: #c82333;
+        }
+        footer {
+            text-align: center;
+            padding: 20px;
+            background: #1a1a2e;
+            color: #888;
+            margin-top: 40px;
+        }
+        footer h2 {
+            color: white;
+            margin-bottom: 5px;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        @media (max-width: 768px) {
+            nav {
+                flex-direction: column;
+                gap: 10px;
+                padding: 10px 15px;
+            }
+            nav ul {
+                width: 100%;
+                justify-content: center;
+                flex-wrap: wrap;
+            }
+            .payment-options {
+                grid-template-columns: 1fr;
+            }
+            .movie-summary {
+                flex-direction: column;
+                text-align: center;
+            }
+        }
+    </style>
 </head>
 
 <body>
 
+    <nav>
+        <div class="logo"><span>K</span>BTV</div>
+        <ul>
+            <li><a href="index.html">Home</a></li>
+            <li><a href="moovie.html">Movies</a></li>
+            <li id="loginLink"><a href="login.html">Login</a></li>
+            <li id="userInfo" style="display:none;">
+                <span id="userEmail"></span>
+            </li>
+            <li id="logoutLi" style="display:none;">
+                <button id="logoutBtn">Logout</button>
+            </li>
+        </ul>
+    </nav>
 
-<!-- =========================
-     NAVIGATION
-========================= -->
+    <main class="container">
+        <div class="payment-container">
+            <h1>💳 Payment Options</h1>
+            <p class="subtitle">Choose your preferred payment method</p>
 
-<nav>
+            <!-- Movie Summary -->
+            <div class="movie-summary">
+                <div class="movie-info">
+                    <h3 id="movieTitle">Movie One</h3>
+                    <p>🎬 24-Hour Rental Access</p>
+                </div>
+                <div class="price" id="moviePrice">₹100</div>
+            </div>
 
-    <div class="logo">
-        <span>K</span>BTV
-    </div>
+            <!-- Payment Options -->
+            <div class="payment-options" id="paymentOptions">
+                <div class="payment-option selected" data-method="upi" onclick="selectPayment('upi')">
+                    <span class="icon">📱</span>
+                    <div class="name">UPI</div>
+                    <div class="description">Google Pay, PhonePe, Paytm</div>
+                    <span class="radio"></span>
+                </div>
+                <div class="payment-option" data-method="card" onclick="selectPayment('card')">
+                    <span class="icon">💳</span>
+                    <div class="name">Credit/Debit Card</div>
+                    <div class="description">Visa, Mastercard, RuPay</div>
+                    <span class="radio"></span>
+                </div>
+                <div class="payment-option" data-method="netbanking" onclick="selectPayment('netbanking')">
+                    <span class="icon">🏦</span>
+                    <div class="name">Net Banking</div>
+                    <div class="description">All major banks</div>
+                    <span class="radio"></span>
+                </div>
+                <div class="payment-option" data-method="wallet" onclick="selectPayment('wallet')">
+                    <span class="icon">👛</span>
+                    <div class="name">Digital Wallet</div>
+                    <div class="description">Paytm Wallet, Amazon Pay</div>
+                    <span class="radio"></span>
+                </div>
+            </div>
 
-    <ul>
+            <div class="info-box">
+                <p>💡 You will be redirected to upload your payment screenshot after confirming.</p>
+                <p>⏱️ Verification usually takes 5-10 minutes.</p>
+            </div>
 
-        <li>
-            <a href="index.html">Home</a>
-        </li>
-
-        <li>
-            <a href="moovie.html">Movies</a>
-        </li>
-
-        <li>
-            <a href="login.html">Login</a>
-        </li>
-
-        <li>
-
-            <button
-                id="logoutBtn"
-                type="button"
-                style="
-                    display: inline-block;
-                    padding: 10px 18px;
-                    background: red;
-                    color: white;
-                    border: none;
-                    border-radius: 6px;
-                    cursor: pointer;
-                    font-size: 15px;
-                ">
-
-                Logout
-
+            <button id="payNowBtn" class="btn-pay">
+                🎬 Continue to Payment
             </button>
 
-        </li>
-
-    </ul>
-
-</nav>
-
-
-<!-- =========================
-     PAYMENT
-========================= -->
-
-<section class="payment-page">
-
-    <div class="payment-card">
-
-        <h1>
-            Complete Your Rental
-        </h1>
-
-
-        <!-- MOVIE POSTER -->
-
-        <img
-            id="paymentPoster"
-            src="moovie1jpg.jpeg"
-            class="movie-payment-poster"
-            alt="Movie">
-
-
-        <!-- MOVIE TITLE -->
-
-        <h2 id="paymentMovieTitle">
-            Movie One
-        </h2>
-
-
-        <!-- PRICE -->
-
-        <p class="price">
-
-            Rental Price:
-
-            <strong id="paymentPrice">
-                ₹100
-            </strong>
-
-        </p>
-
-
-        <!-- QR CODE -->
-
-        <h3>
-            Scan QR Code
-        </h3>
-
-        <img
-            src="Qrc.png"
-            class="qr-image"
-            alt="QR Code">
-
-
-        <!-- UPI ID -->
-
-        <p class="upi-title">
-            UPI ID
-        </p>
-
-
-        <div class="upi-box">
-
-            <input
-                type="text"
-                value="9862728802m@pnb"
-                readonly>
-
+            <br>
+            <a href="movie-details.html?movieId=1" class="btn-back">← Back to Movie</a>
         </div>
+    </main>
 
+    <footer>
+        <h2>🎬 KBTV</h2>
+        <p>© 2026 KBTV Movie Rental. All Rights Reserved.</p>
+    </footer>
 
-        <p class="note">
+    <!-- =========================
+         FIREBASE AUTH - UPDATED
+    ========================= -->
 
-            After payment, keep your screenshot safe.
-            In the next step, you will be able to submit
-            your payment for verification.
+    <script type="module">
+        // ============ IMPORT FROM FIREBASE.JS ============
+        import { auth } from './firebase.js';
+        import { 
+            onAuthStateChanged,
+            signOut 
+        } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 
-        </p>
+        // ============ GET MOVIE FROM URL ============
+        const params = new URLSearchParams(window.location.search);
+        const movieId = params.get('movieId') || '1';
+        const movieTitle = params.get('title') || 'Movie One';
+        const moviePrice = params.get('price') || '100';
 
+        // Update movie details
+        document.getElementById('movieTitle').textContent = movieTitle;
+        document.getElementById('moviePrice').textContent = '₹' + moviePrice;
 
-        <!-- I'VE PAID BUTTON -->
+        // ============ NAVIGATION AUTH ============
+        const loginLink = document.getElementById('loginLink');
+        const userInfo = document.getElementById('userInfo');
+        const userEmail = document.getElementById('userEmail');
+        const logoutLi = document.getElementById('logoutLi');
+        const logoutBtn = document.getElementById('logoutBtn');
 
-        <button
-            id="paidBtn"
-            class="pay-btn"
-            type="button">
+        onAuthStateChanged(auth, (user) => {
+            if (user) {
+                loginLink.style.display = 'none';
+                userInfo.style.display = 'inline-block';
+                logoutLi.style.display = 'inline-block';
+                userEmail.textContent = '👤 ' + user.email;
+            } else {
+                loginLink.style.display = 'inline-block';
+                userInfo.style.display = 'none';
+                logoutLi.style.display = 'none';
+                // Redirect to login if trying to pay without login
+                const payBtn = document.getElementById('payNowBtn');
+                payBtn.textContent = '🔐 Login to Continue';
+                payBtn.onclick = () => {
+                    window.location.href = 'login.html';
+                };
+            }
+        });
 
-            I've Paid
+        // ============ LOGOUT ============
+        logoutBtn.addEventListener('click', async () => {
+            try {
+                await signOut(auth);
+                window.location.href = 'login.html';
+            } catch (error) {
+                console.error('Logout error:', error);
+                alert('Logout error: ' + error.message);
+            }
+        });
 
-        </button>
+        // ============ SELECT PAYMENT METHOD ============
+        let selectedMethod = 'upi';
 
-    </div>
+        window.selectPayment = function(method) {
+            selectedMethod = method;
+            document.querySelectorAll('.payment-option').forEach(el => {
+                el.classList.remove('selected');
+            });
+            document.querySelector(`.payment-option[data-method="${method}"]`).classList.add('selected');
+        };
 
-</section>
+        // ============ PAY NOW ============
+        document.getElementById('payNowBtn').addEventListener('click', function() {
+            const user = auth.currentUser;
+            if (!user) {
+                window.location.href = 'login.html';
+                return;
+            }
 
+            // Redirect to payment upload page with method
+            window.location.href = `payment-upload.html?movieId=${movieId}&movieTitle=${encodeURIComponent(movieTitle)}&price=${moviePrice}&method=${selectedMethod}`;
+        });
 
-<!-- =========================
-     MOVIE INFORMATION
-========================= -->
-
-<script>
-
-const movies = {
-
-    1: {
-        title: "Movie One",
-        image: "moovie1jpg.jpeg",
-        price: "₹100"
-    },
-
-    2: {
-        title: "Movie Two",
-        image: "moovie2jpg.jpeg",
-        price: "₹100"
-    },
-
-    3: {
-        title: "Movie Three",
-        image: "moovie3jpg.jpeg",
-        price: "₹100"
-    },
-
-    4: {
-        title: "Movie Four",
-        image: "moovie4jpg.jpeg",
-        price: "₹100"
-    }
-
-};
-
-
-// Get movie number from URL
-
-const params =
-    new URLSearchParams(window.location.search);
-
-const movieNumber =
-    params.get("movie") || "1";
-
-
-// Find selected movie
-
-const movie =
-    movies[movieNumber];
-
-
-// Display selected movie
-
-if (movie) {
-
-    document.getElementById("paymentPoster").src =
-        movie.image;
-
-    document.getElementById("paymentMovieTitle").textContent =
-        movie.title;
-
-    document.getElementById("paymentPrice").textContent =
-        movie.price;
-
-}
-
-
-// ========================================
-// I'VE PAID BUTTON
-// ========================================
-
-document.getElementById("paidBtn")
-    .addEventListener("click", function () {
-
-        window.location.href =
-            "payment-confirmation.html?movie=" + movieNumber;
-
-    });
-
-</script>
-
-
-<!-- =========================
-     FIREBASE AUTH
-========================= -->
-
-<script
-    type="module"
-    src="auth.js">
-</script>
-
+        console.log('✅ payment.html - Payment options page loaded');
+        console.log('🎬 Movie:', movieTitle);
+        console.log('💰 Price:', moviePrice);
+    </script>
 
 </body>
-
 </html>
