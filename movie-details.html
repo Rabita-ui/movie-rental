@@ -1,171 +1,444 @@
-<!-- Add this section to movie-details.html - Place it near the rent button -->
+<!-- movie-details.html - Complete Updated Version -->
+<!DOCTYPE html>
+<html lang="en">
 
-<!-- Movie Details Page - Add this section -->
-<div id="rentalStatusContainer" style="margin: 20px 0;"></div>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KBTV - Movie Details</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <style>
+        .movie-detail-container {
+            max-width: 900px;
+            margin: 40px auto;
+            padding: 30px;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+        }
+        .movie-detail-container img {
+            width: 100%;
+            max-height: 400px;
+            object-fit: cover;
+            border-radius: 8px;
+        }
+        .movie-detail-container h1 {
+            margin: 20px 0 10px 0;
+            color: #333;
+        }
+        .movie-detail-container .rating {
+            color: #ff9800;
+            font-size: 20px;
+            margin: 10px 0;
+        }
+        .movie-detail-container .price {
+            font-size: 24px;
+            font-weight: 600;
+            color: #4CAF50;
+            margin: 10px 0;
+        }
+        .movie-detail-container .description {
+            color: #666;
+            line-height: 1.8;
+            margin: 15px 0;
+        }
+        .btn-rent {
+            display: inline-block;
+            padding: 14px 40px;
+            background: #4CAF50;
+            color: white;
+            text-decoration: none;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 18px;
+            transition: background 0.3s;
+            border: none;
+            cursor: pointer;
+        }
+        .btn-rent:hover {
+            background: #45a049;
+        }
+        .btn-watch {
+            display: inline-block;
+            padding: 14px 40px;
+            background: #28a745;
+            color: white;
+            text-decoration: none;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 18px;
+            transition: background 0.3s;
+            border: none;
+            cursor: pointer;
+        }
+        .btn-watch:hover {
+            background: #218838;
+        }
+        .btn-back {
+            display: inline-block;
+            padding: 10px 20px;
+            background: #6c757d;
+            color: white;
+            text-decoration: none;
+            border-radius: 6px;
+            margin-top: 15px;
+            transition: background 0.3s;
+        }
+        .btn-back:hover {
+            background: #5a6268;
+        }
+        #rentalStatusContainer {
+            margin: 20px 0;
+        }
+        #rentButtonContainer {
+            margin: 20px 0;
+        }
+        /* Navigation */
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 30px;
+            background: #1a1a2e;
+            color: white;
+        }
+        nav .logo {
+            font-size: 24px;
+            font-weight: bold;
+        }
+        nav .logo span {
+            color: #4CAF50;
+        }
+        nav ul {
+            list-style: none;
+            display: flex;
+            gap: 20px;
+            align-items: center;
+            margin: 0;
+            padding: 0;
+        }
+        nav ul li a {
+            color: white;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+        nav ul li a:hover {
+            color: #4CAF50;
+        }
+        #userEmail {
+            color: #aaa;
+            margin-right: 10px;
+        }
+        #logoutBtn {
+            padding: 8px 18px;
+            background: #dc3545;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+        #logoutBtn:hover {
+            background: #c82333;
+        }
+        footer {
+            text-align: center;
+            padding: 20px;
+            background: #1a1a2e;
+            color: #888;
+            margin-top: 40px;
+        }
+        footer h2 {
+            color: white;
+            margin-bottom: 5px;
+        }
+    </style>
+</head>
 
-<!-- Update the rent button to show/hide based on rental status -->
-<div id="rentButtonContainer">
-    <a href="payment-upload.html?movieId=1&movieTitle=Movie One&price=100" class="btn-rent">
-        🎬 Rent Now - ₹100
-    </a>
-</div>
+<body>
 
-<!-- Add this script at the end of movie-details.html -->
-<script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-    import { 
-        getAuth, 
-        onAuthStateChanged 
-    } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
-    import { 
-        getFirestore, 
-        collection, 
-        query, 
-        where, 
-        getDocs,
-        onSnapshot
-    } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+    <!-- Navigation -->
+    <nav>
+        <div class="logo"><span>K</span>BTV</div>
+        <ul>
+            <li><a href="index.html">Home</a></li>
+            <li><a href="moovie.html">Movies</a></li>
+            <li id="loginLink"><a href="login.html">Login</a></li>
+            <li id="userInfo" style="display:none;">
+                <span id="userEmail"></span>
+            </li>
+            <li id="logoutLi" style="display:none;">
+                <button id="logoutBtn">Logout</button>
+            </li>
+        </ul>
+    </nav>
 
-    const firebaseConfig = {
-        apiKey: "YOUR_API_KEY",
-        authDomain: "YOUR_PROJECT.firebaseapp.com",
-        projectId: "YOUR_PROJECT_ID",
-        storageBucket: "YOUR_PROJECT.appspot.com",
-        messagingSenderId: "YOUR_SENDER_ID",
-        appId: "YOUR_APP_ID"
-    };
+    <!-- Main Content -->
+    <main class="container">
+        <div class="movie-detail-container">
+            <img id="moviePoster" src="" alt="Movie Poster">
+            <h1 id="movieTitle">Movie One</h1>
+            <div class="rating" id="movieRating">⭐⭐⭐⭐☆</div>
+            <div class="price" id="moviePrice">₹100</div>
+            <div class="description" id="movieDescription">
+                A thrilling movie experience that will keep you on the edge of your seat.
+                Watch it now and enjoy 24-hour access.
+            </div>
 
-    const app = initializeApp(firebaseConfig);
-    const auth = getAuth(app);
-    const db = getFirestore(app);
+            <!-- Rental Status Container -->
+            <div id="rentalStatusContainer"></div>
 
-    // Get movie details from URL
-    const urlParams = new URLSearchParams(window.location.search);
-    const movieId = urlParams.get('movieId') || '1';
-    const movieTitle = urlParams.get('title') || 'Movie One';
-    const moviePrice = urlParams.get('price') || '100';
+            <!-- Rent Button Container -->
+            <div id="rentButtonContainer">
+                <a href="#" id="rentNowBtn" class="btn-rent">
+                    🎬 Rent Now - ₹100
+                </a>
+            </div>
 
-    // Check authentication and rental status
-    onAuthStateChanged(auth, async (user) => {
+            <br>
+            <a href="moovie.html" class="btn-back">← Back to Movies</a>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer>
+        <h2>🎬 KBTV</h2>
+        <p>© 2026 KBTV Movie Rental. All Rights Reserved.</p>
+    </footer>
+
+    <!-- =========================
+         FIREBASE AUTH - UPDATED
+    ========================= -->
+
+    <script type="module">
+        // ============ IMPORT FROM FIREBASE.JS ============
+        import { auth, db } from './firebase.js';
+        import { 
+            onAuthStateChanged,
+            signOut 
+        } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+        import { 
+            collection, 
+            query, 
+            where, 
+            getDocs,
+            onSnapshot,
+            doc,
+            getDoc
+        } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+        // ============ DOM ELEMENTS ============
+        const loginLink = document.getElementById('loginLink');
+        const userInfo = document.getElementById('userInfo');
+        const userEmail = document.getElementById('userEmail');
+        const logoutLi = document.getElementById('logoutLi');
+        const logoutBtn = document.getElementById('logoutBtn');
         const rentalContainer = document.getElementById('rentalStatusContainer');
         const rentButtonContainer = document.getElementById('rentButtonContainer');
 
-        if (!user) {
-            // User not logged in - show login prompt
-            rentalContainer.innerHTML = `
-                <div style="background: #fff3cd; padding: 15px; border-radius: 8px; border-left: 4px solid #ffc107;">
-                    <p style="margin:0; color: #856404;">
-                        🔐 Please <a href="login.html" style="color: #856404; font-weight: bold;">login</a> to rent or watch this movie.
-                    </p>
-                </div>
-            `;
-            return;
-        }
+        // ============ GET MOVIE DETAILS FROM URL ============
+        const urlParams = new URLSearchParams(window.location.search);
+        const movieId = urlParams.get('movieId') || '1';
+        const movieTitle = urlParams.get('title') || 'Movie One';
+        const moviePrice = urlParams.get('price') || '100';
 
-        // Check for active rental
-        try {
-            const rentalsQuery = query(
-                collection(db, 'rentals'),
-                where('userId', '==', user.uid),
-                where('movieId', '==', movieId),
-                where('status', '==', 'active')
-            );
+        // Movie data (you can expand this)
+        const movieData = {
+            '1': {
+                title: 'Movie One',
+                price: '100',
+                rating: '⭐⭐⭐⭐☆',
+                poster: 'moovie1jpg.jpeg',
+                description: 'A thrilling action movie that will keep you on the edge of your seat. Experience the adventure of a lifetime with stunning visuals and a gripping storyline.'
+            },
+            '2': {
+                title: 'Movie Two',
+                price: '100',
+                rating: '⭐⭐⭐⭐⭐',
+                poster: 'moovie2jpg.jpeg',
+                description: 'An epic drama that has won multiple awards. This masterpiece explores the depths of human emotion and the power of redemption.'
+            },
+            '3': {
+                title: 'Movie Three',
+                price: '100',
+                rating: '⭐⭐⭐⭐☆',
+                poster: 'moovie3jpg.jpeg',
+                description: 'A heartwarming comedy that will make you laugh and cry. Perfect for family movie night with its charming characters and uplifting story.'
+            },
+            '4': {
+                title: 'Movie Four',
+                price: '100',
+                rating: '⭐⭐⭐⭐⭐',
+                poster: 'moovie4jpg.jpeg',
+                description: 'A sci-fi adventure that pushes the boundaries of imagination. Explore new worlds and discover the unknown in this cinematic masterpiece.'
+            }
+        };
 
-            const rentalsSnapshot = await getDocs(rentalsQuery);
+        // Get current movie data or default
+        const currentMovie = movieData[movieId] || movieData['1'];
 
-            if (!rentalsSnapshot.empty) {
-                // User has an active rental
-                const rentalDoc = rentalsSnapshot.docs[0];
-                const rentalData = rentalDoc.data();
-                const expiresAt = rentalData.expiresAt.toDate();
-                const now = new Date();
+        // Update page with movie details
+        document.getElementById('movieTitle').textContent = currentMovie.title;
+        document.getElementById('moviePoster').src = currentMovie.poster || 'placeholder.jpg';
+        document.getElementById('moviePoster').alt = currentMovie.title;
+        document.getElementById('movieRating').textContent = currentMovie.rating;
+        document.getElementById('moviePrice').textContent = '₹' + currentMovie.price;
+        document.getElementById('movieDescription').textContent = currentMovie.description;
 
-                if (expiresAt > now) {
-                    // Active rental - show watch button
-                    const timeRemaining = expiresAt - now;
-                    const hours = Math.floor(timeRemaining / (1000 * 60 * 60));
-                    const minutes = Math.floor((timeRemaining % (1000 * 60 * 60)) / (1000 * 60));
+        // Update rent button
+        const rentBtn = document.getElementById('rentNowBtn');
+        rentBtn.href = `payment-upload.html?movieId=${movieId}&movieTitle=${encodeURIComponent(currentMovie.title)}&price=${currentMovie.price}`;
+        rentBtn.textContent = `🎬 Rent Now - ₹${currentMovie.price}`;
 
-                    rentalContainer.innerHTML = `
-                        <div style="background: #d4edda; padding: 20px; border-radius: 8px; border-left: 4px solid #28a745;">
-                            <h4 style="margin:0 0 10px 0; color: #155724;">✅ You have an active rental!</h4>
-                            <p style="margin:5px 0; color: #155724;">
-                                ⏱️ Time remaining: <strong>${hours}h ${minutes}m</strong>
-                            </p>
-                            <p style="margin:5px 0; color: #155724; font-size: 14px;">
-                                Expires: ${expiresAt.toLocaleString()}
-                            </p>
-                            <a href="watch.html?movieId=${movieId}&title=${encodeURIComponent(movieTitle)}" 
-                               style="display: inline-block; margin-top: 10px; padding: 12px 30px; 
-                                      background: #28a745; color: white; text-decoration: none; 
-                                      border-radius: 6px; font-weight: bold;">
-                                ▶️ Watch Now
-                            </a>
-                        </div>
-                    `;
-                    
-                    // Hide the rent button
-                    rentButtonContainer.style.display = 'none';
-
-                    // Set up real-time updates for the rental
-                    onSnapshot(doc(db, 'rentals', rentalDoc.id), (doc) => {
-                        if (doc.exists()) {
-                            const data = doc.data();
-                            if (data.status !== 'active') {
-                                // Rental no longer active - refresh the page
-                                location.reload();
-                            }
-                        }
-                    });
-                } else {
-                    // Rental expired
-                    rentalContainer.innerHTML = `
-                        <div style="background: #f8d7da; padding: 15px; border-radius: 8px; border-left: 4px solid #dc3545;">
-                            <p style="margin:0; color: #721c24;">
-                                ⏰ Your rental for this movie has expired. Please rent again to watch.
-                            </p>
-                        </div>
-                    `;
-                    // Show rent button
-                    rentButtonContainer.style.display = 'block';
-                }
+        // ============ NAVIGATION AUTH ============
+        onAuthStateChanged(auth, (user) => {
+            if (user) {
+                loginLink.style.display = 'none';
+                userInfo.style.display = 'inline-block';
+                logoutLi.style.display = 'inline-block';
+                userEmail.textContent = '👤 ' + user.email;
+                checkRentalStatus(user);
             } else {
-                // No active rental - check if there's a pending payment
-                const pendingQuery = query(
-                    collection(db, 'payments'),
+                loginLink.style.display = 'inline-block';
+                userInfo.style.display = 'none';
+                logoutLi.style.display = 'none';
+                rentalContainer.innerHTML = `
+                    <div style="background: #fff3cd; padding: 15px; border-radius: 8px; border-left: 4px solid #ffc107;">
+                        <p style="margin:0; color: #856404;">
+                            🔐 Please <a href="login.html" style="color: #856404; font-weight: bold;">login</a> to rent or watch this movie.
+                        </p>
+                    </div>
+                `;
+                rentButtonContainer.style.display = 'none';
+            }
+        });
+
+        // ============ LOGOUT ============
+        logoutBtn.addEventListener('click', async () => {
+            try {
+                await signOut(auth);
+                window.location.href = 'login.html';
+            } catch (error) {
+                console.error('Logout error:', error);
+                alert('Logout error: ' + error.message);
+            }
+        });
+
+        // ============ CHECK RENTAL STATUS ============
+        async function checkRentalStatus(user) {
+            try {
+                // Check for active rental
+                const rentalsQuery = query(
+                    collection(db, 'rentals'),
                     where('userId', '==', user.uid),
                     where('movieId', '==', movieId),
-                    where('status', '==', 'pending')
+                    where('status', '==', 'active')
                 );
-                const pendingSnapshot = await getDocs(pendingQuery);
 
-                if (!pendingSnapshot.empty) {
-                    // There's a pending payment
-                    rentalContainer.innerHTML = `
-                        <div style="background: #fff3cd; padding: 15px; border-radius: 8px; border-left: 4px solid #ffc107;">
-                            <p style="margin:0; color: #856404;">
-                                ⏳ Your payment is pending verification. Please wait for admin approval.
-                            </p>
-                            <p style="margin:5px 0 0 0; color: #856404; font-size: 14px;">
-                                Transaction ID: ${pendingSnapshot.docs[0].data().transactionId}
-                            </p>
-                        </div>
-                    `;
-                    // Hide rent button
-                    rentButtonContainer.style.display = 'none';
+                const rentalsSnapshot = await getDocs(rentalsQuery);
+
+                if (!rentalsSnapshot.empty) {
+                    // User has an active rental
+                    const rentalDoc = rentalsSnapshot.docs[0];
+                    const rentalData = rentalDoc.data();
+                    const expiresAt = rentalData.expiresAt.toDate();
+                    const now = new Date();
+
+                    if (expiresAt > now) {
+                        // Active rental - show watch button
+                        const timeRemaining = expiresAt - now;
+                        const hours = Math.floor(timeRemaining / (1000 * 60 * 60));
+                        const minutes = Math.floor((timeRemaining % (1000 * 60 * 60)) / (1000 * 60));
+
+                        rentalContainer.innerHTML = `
+                            <div style="background: #d4edda; padding: 20px; border-radius: 8px; border-left: 4px solid #28a745;">
+                                <h4 style="margin:0 0 10px 0; color: #155724;">✅ You have an active rental!</h4>
+                                <p style="margin:5px 0; color: #155724;">
+                                    ⏱️ Time remaining: <strong>${hours}h ${minutes}m</strong>
+                                </p>
+                                <p style="margin:5px 0; color: #155724; font-size: 14px;">
+                                    Expires: ${expiresAt.toLocaleString()}
+                                </p>
+                                <a href="watch.html?movieId=${movieId}&title=${encodeURIComponent(currentMovie.title)}" 
+                                   style="display: inline-block; margin-top: 10px; padding: 12px 30px; 
+                                          background: #28a745; color: white; text-decoration: none; 
+                                          border-radius: 6px; font-weight: bold;">
+                                    ▶️ Watch Now
+                                </a>
+                            </div>
+                        `;
+                        
+                        // Hide the rent button
+                        rentButtonContainer.style.display = 'none';
+
+                        // Set up real-time updates for the rental
+                        const rentalRef = doc(db, 'rentals', rentalDoc.id);
+                        onSnapshot(rentalRef, (doc) => {
+                            if (doc.exists()) {
+                                const data = doc.data();
+                                if (data.status !== 'active') {
+                                    // Rental no longer active - refresh the page
+                                    location.reload();
+                                }
+                            }
+                        });
+                    } else {
+                        // Rental expired
+                        rentalContainer.innerHTML = `
+                            <div style="background: #f8d7da; padding: 15px; border-radius: 8px; border-left: 4px solid #dc3545;">
+                                <p style="margin:0; color: #721c24;">
+                                    ⏰ Your rental for this movie has expired. Please rent again to watch.
+                                </p>
+                            </div>
+                        `;
+                        rentButtonContainer.style.display = 'block';
+                    }
                 } else {
-                    // No rental and no pending payment - show rent button
-                    rentalContainer.innerHTML = '';
-                    rentButtonContainer.style.display = 'block';
+                    // No active rental - check if there's a pending payment
+                    const pendingQuery = query(
+                        collection(db, 'payments'),
+                        where('userId', '==', user.uid),
+                        where('movieId', '==', movieId),
+                        where('status', '==', 'pending')
+                    );
+                    const pendingSnapshot = await getDocs(pendingQuery);
+
+                    if (!pendingSnapshot.empty) {
+                        // There's a pending payment
+                        rentalContainer.innerHTML = `
+                            <div style="background: #fff3cd; padding: 15px; border-radius: 8px; border-left: 4px solid #ffc107;">
+                                <p style="margin:0; color: #856404;">
+                                    ⏳ Your payment is pending verification. Please wait for admin approval.
+                                </p>
+                                <p style="margin:5px 0 0 0; color: #856404; font-size: 14px;">
+                                    Transaction ID: ${pendingSnapshot.docs[0].data().transactionId}
+                                </p>
+                            </div>
+                        `;
+                        rentButtonContainer.style.display = 'none';
+                    } else {
+                        // No rental and no pending payment - show rent button
+                        rentalContainer.innerHTML = '';
+                        rentButtonContainer.style.display = 'block';
+                    }
                 }
+            } catch (error) {
+                console.error('Error checking rental status:', error);
+                rentalContainer.innerHTML = `
+                    <div style="background: #f8d7da; padding: 15px; border-radius: 8px; border-left: 4px solid #dc3545;">
+                        <p style="margin:0; color: #721c24;">Error checking rental status. Please try again.</p>
+                    </div>
+                `;
             }
-        } catch (error) {
-            console.error('Error checking rental status:', error);
-            rentalContainer.innerHTML = `
-                <div style="background: #f8d7da; padding: 15px; border-radius: 8px; border-left: 4px solid #dc3545;">
-                    <p style="margin:0; color: #721c24;">Error checking rental status. Please try again.</p>
-                </div>
-            `;
         }
-    });
-</script>
+
+        console.log('✅ movie-details.html - Firebase imported from firebase.js');
+        console.log('🎬 Movie ID:', movieId);
+        console.log('📺 Movie Title:', currentMovie.title);
+    </script>
+
+</body>
+</html>
