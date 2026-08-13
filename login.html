@@ -57,6 +57,8 @@
 
             </form>
 
+            <div id="errorMessage" style="color:red;margin-top:10px;font-size:14px;"></div>
+
             <p>
                 Don't have an account?
 
@@ -77,9 +79,76 @@
 
     </footer>
 
-    <!-- Firebase -->
-    <script type="module" src="firebase.js"></script>
-    <script type="module" src="auth.js"></script>
+    <!-- =========================
+         FIREBASE AUTH - UPDATED
+    ========================= -->
+
+    <script type="module">
+        // ============ IMPORT FROM FIREBASE.JS ============
+        import { auth, db } from './firebase.js';
+        import { signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+        import { doc, getDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+        // ============ LOGIN FORM HANDLER ============
+        const loginForm = document.getElementById('loginForm');
+        const errorMessage = document.getElementById('errorMessage');
+
+        loginForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const email = document.getElementById('loginEmail').value;
+            const password = document.getElementById('loginPassword').value;
+            
+            // Clear previous error
+            errorMessage.textContent = '';
+            errorMessage.style.color = 'red';
+
+            try {
+                // Sign in with Firebase Auth
+                const userCredential = await signInWithEmailAndPassword(auth, email, password);
+                const user = userCredential.user;
+                
+                console.log('✅ Login successful for:', user.email);
+
+                // Check if user is admin
+                const userDoc = await getDoc(doc(db, 'users', user.uid));
+                const userData = userDoc.data();
+                
+                if (userData && userData.role === 'admin') {
+                    // Redirect to admin dashboard
+                    window.location.href = 'admin-dashboard.html';
+                } else {
+                    // Redirect to home page
+                    window.location.href = 'index.html';
+                }
+                
+            } catch (error) {
+                console.error('Login error:', error);
+                
+                // Show user-friendly error message
+                let message = 'Login failed. ';
+                switch (error.code) {
+                    case 'auth/user-not-found':
+                        message += 'No account found with this email.';
+                        break;
+                    case 'auth/wrong-password':
+                        message += 'Incorrect password.';
+                        break;
+                    case 'auth/invalid-email':
+                        message += 'Invalid email format.';
+                        break;
+                    case 'auth/too-many-requests':
+                        message += 'Too many failed attempts. Please try again later.';
+                        break;
+                    default:
+                        message += error.message;
+                }
+                errorMessage.textContent = '❌ ' + message;
+            }
+        });
+
+        console.log('✅ login.html - Firebase imported from firebase.js');
+    </script>
 
 </body>
 
