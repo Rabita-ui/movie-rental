@@ -1,114 +1,171 @@
-import { auth, db } from "./firebase.js";
+<!-- Add this section to movie-details.html - Place it near the rent button -->
 
-import {
-createUserWithEmailAndPassword,
-signInWithEmailAndPassword
-} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+<!-- Movie Details Page - Add this section -->
+<div id="rentalStatusContainer" style="margin: 20px 0;"></div>
 
-import {
-doc,
-setDoc
-} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+<!-- Update the rent button to show/hide based on rental status -->
+<div id="rentButtonContainer">
+    <a href="payment-upload.html?movieId=1&movieTitle=Movie One&price=100" class="btn-rent">
+        🎬 Rent Now - ₹100
+    </a>
+</div>
 
-// ------------------------
-// REGISTER
-// ------------------------
+<!-- Add this script at the end of movie-details.html -->
+<script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+    import { 
+        getAuth, 
+        onAuthStateChanged 
+    } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+    import { 
+        getFirestore, 
+        collection, 
+        query, 
+        where, 
+        getDocs,
+        onSnapshot
+    } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
-const registerForm=document.getElementById("registerForm");
+    const firebaseConfig = {
+        apiKey: "YOUR_API_KEY",
+        authDomain: "YOUR_PROJECT.firebaseapp.com",
+        projectId: "YOUR_PROJECT_ID",
+        storageBucket: "YOUR_PROJECT.appspot.com",
+        messagingSenderId: "YOUR_SENDER_ID",
+        appId: "YOUR_APP_ID"
+    };
 
-if(registerForm){
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db = getFirestore(app);
 
-registerForm.addEventListener("submit",async(e)=>{
+    // Get movie details from URL
+    const urlParams = new URLSearchParams(window.location.search);
+    const movieId = urlParams.get('movieId') || '1';
+    const movieTitle = urlParams.get('title') || 'Movie One';
+    const moviePrice = urlParams.get('price') || '100';
 
-e.preventDefault();
+    // Check authentication and rental status
+    onAuthStateChanged(auth, async (user) => {
+        const rentalContainer = document.getElementById('rentalStatusContainer');
+        const rentButtonContainer = document.getElementById('rentButtonContainer');
 
-const name=document.getElementById("fullName").value;
+        if (!user) {
+            // User not logged in - show login prompt
+            rentalContainer.innerHTML = `
+                <div style="background: #fff3cd; padding: 15px; border-radius: 8px; border-left: 4px solid #ffc107;">
+                    <p style="margin:0; color: #856404;">
+                        🔐 Please <a href="login.html" style="color: #856404; font-weight: bold;">login</a> to rent or watch this movie.
+                    </p>
+                </div>
+            `;
+            return;
+        }
 
-const mobile=document.getElementById("mobile").value;
+        // Check for active rental
+        try {
+            const rentalsQuery = query(
+                collection(db, 'rentals'),
+                where('userId', '==', user.uid),
+                where('movieId', '==', movieId),
+                where('status', '==', 'active')
+            );
 
-const email=document.getElementById("email").value;
+            const rentalsSnapshot = await getDocs(rentalsQuery);
 
-const password=document.getElementById("password").value;
+            if (!rentalsSnapshot.empty) {
+                // User has an active rental
+                const rentalDoc = rentalsSnapshot.docs[0];
+                const rentalData = rentalDoc.data();
+                const expiresAt = rentalData.expiresAt.toDate();
+                const now = new Date();
 
-const confirm=document.getElementById("confirmPassword").value;
+                if (expiresAt > now) {
+                    // Active rental - show watch button
+                    const timeRemaining = expiresAt - now;
+                    const hours = Math.floor(timeRemaining / (1000 * 60 * 60));
+                    const minutes = Math.floor((timeRemaining % (1000 * 60 * 60)) / (1000 * 60));
 
-if(password!==confirm){
+                    rentalContainer.innerHTML = `
+                        <div style="background: #d4edda; padding: 20px; border-radius: 8px; border-left: 4px solid #28a745;">
+                            <h4 style="margin:0 0 10px 0; color: #155724;">✅ You have an active rental!</h4>
+                            <p style="margin:5px 0; color: #155724;">
+                                ⏱️ Time remaining: <strong>${hours}h ${minutes}m</strong>
+                            </p>
+                            <p style="margin:5px 0; color: #155724; font-size: 14px;">
+                                Expires: ${expiresAt.toLocaleString()}
+                            </p>
+                            <a href="watch.html?movieId=${movieId}&title=${encodeURIComponent(movieTitle)}" 
+                               style="display: inline-block; margin-top: 10px; padding: 12px 30px; 
+                                      background: #28a745; color: white; text-decoration: none; 
+                                      border-radius: 6px; font-weight: bold;">
+                                ▶️ Watch Now
+                            </a>
+                        </div>
+                    `;
+                    
+                    // Hide the rent button
+                    rentButtonContainer.style.display = 'none';
 
-alert("Passwords do not match.");
+                    // Set up real-time updates for the rental
+                    onSnapshot(doc(db, 'rentals', rentalDoc.id), (doc) => {
+                        if (doc.exists()) {
+                            const data = doc.data();
+                            if (data.status !== 'active') {
+                                // Rental no longer active - refresh the page
+                                location.reload();
+                            }
+                        }
+                    });
+                } else {
+                    // Rental expired
+                    rentalContainer.innerHTML = `
+                        <div style="background: #f8d7da; padding: 15px; border-radius: 8px; border-left: 4px solid #dc3545;">
+                            <p style="margin:0; color: #721c24;">
+                                ⏰ Your rental for this movie has expired. Please rent again to watch.
+                            </p>
+                        </div>
+                    `;
+                    // Show rent button
+                    rentButtonContainer.style.display = 'block';
+                }
+            } else {
+                // No active rental - check if there's a pending payment
+                const pendingQuery = query(
+                    collection(db, 'payments'),
+                    where('userId', '==', user.uid),
+                    where('movieId', '==', movieId),
+                    where('status', '==', 'pending')
+                );
+                const pendingSnapshot = await getDocs(pendingQuery);
 
-return;
-
-}
-
-try{
-
-const userCredential=
-await createUserWithEmailAndPassword(
-auth,
-email,
-password
-);
-
-await setDoc(doc(db,"users",userCredential.user.uid),{
-
-name:name,
-
-mobile:mobile,
-
-email:email,
-
-createdAt:new Date()
-
-});
-
-alert("Account Created Successfully!");
-
-window.location="login.html";
-
-}catch(error){
-
-alert(error.message);
-
-}
-
-});
-
-}
-
-// ------------------------
-// LOGIN
-// ------------------------
-
-const loginForm=document.getElementById("loginForm");
-
-if(loginForm){
-
-loginForm.addEventListener("submit",async(e)=>{
-
-e.preventDefault();
-
-const email=document.getElementById("loginEmail").value;
-
-const password=document.getElementById("loginPassword").value;
-
-try{
-
-await signInWithEmailAndPassword(
-auth,
-email,
-password
-);
-
-alert("Login Successful!");
-
-window.location="index.html";
-
-}catch(error){
-
-alert(error.message);
-
-}
-
-});
-
-}
+                if (!pendingSnapshot.empty) {
+                    // There's a pending payment
+                    rentalContainer.innerHTML = `
+                        <div style="background: #fff3cd; padding: 15px; border-radius: 8px; border-left: 4px solid #ffc107;">
+                            <p style="margin:0; color: #856404;">
+                                ⏳ Your payment is pending verification. Please wait for admin approval.
+                            </p>
+                            <p style="margin:5px 0 0 0; color: #856404; font-size: 14px;">
+                                Transaction ID: ${pendingSnapshot.docs[0].data().transactionId}
+                            </p>
+                        </div>
+                    `;
+                    // Hide rent button
+                    rentButtonContainer.style.display = 'none';
+                } else {
+                    // No rental and no pending payment - show rent button
+                    rentalContainer.innerHTML = '';
+                    rentButtonContainer.style.display = 'block';
+                }
+            }
+        } catch (error) {
+            console.error('Error checking rental status:', error);
+            rentalContainer.innerHTML = `
+                <div style="background: #f8d7da; padding: 15px; border-radius: 8px; border-left: 4px solid #dc3545;">
+                    <p style="margin:0; color: #721c24;">Error checking rental status. Please try again.</p>
+                </div>
+            `;
+        }
+    });
+</script>
