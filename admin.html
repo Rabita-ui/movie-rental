@@ -197,7 +197,6 @@
     </div>
 
     <script type="module">
-        // ============ IMPORT FROM FIREBASE.JS ============
         import { auth, db } from './firebase.js';
         import { 
             signInWithEmailAndPassword,
@@ -206,14 +205,12 @@
         } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
         import { doc, getDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
-        // ============ DOM ELEMENTS ============
         const form = document.getElementById('adminLoginForm');
         const emailInput = document.getElementById('adminEmail');
         const passwordInput = document.getElementById('adminPassword');
         const errorDiv = document.getElementById('loginError');
         const loginBtn = document.getElementById('loginBtn');
 
-        // ============ FORM SUBMIT ============
         form.addEventListener('submit', async (e) => {
             e.preventDefault();
             
@@ -234,13 +231,10 @@
                 const userCredential = await signInWithEmailAndPassword(auth, email, password);
                 const user = userCredential.user;
 
-                console.log('✅ Logged in as:', user.email);
-
                 const userDoc = await getDoc(doc(db, 'users', user.uid));
                 const userData = userDoc.data();
                 
                 if (userData && userData.role === 'admin') {
-                    console.log('✅ Admin access granted');
                     window.location.href = 'admin-dashboard.html';
                 } else {
                     errorDiv.textContent = '❌ Access denied. Admin privileges required.';
@@ -249,8 +243,6 @@
                     loginBtn.textContent = '🚀 Login as Admin';
                 }
             } catch (error) {
-                console.error('Login error:', error);
-                
                 let message = '';
                 switch (error.code) {
                     case 'auth/user-not-found':
@@ -260,13 +252,7 @@
                         message = 'Incorrect password. Please try again.';
                         break;
                     case 'auth/invalid-email':
-                        message = 'Invalid email format. Please check and try again.';
-                        break;
-                    case 'auth/too-many-requests':
-                        message = 'Too many failed attempts. Please try again later.';
-                        break;
-                    case 'auth/network-request-failed':
-                        message = 'Network error. Please check your internet connection.';
+                        message = 'Invalid email format.';
                         break;
                     default:
                         message = error.message;
@@ -277,18 +263,14 @@
             }
         });
 
-        // ============ CHECK IF ALREADY LOGGED IN ============
         onAuthStateChanged(auth, async (user) => {
             if (user) {
                 try {
                     const userDoc = await getDoc(doc(db, 'users', user.uid));
                     const userData = userDoc.data();
-                    
                     if (userData && userData.role === 'admin') {
-                        console.log('✅ Already logged in as admin');
                         window.location.href = 'admin-dashboard.html';
                     } else {
-                        console.log('⚠️ User is not admin, signing out...');
                         await signOut(auth);
                     }
                 } catch (error) {
@@ -297,8 +279,7 @@
             }
         });
 
-        console.log('✅ admin.html - Firebase imported from firebase.js');
-        console.log('🔐 Admin login page ready');
+        console.log('✅ admin.html loaded');
     </script>
 
 </body>
