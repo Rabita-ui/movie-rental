@@ -48,34 +48,25 @@
         </li>
 
         <li>
+
             <button
-    id="paidBtn"
-    class="pay-btn"
-    type="button">
+                id="logoutBtn"
+                type="button"
+                style="
+                    display: inline-block;
+                    padding: 10px 18px;
+                    background: red;
+                    color: white;
+                    border: none;
+                    border-radius: 6px;
+                    cursor: pointer;
+                    font-size: 15px;
+                ">
 
-    I've Paid
+                Logout
 
-</button>
+            </button>
 
-
-<script>
-
-const paymentParams =
-    new URLSearchParams(window.location.search);
-
-const selectedMovie =
-    paymentParams.get("movie") || "1";
-
-
-document.getElementById("paidBtn")
-    .addEventListener("click", function () {
-
-        window.location.href =
-            "payment-confirmation.html?movie=" + selectedMovie;
-
-    });
-
-</script>
         </li>
 
     </ul>
@@ -96,7 +87,7 @@ document.getElementById("paidBtn")
         </h1>
 
 
-        <!-- Movie poster -->
+        <!-- MOVIE POSTER -->
 
         <img
             id="paymentPoster"
@@ -105,35 +96,39 @@ document.getElementById("paidBtn")
             alt="Movie">
 
 
-        <!-- Movie title -->
+        <!-- MOVIE TITLE -->
 
         <h2 id="paymentMovieTitle">
             Movie One
         </h2>
 
 
-        <!-- Price -->
+        <!-- PRICE -->
 
         <p class="price">
+
             Rental Price:
+
             <strong id="paymentPrice">
                 ₹100
             </strong>
+
         </p>
 
+
+        <!-- QR CODE -->
 
         <h3>
             Scan QR Code
         </h3>
-
-
-        <!-- Your QR code -->
 
         <img
             src="Qrc.png"
             class="qr-image"
             alt="QR Code">
 
+
+        <!-- UPI ID -->
 
         <p class="upi-title">
             UPI ID
@@ -158,6 +153,8 @@ document.getElementById("paidBtn")
 
         </p>
 
+
+        <!-- I'VE PAID BUTTON -->
 
         <button
             id="paidBtn"
@@ -208,7 +205,7 @@ const movies = {
 };
 
 
-// Read movie number from URL
+// Get movie number from URL
 
 const params =
     new URLSearchParams(window.location.search);
@@ -217,13 +214,13 @@ const movieNumber =
     params.get("movie") || "1";
 
 
-// Find movie
+// Find selected movie
 
 const movie =
     movies[movieNumber];
 
 
-// Display movie
+// Display selected movie
 
 if (movie) {
 
@@ -238,10 +235,25 @@ if (movie) {
 
 }
 
+
+// ========================================
+// I'VE PAID BUTTON
+// ========================================
+
+document.getElementById("paidBtn")
+    .addEventListener("click", function () {
+
+        window.location.href =
+            "payment-confirmation.html?movie=" + movieNumber;
+
+    });
+
 </script>
 
 
-<!-- Firebase Authentication -->
+<!-- =========================
+     FIREBASE AUTH
+========================= -->
 
 <script
     type="module"
