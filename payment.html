@@ -31,7 +31,7 @@
         
         .movie-summary {
             background: #f8f9fa;
-            padding: 15px;
+            padding: 20px;
             border-radius: 12px;
             margin-bottom: 25px;
         }
@@ -40,7 +40,7 @@
             color: #333;
         }
         .movie-summary .price {
-            font-size: 28px;
+            font-size: 32px;
             font-weight: 700;
             color: #4CAF50;
         }
@@ -56,7 +56,7 @@
             padding: 20px;
             background: #f8f9fa;
             border-radius: 12px;
-            margin: 20px 0;
+            margin: 15px 0;
         }
         .qr-section h4 {
             color: #333;
@@ -75,6 +75,12 @@
             height: auto;
             display: block;
         }
+        .qr-section .pay-amount {
+            font-size: 18px;
+            font-weight: 600;
+            color: #333;
+            margin: 12px 0 8px 0;
+        }
         .qr-section .upi-id {
             background: #e3f2fd;
             padding: 10px 20px;
@@ -83,14 +89,8 @@
             color: #1565c0;
             font-weight: 600;
             font-size: 16px;
-            margin-top: 12px;
+            margin-top: 8px;
             word-break: break-all;
-        }
-        .qr-section .pay-amount {
-            font-size: 20px;
-            font-weight: 600;
-            color: #333;
-            margin: 12px 0 8px 0;
         }
         
         /* Divider */
@@ -100,7 +100,7 @@
             margin: 20px 0;
         }
         
-        /* Pay Using UPI Button - BIG & PROMINENT */
+        /* Pay Using UPI Button */
         .btn-pay-upi {
             width: 100%;
             padding: 20px;
@@ -282,9 +282,6 @@
         }
         
         @media (max-width: 600px) {
-            .qr-section .qr-container img {
-                max-width: 150px;
-            }
             nav {
                 flex-direction: column;
                 gap: 10px;
@@ -302,6 +299,9 @@
             .payment-container {
                 margin: 20px 10px;
                 padding: 20px;
+            }
+            .qr-section .qr-container img {
+                max-width: 150px;
             }
         }
     </style>
@@ -331,7 +331,7 @@
 
             <!-- Movie Summary -->
             <div class="movie-summary">
-                <h3 id="movieTitle">Movie One</h3>
+                <h3 id="movieTitle">Movie Two</h3>
                 <div class="price">₹<span id="moviePrice">100</span></div>
                 <div class="rental-info">🎬 24-Hour Rental Access</div>
             </div>
@@ -340,7 +340,7 @@
             <div class="qr-section">
                 <h4>📲 Scan to Pay</h4>
                 <div class="qr-container">
-                    <img src="qrc.png" alt="UPI QR Code" id="qrCodeImage" />
+                    <img src="Qrc.png" alt="UPI QR Code" id="qrCodeImage" />
                 </div>
                 <div class="pay-amount">Amount: ₹<span id="qrPrice">100</span></div>
                 <div class="upi-id">📧 <span id="upiId">kbtv@upi</span></div>
@@ -356,7 +356,7 @@
                 <span class="arrow">→</span>
             </button>
             
-            <p style="color:#888;font-size:13px;margin:10px 0 0 0;">
+            <p style="color:#888;font-size:13px;margin:12px 0 0 0;">
                 ⚡ Opens your UPI app with pre-filled amount
             </p>
 
@@ -411,7 +411,7 @@
         // ============ GET MOVIE FROM URL ============
         const params = new URLSearchParams(window.location.search);
         const movieId = params.get('movieId') || '1';
-        const movieTitle = params.get('title') || 'Movie One';
+        const movieTitle = params.get('title') || 'Movie Two';
         const moviePrice = params.get('price') || '100';
 
         // Update movie details
@@ -464,7 +464,7 @@
                 return;
             }
 
-            // Build UPI payment URL - EXACTLY like QR code scan
+            // Build UPI payment URL
             const transactionNote = `Rental for ${movieTitle}`;
             const upiLink = `upi://pay?pa=${UPI_ID}&pn=${encodeURIComponent(PAYEE_NAME)}&am=${moviePrice}&cu=INR&tn=${encodeURIComponent(transactionNote)}`;
             
@@ -475,16 +475,11 @@
             
             // Try to open UPI app
             try {
-                // Open UPI link - this opens the user's default UPI app
-                // EXACTLY like scanning a QR code
                 window.location.href = upiLink;
-                
-                // Show toast notification
                 showToast('📱 Opening UPI app...', 'info');
                 
                 // Fallback: If UPI app doesn't open, show UPI ID after 3 seconds
                 setTimeout(() => {
-                    // Check if the page is still visible (UPI app didn't open)
                     if (document.visibilityState === 'visible') {
                         showToast(`💡 Please send ₹${moviePrice} to ${UPI_ID} manually`, 'info');
                     }
@@ -518,9 +513,7 @@
             toast.textContent = message;
             toast.className = 'toast ' + type;
             
-            // Force reflow
             void toast.offsetWidth;
-            
             toast.classList.add('show');
             
             setTimeout(() => {
@@ -529,7 +522,6 @@
         }
 
         // ============ LISTEN FOR PAGE VISIBILITY CHANGE ============
-        // When user returns from UPI app, they can click continue
         document.addEventListener('visibilitychange', () => {
             if (document.visibilityState === 'visible') {
                 showToast('✅ Welcome back! Click "Continue" to upload screenshot.', 'success');
@@ -540,7 +532,6 @@
         console.log('🎬 Movie:', movieTitle);
         console.log('💰 Price: ₹' + moviePrice);
         console.log('📧 UPI ID:', UPI_ID);
-        console.log('📱 UPI Link:', `upi://pay?pa=${UPI_ID}&am=${moviePrice}`);
     </script>
 
 </body>
