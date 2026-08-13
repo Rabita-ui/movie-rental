@@ -16,6 +16,22 @@
 href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap"
 rel="stylesheet">
 
+<style>
+    .payment-method-display {
+        background: #e3f2fd;
+        padding: 10px 15px;
+        border-radius: 8px;
+        margin: 10px 0;
+        text-align: center;
+        color: #1565c0;
+        font-weight: 500;
+    }
+    .payment-method-display .method-icon {
+        font-size: 24px;
+        margin-right: 10px;
+    }
+</style>
+
 </head>
 
 <body>
@@ -78,9 +94,14 @@ Rental Price:
 <strong>₹100</strong>
 </p>
 
+<!-- ============ PAYMENT METHOD DISPLAY ============ -->
+<div id="paymentMethodDisplay" class="payment-method-display">
+    <span class="method-icon">📱</span>
+    Payment Method: <strong id="selectedMethod">UPI</strong>
+</div>
 
 <label for="transactionId">
-UPI Transaction / Reference Number
+Transaction / Reference Number
 </label>
 
 <input
@@ -150,17 +171,34 @@ import {
 ================================ */
 
 const params = new URLSearchParams(window.location.search);
-const movieNumber = params.get("movie") || "1";
+const movieNumber = params.get("movieId") || params.get("movie") || "1";
+const movieTitle = params.get("movieTitle") || params.get("title") || "Movie";
+const moviePrice = params.get("price") || "100";
+const paymentMethod = params.get("method") || "UPI";
 
-const movies = {
-    1: "Movie One",
-    2: "Movie Two",
-    3: "Movie Three",
-    4: "Movie Four"
+// ============ DISPLAY PAYMENT METHOD ============
+const methodIcons = {
+    'upi': '📱',
+    'card': '💳',
+    'netbanking': '🏦',
+    'wallet': '👛'
 };
 
-const movieTitle = movies[movieNumber] || "Movie";
+const methodNames = {
+    'upi': 'UPI (Google Pay, PhonePe, Paytm)',
+    'card': 'Credit/Debit Card',
+    'netbanking': 'Net Banking',
+    'wallet': 'Digital Wallet'
+};
 
+const selectedMethodDisplay = document.getElementById('selectedMethod');
+const methodIconDisplay = document.querySelector('.method-icon');
+
+const methodKey = paymentMethod.toLowerCase();
+selectedMethodDisplay.textContent = methodNames[methodKey] || 'UPI';
+methodIconDisplay.textContent = methodIcons[methodKey] || '📱';
+
+// Update movie title
 document.getElementById("uploadMovieTitle").textContent = movieTitle;
 
 /* ================================
@@ -237,7 +275,7 @@ submitBtn.addEventListener('click', async function () {
 
     /* CHECK TRANSACTION ID */
     if (!transactionId) {
-        message.textContent = '⚠️ Please enter your UPI transaction/reference number.';
+        message.textContent = '⚠️ Please enter your transaction/reference number.';
         message.style.color = '#856404';
         return;
     }
@@ -272,11 +310,11 @@ submitBtn.addEventListener('click', async function () {
     try {
         /* SAVE PAYMENT INFORMATION TO FIRESTORE */
         const paymentData = {
-            amount: 100,
+            amount: parseInt(moviePrice),
             currency: 'INR',
             movieId: movieNumber,
             movieTitle: movieTitle,
-            paymentMethod: 'UPI',
+            paymentMethod: paymentMethod, // ✅ Now storing selected method
             transactionId: transactionId,
             userId: currentUser.uid,
             userEmail: currentUser.email || '',
@@ -291,6 +329,7 @@ submitBtn.addEventListener('click', async function () {
         const paymentRef = await addDoc(collection(db, 'payments'), paymentData);
         
         console.log('✅ Payment submitted successfully! Payment ID:', paymentRef.id);
+        console.log('📊 Payment Method:', paymentMethod);
 
         /* SUCCESS */
         message.textContent = '✅ Payment submitted successfully! Your payment is now pending verification.';
@@ -304,7 +343,7 @@ submitBtn.addEventListener('click', async function () {
         submitBtn.disabled = false;
         submitBtn.textContent = 'Submit Payment';
 
-        /* OPTIONAL: Redirect to confirmation after 3 seconds */
+        /* Redirect to confirmation after 3 seconds */
         setTimeout(() => {
             window.location.href = 'payment-confirmation.html?movie=' + movieNumber;
         }, 3000);
@@ -318,9 +357,10 @@ submitBtn.addEventListener('click', async function () {
     }
 });
 
-console.log('✅ payment.html - Firebase imported from firebase.js');
+console.log('✅ payment-upload.html - Firebase imported from firebase.js');
 console.log('🎬 Movie:', movieTitle);
-console.log('💰 Amount: ₹100');
+console.log('💰 Amount: ₹' + moviePrice);
+console.log('💳 Payment Method:', paymentMethod);
 
 </script>
 
