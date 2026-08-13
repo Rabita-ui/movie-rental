@@ -49,19 +49,33 @@
 
         <li>
             <button
-                id="logoutBtn"
-                type="button"
-                style="
-                    display: inline-block;
-                    padding: 10px 18px;
-                    background: red;
-                    color: white;
-                    border: none;
-                    border-radius: 6px;
-                    cursor: pointer;
-                ">
-                Logout
-            </button>
+    id="paidBtn"
+    class="pay-btn"
+    type="button">
+
+    I've Paid
+
+</button>
+
+
+<script>
+
+const paymentParams =
+    new URLSearchParams(window.location.search);
+
+const selectedMovie =
+    paymentParams.get("movie") || "1";
+
+
+document.getElementById("paidBtn")
+    .addEventListener("click", function () {
+
+        window.location.href =
+            "payment-confirmation.html?movie=" + selectedMovie;
+
+    });
+
+</script>
         </li>
 
     </ul>
