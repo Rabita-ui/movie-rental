@@ -155,6 +155,11 @@
             color: white;
             margin-bottom: 5px;
         }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
     </style>
 </head>
 
@@ -288,9 +293,10 @@
         document.getElementById('moviePrice').textContent = '₹' + currentMovie.price;
         document.getElementById('movieDescription').textContent = currentMovie.description;
 
-        // Update rent button
+        // ============ UPDATE RENT BUTTON - FIXED LINK ============
         const rentBtn = document.getElementById('rentNowBtn');
-        rentBtn.href = `payment-upload.html?movieId=${movieId}&movieTitle=${encodeURIComponent(currentMovie.title)}&price=${currentMovie.price}`;
+        // ✅ FIXED: Now goes to payment.html instead of payment-upload.html
+        rentBtn.href = `payment.html?movieId=${movieId}&title=${encodeURIComponent(currentMovie.title)}&price=${currentMovie.price}`;
         rentBtn.textContent = `🎬 Rent Now - ₹${currentMovie.price}`;
 
         // ============ NAVIGATION AUTH ============
@@ -438,6 +444,7 @@
         console.log('✅ movie-details.html - Firebase imported from firebase.js');
         console.log('🎬 Movie ID:', movieId);
         console.log('📺 Movie Title:', currentMovie.title);
+        console.log('🔗 Rent link updated to payment.html');
     </script>
 
 </body>
