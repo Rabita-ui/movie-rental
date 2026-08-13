@@ -123,7 +123,7 @@ required>
 
 
 <p class="note">
-Upload the screenshot showing your successful ₹100 payment.
+Upload the screenshot showing your successful payment.
 </p>
 
 
@@ -185,7 +185,7 @@ const methodIcons = {
 };
 
 const methodNames = {
-    'upi': 'UPI (Google Pay, PhonePe, Paytm)',
+    'upi': 'UPI',
     'card': 'Credit/Debit Card',
     'netbanking': 'Net Banking',
     'wallet': 'Digital Wallet'
@@ -314,7 +314,7 @@ submitBtn.addEventListener('click', async function () {
             currency: 'INR',
             movieId: movieNumber,
             movieTitle: movieTitle,
-            paymentMethod: paymentMethod, // ✅ Now storing selected method
+            paymentMethod: paymentMethod,
             transactionId: transactionId,
             userId: currentUser.uid,
             userEmail: currentUser.email || '',
