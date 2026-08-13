@@ -76,6 +76,11 @@
             border-left: 4px solid #dc3545;
             color: #721c24;
         }
+        .status-info {
+            background: #cce5ff;
+            border-left: 4px solid #004085;
+            color: #004085;
+        }
         .btn-primary {
             display: inline-block;
             padding: 14px 40px;
@@ -126,37 +131,6 @@
         }
         .btn-watch:hover {
             background: #218838;
-        }
-        .btn-rent {
-            display: inline-block;
-            padding: 14px 40px;
-            background: #ff9800;
-            color: white;
-            text-decoration: none;
-            border-radius: 8px;
-            font-weight: 600;
-            font-size: 16px;
-            transition: background 0.3s;
-            border: none;
-            cursor: pointer;
-            margin: 5px;
-        }
-        .btn-rent:hover {
-            background: #e68900;
-        }
-        .loading-spinner {
-            display: inline-block;
-            border: 3px solid #f3f3f3;
-            border-top: 3px solid #4CAF50;
-            border-radius: 50%;
-            width: 30px;
-            height: 30px;
-            animation: spin 1s linear infinite;
-            margin: 10px auto;
-        }
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
         }
         .info-text {
             color: #888;
@@ -234,6 +208,32 @@
             margin: 0 auto;
             padding: 0 20px;
         }
+        .loading-spinner {
+            display: inline-block;
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid #4CAF50;
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            animation: spin 1s linear infinite;
+            margin: 10px auto;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        .retry-btn {
+            background: #ff9800;
+            color: white;
+            border: none;
+            padding: 8px 20px;
+            border-radius: 6px;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+        .retry-btn:hover {
+            background: #e68900;
+        }
     </style>
 
 </head>
@@ -268,9 +268,10 @@
 
             <div id="statusContainer">
                 <div class="status-box status-pending">
-                    <strong>⏳ Payment Status: Pending Verification</strong>
+                    <strong>⏳ Loading Payment Status...</strong>
+                    <div class="loading-spinner"></div>
                     <p style="margin:5px 0 0 0;font-size:14px;">
-                        Your payment is being reviewed by our team. This usually takes 5-10 minutes.
+                        Checking your payment status...
                     </p>
                 </div>
             </div>
@@ -392,8 +393,11 @@
         // ============ CHECK PAYMENT STATUS ============
         async function checkPaymentStatus(user) {
             try {
-                // Query the most recent payment for this user and movie
-                const paymentsQuery = query(
+                console.log('🔍 Checking payment status for user:', user.uid);
+                console.log('🎬 Movie ID:', movieNumber);
+
+                // First, check if user has any payments at all
+                const allPaymentsQuery = query(
                     collection(db, 'payments'),
                     where('userId', '==', user.uid),
                     where('movieId', '==', movieNumber),
@@ -401,17 +405,28 @@
                     limit(1)
                 );
 
-                const paymentsSnapshot = await getDocs(paymentsQuery);
+                console.log('📊 Querying payments...');
+                const paymentsSnapshot = await getDocs(allPaymentsQuery);
+                
+                console.log('📄 Payments found:', paymentsSnapshot.size);
 
                 if (paymentsSnapshot.empty) {
-                    // No payment found - show pending status
+                    // No payment found - show info to submit payment
                     statusContainer.innerHTML = `
-                        <div class="status-box status-pending">
-                            <strong>⏳ No Payment Found</strong>
+                        <div class="status-box status-info">
+                            <strong>📤 No Payment Found</strong>
                             <p style="margin:5px 0 0 0;font-size:14px;">
-                                Please submit your payment details to complete the rental process.
+                                You haven't submitted a payment for this movie yet.
+                                Please complete the payment process.
                             </p>
                         </div>
+                    `;
+                    actionButtons.innerHTML = `
+                        <button onclick="window.location.href='payment-upload.html?movie=${movieNumber}'" class="btn-primary">
+                            📤 Submit Payment Details
+                        </button>
+                        <br>
+                        <a href="moovie.html" class="btn-secondary">← Browse Movies</a>
                     `;
                     return;
                 }
@@ -422,26 +437,37 @@
                 const paymentId = paymentDoc.id;
                 paymentIdSpan.textContent = paymentId.slice(0, 8) + '...';
 
+                console.log('✅ Payment found:', paymentId);
+                console.log('📊 Payment status:', paymentData.status);
+
                 // Listen for real-time updates
                 const paymentRef = doc(db, 'payments', paymentId);
                 onSnapshot(paymentRef, (doc) => {
                     if (doc.exists()) {
                         const data = doc.data();
+                        console.log('🔄 Payment updated:', data.status);
                         updatePaymentStatus(data, paymentId);
                     }
+                }, (error) => {
+                    console.error('❌ Real-time update error:', error);
                 });
 
                 // Initial status update
                 updatePaymentStatus(paymentData, paymentId);
 
             } catch (error) {
-                console.error('Error checking payment status:', error);
+                console.error('❌ Error checking payment status:', error);
+                console.error('Error details:', error.message);
+                
                 statusContainer.innerHTML = `
                     <div class="status-box status-pending">
-                        <strong>❌ Error</strong>
+                        <strong>⚠️ Could Not Check Payment Status</strong>
                         <p style="margin:5px 0 0 0;font-size:14px;">
-                            Could not check payment status. Please try again later.
+                            ${error.message}
                         </p>
+                        <button onclick="location.reload()" class="retry-btn">
+                            🔄 Retry
+                        </button>
                     </div>
                 `;
             }
@@ -451,6 +477,8 @@
         function updatePaymentStatus(paymentData, paymentId) {
             const status = paymentData.status || 'pending';
             const transactionId = paymentData.transactionId || 'N/A';
+            
+            console.log('📊 Updating UI for status:', status);
             
             let statusHTML = '';
             let buttonsHTML = '';
@@ -463,7 +491,7 @@
                 case 'approved':
                     icon = '✅';
                     statusClass = 'status-approved';
-                    statusText = 'Approved!';
+                    statusText = 'Approved! 🎉';
                     message = 'Your payment has been approved! You can now watch the movie.';
                     buttonsHTML = `
                         <a href="watch.html?movieId=${movieNumber}&title=${encodeURIComponent(movieTitle)}" class="btn-watch">
@@ -480,7 +508,7 @@
                     statusText = 'Rejected';
                     message = 'Your payment was rejected. Please contact support or try again.';
                     buttonsHTML = `
-                        <button onclick="window.location.href='payment-upload.html?movie=${movieNumber}'" class="btn-rent">
+                        <button onclick="window.location.href='payment-upload.html?movie=${movieNumber}'" class="btn-primary">
                             🔄 Try Again
                         </button>
                         <br>
@@ -499,7 +527,7 @@
                             📤 Submit Payment Details
                         </button>
                         <br>
-                        <a href="moovie.html" class="btn-secondary">← Browse More Movies</a>
+                        <a href="moovie.html" class="btn-secondary">← Browse Movies</a>
                     `;
                     break;
             }
@@ -514,11 +542,25 @@
                         <p style="margin:5px 0 0 0;font-size:12px;color:#856404;">
                             Transaction ID: ${transactionId}
                         </p>
+                        <p style="margin:5px 0 0 0;font-size:12px;color:#856404;">
+                            Submitted: ${paymentData.submittedAt ? new Date(paymentData.submittedAt.seconds * 1000).toLocaleString() : 'Unknown'}
+                        </p>
+                    ` : ''}
+                    ${status === 'approved' ? `
+                        <p style="margin:5px 0 0 0;font-size:12px;color:#155724;">
+                            Approved at: ${paymentData.approvedAt ? new Date(paymentData.approvedAt.seconds * 1000).toLocaleString() : 'Unknown'}
+                        </p>
                     ` : ''}
                 </div>
             `;
 
             actionButtons.innerHTML = buttonsHTML;
+            
+            // Update the icon at the top
+            const iconElement = document.querySelector('.icon');
+            if (iconElement) {
+                iconElement.textContent = icon;
+            }
         }
 
         console.log('✅ payment-confirmation.html - Firebase imported from firebase.js');
