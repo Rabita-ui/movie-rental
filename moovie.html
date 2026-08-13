@@ -1,108 +1,434 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-<title>KBTV - Movie Details</title>
-
-<link rel="stylesheet" href="style.css">
-
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
-
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KBTV - Browse Movies</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <style>
+        /* Additional styles for movie grid */
+        .movies-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 30px;
+            padding: 20px 0;
+        }
+        .movie-card {
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            transition: transform 0.3s, box-shadow 0.3s;
+            cursor: pointer;
+        }
+        .movie-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 30px rgba(0,0,0,0.15);
+        }
+        .movie-card img {
+            width: 100%;
+            height: 300px;
+            object-fit: cover;
+        }
+        .movie-card .card-content {
+            padding: 15px;
+        }
+        .movie-card .card-content h3 {
+            margin: 0 0 5px 0;
+            color: #333;
+        }
+        .movie-card .card-content .rating {
+            color: #ff9800;
+            margin: 5px 0;
+        }
+        .movie-card .card-content .price {
+            font-weight: 600;
+            color: #4CAF50;
+            font-size: 18px;
+        }
+        .movie-card .card-content .btn-rent {
+            display: inline-block;
+            padding: 8px 20px;
+            background: #4CAF50;
+            color: white;
+            text-decoration: none;
+            border-radius: 6px;
+            margin-top: 10px;
+            transition: background 0.3s;
+            border: none;
+            cursor: pointer;
+            font-size: 14px;
+        }
+        .movie-card .card-content .btn-rent:hover {
+            background: #45a049;
+        }
+        .movie-card .card-content .btn-watch {
+            display: inline-block;
+            padding: 8px 20px;
+            background: #28a745;
+            color: white;
+            text-decoration: none;
+            border-radius: 6px;
+            margin-top: 10px;
+            transition: background 0.3s;
+            border: none;
+            cursor: pointer;
+            font-size: 14px;
+        }
+        .movie-card .card-content .btn-watch:hover {
+            background: #218838;
+        }
+        .movie-card .card-content .status-badge {
+            display: inline-block;
+            padding: 3px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            margin-top: 5px;
+        }
+        .badge-active {
+            background: #d4edda;
+            color: #155724;
+        }
+        .badge-pending {
+            background: #fff3cd;
+            color: #856404;
+        }
+        .page-title {
+            text-align: center;
+            margin: 30px 0 10px 0;
+            color: #333;
+        }
+        .page-subtitle {
+            text-align: center;
+            color: #888;
+            margin-bottom: 30px;
+        }
+        /* Navigation */
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 30px;
+            background: #1a1a2e;
+            color: white;
+        }
+        nav .logo {
+            font-size: 24px;
+            font-weight: bold;
+        }
+        nav .logo span {
+            color: #4CAF50;
+        }
+        nav ul {
+            list-style: none;
+            display: flex;
+            gap: 20px;
+            align-items: center;
+            margin: 0;
+            padding: 0;
+        }
+        nav ul li a {
+            color: white;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+        nav ul li a:hover {
+            color: #4CAF50;
+        }
+        #userEmail {
+            color: #aaa;
+            margin-right: 10px;
+        }
+        #logoutBtn {
+            padding: 8px 18px;
+            background: #dc3545;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+        #logoutBtn:hover {
+            background: #c82333;
+        }
+        footer {
+            text-align: center;
+            padding: 20px;
+            background: #1a1a2e;
+            color: #888;
+            margin-top: 40px;
+        }
+        footer h2 {
+            color: white;
+            margin-bottom: 5px;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        .loading-message {
+            text-align: center;
+            padding: 40px;
+            color: #888;
+        }
+    </style>
 </head>
-
 <body>
 
-<nav>
+    <nav>
+        <div class="logo"><span>K</span>BTV</div>
+        <ul>
+            <li><a href="index.html">Home</a></li>
+            <li><a href="moovie.html">Movies</a></li>
+            <li id="loginLink"><a href="login.html">Login</a></li>
+            <li id="userInfo" style="display:none;">
+                <span id="userEmail"></span>
+            </li>
+            <li id="logoutLi" style="display:none;">
+                <button id="logoutBtn">Logout</button>
+            </li>
+        </ul>
+    </nav>
 
-<div class="logo">
-<span>K</span>BTV
-</div>
+    <main class="container">
+        <h1 class="page-title">🎬 Movie Collection</h1>
+        <p class="page-subtitle">Rent your favorite movies for just ₹100 and enjoy 24-hour access</p>
 
-<ul>
+        <div id="moviesContainer" class="movies-grid">
+            <div class="loading-message">Loading movies...</div>
+        </div>
+    </main>
 
-<li><a href="index.html">Home</a></li>
+    <footer>
+        <h2>🎬 KBTV</h2>
+        <p>© 2026 KBTV Movie Rental. All Rights Reserved.</p>
+    </footer>
 
-<li><a href="login.html">Login</a></li>
+    <!-- =========================
+         FIREBASE AUTH - UPDATED
+    ========================= -->
 
-</ul>
+    <script type="module">
+        // ============ IMPORT FROM FIREBASE.JS ============
+        import { auth, db } from './firebase.js';
+        import { 
+            onAuthStateChanged,
+            signOut 
+        } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+        import { 
+            collection, 
+            query, 
+            where, 
+            getDocs,
+            doc,
+            getDoc
+        } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
-</nav>
+        // ============ DOM ELEMENTS ============
+        const loginLink = document.getElementById('loginLink');
+        const userInfo = document.getElementById('userInfo');
+        const userEmail = document.getElementById('userEmail');
+        const logoutLi = document.getElementById('logoutLi');
+        const logoutBtn = document.getElementById('logoutBtn');
+        const moviesContainer = document.getElementById('moviesContainer');
 
-<section class="movie-page">
+        // ============ MOVIE DATA ============
+        const moviesData = [
+            {
+                id: '1',
+                title: 'Movie One',
+                poster: 'moovie1jpg.jpeg',
+                rating: '⭐⭐⭐⭐☆',
+                price: '100',
+                description: 'A thrilling action movie that will keep you on the edge of your seat.'
+            },
+            {
+                id: '2',
+                title: 'Movie Two',
+                poster: 'moovie2jpg.jpeg',
+                rating: '⭐⭐⭐⭐⭐',
+                price: '100',
+                description: 'An epic drama that has won multiple awards.'
+            },
+            {
+                id: '3',
+                title: 'Movie Three',
+                poster: 'moovie3jpg.jpeg',
+                rating: '⭐⭐⭐⭐☆',
+                price: '100',
+                description: 'A heartwarming comedy that will make you laugh and cry.'
+            },
+            {
+                id: '4',
+                title: 'Movie Four',
+                poster: 'moovie4jpg.jpeg',
+                rating: '⭐⭐⭐⭐⭐',
+                price: '100',
+                description: 'A sci-fi adventure that pushes the boundaries of imagination.'
+            }
+        ];
 
-<div class="movie-poster">
+        let currentUser = null;
 
-<img src="moovie1jpg.jpeg" alt="Movie Poster">
+        // ============ NAVIGATION AUTH ============
+        onAuthStateChanged(auth, (user) => {
+            currentUser = user;
+            if (user) {
+                loginLink.style.display = 'none';
+                userInfo.style.display = 'inline-block';
+                logoutLi.style.display = 'inline-block';
+                userEmail.textContent = '👤 ' + user.email;
+                renderMoviesWithRentalStatus(user);
+            } else {
+                loginLink.style.display = 'inline-block';
+                userInfo.style.display = 'none';
+                logoutLi.style.display = 'none';
+                renderMoviesWithoutRentalStatus();
+            }
+        });
 
-</div>
+        // ============ LOGOUT ============
+        logoutBtn.addEventListener('click', async () => {
+            try {
+                await signOut(auth);
+                window.location.href = 'login.html';
+            } catch (error) {
+                console.error('Logout error:', error);
+                alert('Logout error: ' + error.message);
+            }
+        });
 
-<div class="movie-info">
+        // ============ RENDER MOVIES WITHOUT RENTAL STATUS ============
+        function renderMoviesWithoutRentalStatus() {
+            let html = '';
+            moviesData.forEach(movie => {
+                html += `
+                    <div class="movie-card">
+                        <img src="${movie.poster}" alt="${movie.title}" />
+                        <div class="card-content">
+                            <h3>${movie.title}</h3>
+                            <div class="rating">${movie.rating}</div>
+                            <div class="price">₹${movie.price}</div>
+                            <p style="color:#666;font-size:14px;margin:5px 0;">${movie.description}</p>
+                            <a href="movie-details.html?movieId=${movie.id}&title=${encodeURIComponent(movie.title)}&price=${movie.price}" class="btn-rent">
+                                🎬 Rent Now - ₹${movie.price}
+                            </a>
+                        </div>
+                    </div>
+                `;
+            });
+            moviesContainer.innerHTML = html;
+        }
 
-<h1>Movie One</h1>
+        // ============ RENDER MOVIES WITH RENTAL STATUS ============
+        async function renderMoviesWithRentalStatus(user) {
+            try {
+                // Get all active rentals for this user
+                const rentalsQuery = query(
+                    collection(db, 'rentals'),
+                    where('userId', '==', user.uid),
+                    where('status', '==', 'active')
+                );
+                const rentalsSnapshot = await getDocs(rentalsQuery);
+                const activeRentals = {};
+                rentalsSnapshot.forEach(doc => {
+                    const data = doc.data();
+                    activeRentals[data.movieId] = {
+                        id: doc.id,
+                        ...data
+                    };
+                });
 
-<p class="rating">⭐⭐⭐⭐☆</p>
+                // Get all pending payments for this user
+                const pendingQuery = query(
+                    collection(db, 'payments'),
+                    where('userId', '==', user.uid),
+                    where('status', '==', 'pending')
+                );
+                const pendingSnapshot = await getDocs(pendingQuery);
+                const pendingPayments = {};
+                pendingSnapshot.forEach(doc => {
+                    const data = doc.data();
+                    pendingPayments[data.movieId] = {
+                        id: doc.id,
+                        ...data
+                    };
+                });
 
-<p>
+                // Render movies with status
+                let html = '';
+                moviesData.forEach(movie => {
+                    const isActive = activeRentals[movie.id];
+                    const isPending = pendingPayments[movie.id];
+                    
+                    let statusHTML = '';
+                    let buttonHTML = '';
 
-This is a sample movie description.
-Later you will be able to add the real movie story,
-language, cast, duration, and producer details.
+                    if (isActive) {
+                        const expiresAt = isActive.expiresAt.toDate();
+                        const now = new Date();
+                        if (expiresAt > now) {
+                            statusHTML = `<span class="status-badge badge-active">✅ Active Rental</span>`;
+                            buttonHTML = `
+                                <a href="watch.html?movieId=${movie.id}&title=${encodeURIComponent(movie.title)}" class="btn-watch">
+                                    ▶️ Watch Now
+                                </a>
+                            `;
+                        } else {
+                            statusHTML = `<span class="status-badge badge-pending">⏰ Expired</span>`;
+                            buttonHTML = `
+                                <a href="movie-details.html?movieId=${movie.id}&title=${encodeURIComponent(movie.title)}&price=${movie.price}" class="btn-rent">
+                                    🎬 Rent Again - ₹${movie.price}
+                                </a>
+                            `;
+                        }
+                    } else if (isPending) {
+                        statusHTML = `<span class="status-badge badge-pending">⏳ Pending Verification</span>`;
+                        buttonHTML = `
+                            <a href="movie-details.html?movieId=${movie.id}&title=${encodeURIComponent(movie.title)}&price=${movie.price}" class="btn-rent" style="background:#ffc107;color:#333;">
+                                ⏳ Check Status
+                            </a>
+                        `;
+                    } else {
+                        buttonHTML = `
+                            <a href="movie-details.html?movieId=${movie.id}&title=${encodeURIComponent(movie.title)}&price=${movie.price}" class="btn-rent">
+                                🎬 Rent Now - ₹${movie.price}
+                            </a>
+                        `;
+                    }
 
-</p>
+                    html += `
+                        <div class="movie-card">
+                            <img src="${movie.poster}" alt="${movie.title}" />
+                            <div class="card-content">
+                                <h3>${movie.title}</h3>
+                                <div class="rating">${movie.rating}</div>
+                                <div class="price">₹${movie.price}</div>
+                                <p style="color:#666;font-size:14px;margin:5px 0;">${movie.description}</p>
+                                ${statusHTML}
+                                <div style="margin-top:10px;">
+                                    ${buttonHTML}
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                });
+                moviesContainer.innerHTML = html;
 
-<table>
+            } catch (error) {
+                console.error('Error loading rental status:', error);
+                renderMoviesWithoutRentalStatus();
+            }
+        }
 
-<tr>
-<td><strong>Language</strong></td>
-<td>English</td>
-</tr>
+        console.log('✅ moovie.html - Firebase imported from firebase.js');
+        console.log('🎬 Movie listing page loaded');
+    </script>
 
-<tr>
-<td><strong>Duration</strong></td>
-<td>2 Hours 15 Minutes</td>
-</tr>
-
-<tr>
-<td><strong>Genre</strong></td>
-<td>Action</td>
-</tr>
-
-<tr>
-<td><strong>Rental Price</strong></td>
-<td>₹100</td>
-</tr>
-
-</table>
-
-<div class="buttons">
-
-<a href="https://www.youtube.com/watch?v=dQw4w9WgXcQ" target="_blank">
-<button class="watch-trailer">Watch Trailer</button>
-</a>
-
-<a href="payment.html">
-<button class="rent-now">Rent Now</button>
-</a>
-
-</div>
-
-</div>
-
-</section>
-
-<footer>
-
-<h2>KBTV</h2>
-
-<p>© 2026 KBTV Movie Rental</p>
-
-</footer>
-<script type="module" src="protect.js"></script>
 </body>
-
 </html>
